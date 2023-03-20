@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { Colors } from 'utils/colors';
+import Link from "next/link";
+import { Colors } from "utils/colors";
 
 type Props = {
   text: string;
@@ -8,16 +8,16 @@ type Props = {
 };
 const CustomLink = (props: Props) => {
   const {
-    text = 'Submit',
-    customStyle = { color: Colors.PRIMARY, fontWeight: '600' },
-    url = '/'
+    text = "Submit",
+    customStyle = { color: Colors.PRIMARY, fontWeight: "600" },
+    url = "/",
   } = props;
   return (
     <Link
       style={{
         color: customStyle.color,
         fontWeight: customStyle?.fontWeight,
-        padding: '0'
+        padding: "0",
       }}
       href={url}
     >

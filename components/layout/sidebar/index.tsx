@@ -12,7 +12,6 @@ import React, {
   useState,
 } from "react";
 import styled from "styled-components";
-import Clock from "utils/clock";
 import { Roles } from "utils/enums";
 import { getDefaultOpenKeys } from "utils/helpers";
 import urls from "../../../configs/urls";
@@ -210,9 +209,7 @@ const SidebarLayout = ({ role, children }: Props) => {
                   fontSize: 16,
                   fontWeight: 600,
                 }}
-              >
-                <Clock />
-              </span>
+              ></span>
               {/* <Space size="middle">
                 <Badge
                   dot={true}

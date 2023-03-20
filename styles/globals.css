@@ -1,0 +1,675 @@
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../public/fonts/nunito-sans-v12-latin-regular.eot');
+  /* IE9 Compat Modes */
+  src: local(''),
+    url('../public/fonts/nunito-sans-v12-latin-regular.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-regular.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-regular.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-regular.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-regular.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+/* nunito-sans-200 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 200;
+  src: url('../public/fonts/nunito-sans-v12-latin-200.eot');
+  /* IE9 Compat Modes */
+  src: url('../public/fonts/nunito-sans-v12-latin-200.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-200.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-200.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-200.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-200.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+/* nunito-sans-300 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('../public/fonts/nunito-sans-v12-latin-300.eot');
+  /* IE9 Compat Modes */
+  src: url('../public/fonts/nunito-sans-v12-latin-300.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-300.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-300.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-300.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-300.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+/* nunito-sans-regular - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../public/fonts/nunito-sans-v12-latin-regular.eot');
+  /* IE9 Compat Modes */
+  src: url('../public/fonts/nunito-sans-v12-latin-regular.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-regular.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-regular.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-regular.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-regular.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+/* nunito-sans-italic - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nunito Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: url('../public/fonts/nunito-sans-v12-latin-italic.eot');
+  /* IE9 Compat Modes */
+  src: url('../public/fonts/nunito-sans-v12-latin-italic.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-italic.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-italic.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-italic.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-italic.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+/* nunito-sans-600 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../public/fonts/nunito-sans-v12-latin-600.eot');
+  /* IE9 Compat Modes */
+  src: url('../public/fonts/nunito-sans-v12-latin-600.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-600.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-600.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-600.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-600.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+/* nunito-sans-700 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../public/fonts/nunito-sans-v12-latin-700.eot');
+  /* IE9 Compat Modes */
+  src: url('../public/fonts/nunito-sans-v12-latin-700.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-700.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-700.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-700.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-700.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+/* nunito-sans-800 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 800;
+  src: url('../public/fonts/nunito-sans-v12-latin-800.eot');
+  /* IE9 Compat Modes */
+  src: url('../public/fonts/nunito-sans-v12-latin-800.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-800.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-800.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-800.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-800.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+/* nunito-sans-900 - latin */
+@font-face {
+  font-display: swap;
+  /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 900;
+  src: url('../public/fonts/nunito-sans-v12-latin-900.eot');
+  /* IE9 Compat Modes */
+  src: url('../public/fonts/nunito-sans-v12-latin-900.eot?#iefix') format('embedded-opentype'),
+    /* IE6-IE8 */
+    url('../public/fonts/nunito-sans-v12-latin-900.woff2') format('woff2'),
+    /* Super Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-900.woff') format('woff'),
+    /* Modern Browsers */
+    url('../public/fonts/nunito-sans-v12-latin-900.ttf') format('truetype'),
+    /* Safari, Android, iOS */
+    url('../public/fonts/nunito-sans-v12-latin-900.svg#NunitoSans') format('svg');
+  /* Legacy iOS */
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif;
+  background-color: #f0f2f6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: inherit;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Nunito Sans' !important;
+}
+
+.bg-primary {
+  background: #001529 !important;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.truncate {
+  text-overflow: ellipsis;
+}
+
+.attendance-table-header {
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.attendance-table-header.current-day {
+  background-color: #ff700033;
+}
+
+.attendance-table-header.weekend-day {
+  color: gray;
+  opacity: .5;
+}
+
+.attendance-legends {
+  display: flex;
+  text-align: right;
+  flex-direction: row-reverse;
+  padding-right: 1rem;
+}
+
+.attendance-legends-row {
+  padding: 1rem;
+}
+
+.attendance-icon {
+  margin-right: 6px;
+  margin-top: 16px;
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.navbar-item-selected {
+  border-radius: 0 2rem 2rem 0 !important;
+}
+
+.navbar-item-selected-child {
+  color: #ff7000 !important;
+}
+
+.ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+  background: transparent !important;
+}
+
+.ant-menu-item-selected {
+  border-radius: 0 2rem 2rem 0 !important;
+}
+
+.ant-menu-submenu-open {
+  border-radius: 0 2rem 2rem 0 !important;
+}
+
+.navbar-parent-item:has(.navbar-item-selected-child) .ant-menu-submenu-title {
+  border-radius: 0 2rem 2rem 0 !important;
+  background-color: #ff7000;
+}
+
+.ant-menu-submenu-title:hover {
+  background-color: #ff7000;
+}
+
+.navbar-child-item {
+  background: none !important;
+}
+
+.bg-white-halfrem {
+  background-color: #fff;
+  padding: 0.5rem;
+  margin: 0px !important;
+  margin-top: 0px !important;
+}
+
+.sign-in-form {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-in-form input {
+  display: block;
+  padding: 5px;
+  border: 1px gray solid;
+  border-radius: 3px;
+  margin-top: 15px;
+}
+
+.sign-in-form h1 {
+  font-size: 18px;
+  text-align: center;
+}
+
+.sign-in-form form {
+  padding: 50px 15px;
+  border: 2px gray solid;
+  border-radius: 3px;
+}
+
+.sidebar-logo {
+  height: 3rem;
+  text-align: center;
+  float: left;
+  padding-top: 3px;
+}
+
+.ant-btn {
+  border-radius: 2px !important;
+}
+
+input {
+  border-radius: 2px !important;
+}
+
+.ant-input:focus,
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused,
+.ant-input-focused,
+.ant-picker-focused {
+  box-shadow: none !important;
+}
+
+.ant-select-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: #fff;
+  font-weight: 500;
+}
+
+.ant-select-focused.ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+  box-shadow: none !important;
+}
+
+.ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-in-view:is(.ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected) .ant-picker-calendar-date,
+.ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-in-view:is(.ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected) .ant-picker-calendar-date-today {
+  color: #f5222d;
+  background-color: rgba(255, 112, 0, 0.2);
+}
+
+.ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected .ant-picker-calendar-date .ant-picker-calendar-date-value,
+.ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected:hover .ant-picker-calendar-date .ant-picker-calendar-date-value,
+.ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected .ant-picker-calendar-date-today .ant-picker-calendar-date-value,
+.ant-picker-calendar.ant-picker-calendar-full .ant-picker-cell-selected:hover .ant-picker-calendar-date-today .ant-picker-calendar-date-value {
+  color: #f5222d;
+}
+
+.ant-select-selector {
+  border-radius: 2px !important;
+}
+
+.ant-dropdown-menu {
+  border-radius: 2px !important;
+}
+
+.ant-table-thead th,
+.ant-table-thead td {
+  background-color: #fff !important;
+}
+
+.ant-table-wrapper .ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before,
+.ant-table-wrapper .ant-table-thead>tr>td:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  display: none;
+}
+
+.ant-pagination-item {
+  border-radius: 2px !important;
+}
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item,
+.ant-dropdown-menu-submenu .ant-dropdown-menu .ant-dropdown-menu-item,
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-submenu-title,
+.ant-dropdown-menu-submenu .ant-dropdown-menu .ant-dropdown-menu-submenu-title .ant-pagination-item .ant-dropdown-menu-item {
+  padding: 4px 6px !important;
+}
+
+.ant-radio-button-wrapper {
+  border-radius: 2px !important;
+}
+
+.ant-btn-primary {
+  box-shadow: none !important;
+  background-color: rgb(255, 112, 0) !important;
+  color: #fff;
+}
+
+.upload-crop .ant-btn-default:active,
+.upload-crop .ant-btn-default:hover {
+  border-color: rgb(255, 112, 0) !important;
+  color: rgb(255, 112, 0) !important;
+}
+
+.button-checkinout .ant-btn-default:hover {
+  color: #fff !important;
+}
+
+.ant-modal-content {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding-top: 15px !important;
+}
+
+.ant-modal-header {
+  padding: 0 25px !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+  padding-bottom: 15px !important;
+  margin-bottom: 15px !important;
+}
+
+.ant-modal-body,
+.ant-modal-footer {
+  padding: 0 25px !important;
+}
+
+.ant-picker {
+  border-radius: 2px;
+}
+
+.ant-layout {
+  background-color: #f0f2f6;
+}
+
+.ant-picker-range .ant-picker-active-bar {
+  background: #ff8d29;
+}
+
+.ant-picker-focused {
+  border: 1px solid #ff8d29;
+  box-shadow: 0 0 0 1px #ff8d29;
+}
+
+.ant-picker-dropdown .ant-picker-cell-in-range {
+  color: white;
+}
+
+.ant-drawer .ant-drawer-body {
+  padding: 0px;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
+  border-color: #000 !important;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  border-color: none;
+  border: 1px solid #000;
+  color: #000;
+}
+
+.ant-radio-button-wrapper {
+  color: #8c8c8c;
+}
+
+.ant-radio-button-wrapper:hover {
+  color: #8c8c8c;
+  border: 1px solid #000;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
+  color: #000;
+  border: 1px solid #000;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover::before {
+  background-color: none;
+}
+
+.ant-radio-button-wrapper-checked:hover {
+  color: #000;
+}
+
+.ant-picker-dropdown .ant-picker-time-panel-column>li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+  color: white;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  color: #000;
+  border: 1px solid #000;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover::before {
+  background-color: #000;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+  background-color: #000;
+}
+
+.semi-bold {
+  font-weight: 600;
+}
+
+.center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: #595959;
+}
+
+.attendanceTable .ant-table-thead>tr>th:nth-child(2) {
+  text-align: start;
+}
+
+.attendanceTable .ant-table-thead>tr>th:nth-child(1) {
+  text-align: start;
+}
+
+.attendanceTable .ant-table-thead>tr>th {
+  text-align: center;
+  font-weight: 700;
+}
+
+.attendanceTable .ant-table-tbody>tr:hover {
+  cursor: pointer;
+}
+
+.ant-menu {
+  padding-right: 24px;
+}
+
+.ant-menu-light.ant-menu-horizontal>.ant-menu-item-selected::after {
+  height: 2px;
+  border-bottom-color: #171f2e;
+}
+
+.ant-menu-light.ant-menu-horizontal>.ant-menu-item-selected {
+  color: #171f2e;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.ant-menu-light.ant-menu-horizontal>.ant-menu-item:hover::after {
+  color: #171f2e;
+  border-bottom-color: #171f2e;
+}
+
+.ant-menu-item-selected {
+  background-color: #1890ff;
+  color: #fff;
+}
+
+.navbar-item-children-current {
+  background-color: none;
+  color: #ff7000;
+}
+
+.ant-table-wrapper.ant-table-pagination.ant-pagination {
+  margin: 0px;
+}
+
+.total-title {
+  text-align: center !important;
+}
+
+.ant-picker-dropdown .ant-picker-time-panel-column>li.ant-picker-time-panel-cell .ant-picker-time-panel-cell-inner:hover {
+  background: #171f2e !important;
+  color: #fff !important;
+}
+
+
+/* Overrides */
+td.ant-table-column-sort {
+  background: #ffff !important;
+}
+
+@media (max-width: 762px) {
+  .search-col-margin {
+    margin-top: 10px;
+  }
+
+  .responsive-leave-display {
+    display: block !important;
+  }
+
+  .responsive-leave-graph {
+    width: 95% !important;
+  }
+
+  .responsive-leave-card {
+    margin: 25px 0px 25px 25px !important;
+  }
+
+}
+
+@media (max-width: 988px) {
+  .search-col-margin {
+    margin-top: 10px;
+  }
+
+  .modal-content-responsive {
+    width: 90vw !important;
+  }
+
+  .ragepicker-repsonsives {
+    width: 100%;
+  }
+}
+
+@media (max-width: 530) {
+  .button-image-upload {
+    min-width: 200px !important;
+  }
+}
+
+th.ant-table-cell,
+td.ant-table-cell {
+  padding: 10px !important;
+}
+
+/* For margin */
+.m-0 {
+  margin: 0;
+}
+
+/* For Font Weight*/
+
+.semi-bold {
+  font-weight: 600;
+}
+
+
+/* Display Flex */
+.flex {
+  display: flex;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+/* For p tag */
+p {
+  margin: 0;
+}

@@ -3,7 +3,7 @@ WORKDIR 	/app
 COPY 		--chown=node:node . .
 RUN		npm run build
 USER		node
-EXPOSE		3000
+EXPOSE		3001
 CMD		npm run start
 
 #FROM	nginx:stable-alpine

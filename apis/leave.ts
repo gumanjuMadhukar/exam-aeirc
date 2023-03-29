@@ -1,5 +1,5 @@
-import http from 'utils/http';
-import { FilterParams } from 'pages/admin/leaves';
+import http from "utils/http";
+
 export interface LeaveTypeResponse {
   id: string;
   name: string;
@@ -86,9 +86,9 @@ export interface LeaveDeclineBody {
 
 export function applyLeave(data: ApplyLeavesPayload) {
   return http({
-    url: '/leave/apply',
-    method: 'post',
-    data
+    url: "/leave/apply",
+    method: "post",
+    data,
   });
 }
 
@@ -96,8 +96,8 @@ export function leaveTypes(): Promise<{
   data: { data: LeaveTypeResponse[] };
 }> {
   return http({
-    url: '/leave/types',
-    method: 'get'
+    url: "/leave/types",
+    method: "get",
   });
 }
 
@@ -105,9 +105,9 @@ export function leave(filterParams: FilterParams): Promise<{
   data: { data: LeaveResponse[] | [] };
 }> {
   return http({
-    url: '/leave',
+    url: "/leave",
     params: filterParams,
-    method: 'get'
+    method: "get",
   });
 }
 
@@ -115,51 +115,43 @@ export function leaveDetails(): Promise<{
   data: { data: LeaveDetailsResponse };
 }> {
   return http({
-    url: '/leave/details',
-    method: 'get'
-  });
-}
-
-export function getAllLeaves(filterParams: FilterParams) {
-  return http({
-    url: '/leave/all',
-    params: filterParams,
-    method: 'get'
+    url: "/leave/details",
+    method: "get",
   });
 }
 
 export function approveLeave(id: number) {
   return http({
     url: `/leave/approve/${id}`,
-    method: 'patch'
+    method: "patch",
   });
 }
 
 export function declineLeave(data: LeaveDeclineBody) {
   return http({
     url: `/leave/reject/${data?.leaveId}`,
-    method: 'patch',
-    data
+    method: "patch",
+    data,
   });
 }
 
 export function deleteLeave(id: number | string) {
   return http({
     url: `/leave/leave/${id}`,
-    method: 'delete'
+    method: "delete",
   });
 }
 
 export function leaveStatuses() {
   return http({
-    url: '/leave/statuses',
-    method: 'get'
+    url: "/leave/statuses",
+    method: "get",
   });
 }
 
 export function leaveAllDetails() {
   return http({
-    url: '/leave/all/details',
-    method: 'get'
+    url: "/leave/all/details",
+    method: "get",
   });
 }

@@ -4,4 +4,4 @@ services: #This section defines all the different containers we will create.
     build: #This specifies the location of our Dockerfile
       context: . #This specifies the location of our Dockerfile
     ports: #This is used to map the container’s ports to the host machine.
-      - "3000:3000"
+      - "3001:3001"

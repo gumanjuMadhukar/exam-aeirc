@@ -1,11 +1,11 @@
-version: '3' 
-services: 
+version: "3"
+services:
   hrlabs_client:
     container_name: hrlabs_frontend
     image: $APP_IMAGE_NAME
-    restart: always 
-    ports: 
-      - "3030:3000"
+    restart: always
+    ports:
+      - "3030:3001"
     networks:
       - hrlabs
     logging:

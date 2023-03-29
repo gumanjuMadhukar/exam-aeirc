@@ -24,6 +24,7 @@ export const publicRoutes = [
   "/auth/reset-password",
   "/auth/reset-verification",
   "/dashboard",
+  "/student",
 ];
 
 function verifyOrRedirectRoute(

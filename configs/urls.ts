@@ -5,71 +5,73 @@ import {
   LogoutOutlined,
   ManOutlined,
   UserOutlined,
-  ReadOutlined
-} from '@ant-design/icons';
+  ReadOutlined,
+} from "@ant-design/icons";
 
 const urls = {
-  login: '/auth/login',
-  forgotPassword: '/auth/forgot-pw',
-  register: '/auth/register',
-  changePassword: 'auth/change-password',
+  login: "/auth/login",
+  forgotPassword: "/auth/forgot-pw",
+  register: "/auth/register",
+  changePassword: "auth/change-password",
+  student: "student",
+
   commonNavItems: [
     {
-      title: 'Dashboard',
-      path: '/dashboard',
-      icon: HomeOutlined
+      title: "Dashboard",
+      path: "/dashboard",
+      icon: HomeOutlined,
     },
     {
-      title: 'Holiday',
-      path: '/holiday',
-      icon: CalendarOutlined
-    }
+      title: "Holiday",
+      path: "/holiday",
+      icon: CalendarOutlined,
+    },
   ],
   employeeNavitems: [
     {
-      title: 'My Profile',
-      path: '/employee/my-profile',
-      icon: ManOutlined
+      title: "My Profile",
+      path: "/employee/my-profile",
+      icon: ManOutlined,
     },
     {
-      title: 'Attendence',
-      path: '/employee/attendance',
-      icon: ClockCircleOutlined
+      title: "Attendence",
+      path: "/employee/attendance",
+      icon: ClockCircleOutlined,
     },
     {
-      title: 'Leaves',
-      path: '/employee/leaves',
-      icon: LogoutOutlined
-    }
+      title: "Leaves",
+      path: "/employee/leaves",
+      icon: LogoutOutlined,
+    },
   ],
   adminNavitems: [
     {
-      title: 'Attendance',
-      path: '/admin/attendance',
-      icon: ClockCircleOutlined
+      title: "Attendance",
+      path: "/admin/attendance",
+      icon: ClockCircleOutlined,
     },
     {
-      title: 'Employee',
-      path: '/admin/employee',
-      icon: UserOutlined
+      title: "Employee",
+      path: "/admin/employee",
+      icon: UserOutlined,
     },
 
     {
-      title: 'Payroll',
+      title: "Payroll",
       icon: ReadOutlined,
       children: [
         {
-          title: 'Go Payroll',
-          path: '/admin/payroll/go-payroll',
-          key: 'go-payroll'
-        }
-      ]
+          title: "Go Payroll",
+          path: "/admin/payroll/go-payroll",
+          key: "go-payroll",
+        },
+      ],
     },
     {
-      title: 'Leaves',
-      path: '/admin/leaves',
-      icon: LogoutOutlined
-    }
+      title: "Leaves",
+      path: "/admin/leaves",
+      icon: LogoutOutlined,
+    },
     // {
     //   title: 'Salary',
     //   path: '/admin/salary',
@@ -81,7 +83,7 @@ const urls = {
     //   path: '/admin/settings',
     //   icon: SettingOutlined
     // }
-  ]
+  ],
 };
 
 export default urls;

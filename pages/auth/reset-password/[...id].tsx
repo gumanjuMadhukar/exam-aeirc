@@ -1,16 +1,16 @@
-import { ReactElement, useState } from 'react';
-import { UserOutlined, MailOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Alert } from 'antd';
-import { useMutation } from 'react-query';
-import { useRouter } from 'next/router';
-import { TextBlock } from '../../../styles/authCSS';
-import { officeEmailValidation } from 'utils';
-import AuthLayout from 'components/layout/auth-layout';
-import Head from 'next/head';
-import { resetPassword } from 'apis/auth';
-import CustomLink from 'components/CustomLink';
-import urls from 'configs/urls';
-import { Colors } from 'utils/colors';
+import { ReactElement, useState } from "react";
+import { UserOutlined, MailOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Alert } from "antd";
+import { useMutation } from "react-query";
+import { useRouter } from "next/router";
+import { TextBlock } from "../../../styles/authCSS";
+import { officeEmailValidation } from "utils";
+import AuthLayout from "components/layout/auth-layout";
+import Head from "next/head";
+import { resetPassword } from "apis/auth";
+import CustomLink from "components/CustomLink";
+import urls from "configs/urls";
+import { Colors } from "utils/colors";
 
 interface Props {}
 
@@ -37,7 +37,7 @@ const ResetPassword: NextPageWithLayout = () => {
         const errorMessages = errors?.map((item: any) => item.errors.matches);
         const message = data?.response?.data?.message;
         setErrorMessageText(errorMessages || message);
-      }
+      },
     });
   };
 
@@ -50,7 +50,7 @@ const ResetPassword: NextPageWithLayout = () => {
       <Form name="resetPassword" onFinish={onFinish} autoComplete="off">
         <Form.Item
           name="newPassword"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: "Please input your password!" }]}
         >
           <Input.Password
             size="large"
@@ -61,22 +61,22 @@ const ResetPassword: NextPageWithLayout = () => {
         </Form.Item>
         <Form.Item
           name="confirmPassword"
-          dependencies={['newPassword']}
+          dependencies={["newPassword"]}
           rules={[
             {
               required: true,
-              message: 'Please confirm your password!'
+              message: "Please confirm your password!",
             },
             ({ getFieldValue }) => ({
               validator(rule, value) {
-                if (!value || getFieldValue('newPassword') === value) {
+                if (!value || getFieldValue("newPassword") === value) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  'The two passwords that you entered do not match!'
+                  "The two passwords that you entered do not match!"
                 );
-              }
-            })
+              },
+            }),
           ]}
         >
           <Input.Password
@@ -95,9 +95,9 @@ const ResetPassword: NextPageWithLayout = () => {
         <Form.Item>
           <Button
             style={{
-              width: '100%',
+              width: "100%",
               backgroundColor: Colors.PRIMARY,
-              color: '#fff'
+              color: "#fff",
             }}
             size="large"
             htmlType="submit"
@@ -110,7 +110,7 @@ const ResetPassword: NextPageWithLayout = () => {
         <CustomLink
           text="Back to Login"
           url={urls.login}
-          customStyle={{ color: '#404040', fontWeight: '400' }}
+          customStyle={{ color: "#404040", fontWeight: "400" }}
         />
       </TextBlock>
     </>

@@ -1,16 +1,15 @@
-import { Form, Input, Button, Alert } from 'antd';
-import SuccessCheckMark from 'components/checkmark/';
-import { ReactElement, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useMutation } from 'react-query';
+import { Form, Input, Button, Alert } from "antd";
+import { ReactElement, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useMutation } from "react-query";
 import {
   forgotPasswordOtpVerify,
   getEmailForForgotPassword,
-  resendOtpVerify
-} from 'apis/auth';
-import AuthLayout from 'components/layout/auth-layout';
-import Head from 'next/head';
-import { Colors } from 'utils/colors';
+  resendOtpVerify,
+} from "apis/auth";
+import AuthLayout from "components/layout/auth-layout";
+import Head from "next/head";
+import { Colors } from "utils/colors";
 
 interface Props {}
 
@@ -37,7 +36,7 @@ const ResetVerification: NextPageWithLayout = () => {
       return;
     }
     const interval = setInterval(() => {
-      setSeconds(prevSeconds => prevSeconds - 1);
+      setSeconds((prevSeconds) => prevSeconds - 1);
     }, 1000);
     return () => clearInterval(interval);
   }, [seconds]);
@@ -54,19 +53,19 @@ const ResetVerification: NextPageWithLayout = () => {
     forgotPasswordVerification.mutate(data, {
       onSuccess: (data: any) => {
         setErrorMessageText(null);
-        localStorage.removeItem('resetEmail');
+        localStorage.removeItem("resetEmail");
         router.push(`/auth/reset-password/${userId}`);
       },
       onError: (data: any) => {
         const errorMessages = data?.response?.data?.message;
         setErrorMessageText(errorMessages);
-      }
+      },
     });
   };
 
   const handleResendOtp = () => {
     const data = {
-      email: localStorage.getItem('resetEmail') || ''
+      email: localStorage.getItem("resetEmail") || "",
     };
     forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
@@ -77,13 +76,13 @@ const ResetVerification: NextPageWithLayout = () => {
       onError: (data: any) => {
         const message = data?.response?.data?.message;
         setErrorMessageText(message);
-      }
+      },
     });
   };
 
   const validateOtpLength = (rule: any, value: any) => {
     if (value.length !== 4) {
-      return Promise.reject('The input value must be exactly 4 characters');
+      return Promise.reject("The input value must be exactly 4 characters");
     }
     return Promise.resolve();
   };
@@ -92,7 +91,7 @@ const ResetVerification: NextPageWithLayout = () => {
       <Head>
         <title>Reset Password Verification</title>
       </Head>
-      <h2 style={{ fontSize: '30px', margin: '0' }}>Verification Code</h2>
+      <h2 style={{ fontSize: "30px", margin: "0" }}>Verification Code</h2>
       <p>Please enter the verification code</p>
       <Form onFinish={onFinish} autoComplete="off">
         <Form.Item
@@ -100,12 +99,12 @@ const ResetVerification: NextPageWithLayout = () => {
           rules={[
             {
               required: true,
-              message: 'Please input OTP sent in your email!'
+              message: "Please input OTP sent in your email!",
             },
             {
-              message: 'OTP must be 4 characters.',
-              validator: validateOtpLength
-            }
+              message: "OTP must be 4 characters.",
+              validator: validateOtpLength,
+            },
           ]}
           validateTrigger="onSubmit"
         >
@@ -118,9 +117,9 @@ const ResetVerification: NextPageWithLayout = () => {
           />
         </Form.Item>
         {!expired && (
-          <p style={{ color: '#1890FF' }}>
-            {minutes < 10 ? '0' + minutes : minutes}:
-            {remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}
+          <p style={{ color: "#1890FF" }}>
+            {minutes < 10 ? "0" + minutes : minutes}:
+            {remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds}
           </p>
         )}
         {errorMessageText && (
@@ -134,8 +133,8 @@ const ResetVerification: NextPageWithLayout = () => {
           <a
             style={{
               color: !expired ? Colors.DISABLED : Colors.PRIMARY,
-              pointerEvents: !expired ? 'none' : 'auto',
-              cursor: !expired ? 'not-allowed' : 'pointer'
+              pointerEvents: !expired ? "none" : "auto",
+              cursor: !expired ? "not-allowed" : "pointer",
             }}
             onClick={handleResendOtp}
           >
@@ -147,9 +146,9 @@ const ResetVerification: NextPageWithLayout = () => {
         <Form.Item>
           <Button
             style={{
-              width: '100%',
+              width: "100%",
               backgroundColor: Colors.PRIMARY,
-              color: '#fff'
+              color: "#fff",
             }}
             size="large"
             htmlType="submit"

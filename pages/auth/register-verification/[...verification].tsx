@@ -1,13 +1,12 @@
-import { Form, Input, Button, Alert, message, Modal } from 'antd';
-import SuccessCheckMark from 'components/checkmark/';
-import { ReactElement, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useMutation } from 'react-query';
-import { otpVerify, resendOtpVerify } from 'apis/auth';
-import AuthLayout from 'components/layout/auth-layout';
-import Head from 'next/head';
-import { Colors } from 'utils/colors';
-import styled from 'styled-components';
+import { Form, Input, Button, Alert, message, Modal } from "antd";
+import { ReactElement, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useMutation } from "react-query";
+import { otpVerify, resendOtpVerify } from "apis/auth";
+import AuthLayout from "components/layout/auth-layout";
+import Head from "next/head";
+import { Colors } from "utils/colors";
+import styled from "styled-components";
 
 interface Props {}
 
@@ -30,7 +29,7 @@ const Verification: NextPageWithLayout = () => {
       return;
     }
     const interval = setInterval(() => {
-      setSeconds(prevSeconds => prevSeconds - 1);
+      setSeconds((prevSeconds) => prevSeconds - 1);
     }, 1000);
     return () => clearInterval(interval);
   }, [seconds]);
@@ -54,7 +53,7 @@ const Verification: NextPageWithLayout = () => {
         const errorMessages = errors?.map((item: any) => item.errors.matches);
         const message = data?.response?.data?.message;
         setErrorMessageText(errorMessages || message);
-      }
+      },
     });
   };
 
@@ -64,13 +63,13 @@ const Verification: NextPageWithLayout = () => {
       onSuccess: (data: any) => {
         setExpired(false);
         setSeconds(180);
-      }
+      },
     });
   };
 
   const validateOtpLength = (rule: any, value: any) => {
     if (value.length !== 4) {
-      return Promise.reject('The input value must be exactly 4 characters');
+      return Promise.reject("The input value must be exactly 4 characters");
     }
     return Promise.resolve();
   };
@@ -79,7 +78,7 @@ const Verification: NextPageWithLayout = () => {
       <Head>
         <title>OTP Verification</title>
       </Head>
-      <h2 style={{ fontSize: '30px', margin: '0' }}>Verification Code</h2>
+      <h2 style={{ fontSize: "30px", margin: "0" }}>Verification Code</h2>
       <p>Please enter the verification code</p>
       <Form onFinish={onFinish} autoComplete="off">
         <Form.Item
@@ -87,12 +86,12 @@ const Verification: NextPageWithLayout = () => {
           rules={[
             {
               required: true,
-              message: 'Please input OTP sent in your email!'
+              message: "Please input OTP sent in your email!",
             },
             {
-              message: 'OTP must be 4 characters.',
-              validator: validateOtpLength
-            }
+              message: "OTP must be 4 characters.",
+              validator: validateOtpLength,
+            },
           ]}
           validateTrigger="onSubmit"
         >
@@ -104,9 +103,9 @@ const Verification: NextPageWithLayout = () => {
           />
         </Form.Item>
         {!expired && (
-          <p style={{ color: '#1890FF' }}>
-            {minutes < 10 ? '0' + minutes : minutes}:
-            {remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}
+          <p style={{ color: "#1890FF" }}>
+            {minutes < 10 ? "0" + minutes : minutes}:
+            {remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds}
           </p>
         )}
         {errorMessageText && (
@@ -120,8 +119,8 @@ const Verification: NextPageWithLayout = () => {
           <a
             style={{
               color: !expired ? Colors.DISABLED : Colors.PRIMARY,
-              pointerEvents: !expired ? 'none' : 'auto',
-              cursor: !expired ? 'not-allowed' : 'pointer'
+              pointerEvents: !expired ? "none" : "auto",
+              cursor: !expired ? "not-allowed" : "pointer",
             }}
             onClick={handleResendOtp}
           >
@@ -133,9 +132,9 @@ const Verification: NextPageWithLayout = () => {
         <Form.Item>
           <Button
             style={{
-              width: '100%',
+              width: "100%",
               backgroundColor: Colors.PRIMARY,
-              color: '#fff'
+              color: "#fff",
             }}
             size="large"
             htmlType="submit"
@@ -151,13 +150,13 @@ const Verification: NextPageWithLayout = () => {
             Registration completed successfully
           </ResgistrationSuccess>
           <ResgistrationSuccessFooter>
-            Congratulations, your account has been successfully created.{' '}
+            Congratulations, your account has been successfully created.{" "}
           </ResgistrationSuccessFooter>
           <Button
             style={{
               marginTop: 32,
               backgroundColor: Colors.PRIMARY,
-              color: Colors.WHITE
+              color: Colors.WHITE,
             }}
             size="large"
             onClick={() => router.push(`/auth/login`)}

@@ -25,6 +25,7 @@ export const publicRoutes = [
   "/auth/reset-verification",
   "/dashboard",
   "/student",
+  "/admin/employee",
 ];
 
 function verifyOrRedirectRoute(
@@ -56,11 +57,11 @@ export default function middleware(req: NextRequest) {
 
   if (verify) {
     if (
-      (url.pathname.startsWith("/employee") &&
-        role?.value !== Roles.EMPLOYEE) ||
-      (url.pathname.startsWith("/admin") &&
-        role?.value !== Roles.ADMIN &&
-        role?.value !== Roles.SUPERADMIN)
+      url.pathname.startsWith("/employee") &&
+      role?.value !== Roles.EMPLOYEE
+      // (url.pathname.startsWith("/admin") &&
+      //   role?.value !== Roles.ADMIN &&
+      //   role?.value !== Roles.SUPERADMIN)
     ) {
       url.pathname = "/dashboard";
       return verifyOrRedirectRoute(publicRoutes.includes(pageName), url);

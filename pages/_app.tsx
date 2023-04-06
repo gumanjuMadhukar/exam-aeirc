@@ -22,12 +22,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout =
     Component.getLayout ??
     ((page: any) => {
-      return publicRoutes.includes(router.pathname) ||
-        page.type?.name === "Verification" ? (
-        page
-      ) : (
-        <SidebarLayout role={role}>{page}</SidebarLayout>
-      );
+      // return
+      // publicRoutes.includes(router.pathname) ||
+      //   page.type?.name === "Verification" ? (
+      //   page
+      // ) : (
+      return <SidebarLayout role={role}>{page}</SidebarLayout>;
+      // );
     });
 
   const [queryClient] = React.useState(

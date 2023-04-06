@@ -44,15 +44,20 @@ const urls = {
       icon: LogoutOutlined,
     },
   ],
-  adminNavitems: [
+  administrationNavitems: [
     {
       title: "Attendance",
       path: "/admin/attendance",
       icon: ClockCircleOutlined,
     },
     {
-      title: "Employee",
+      title: "Users",
       path: "/admin/employee",
+      icon: UserOutlined,
+    },
+    {
+      title: "Program",
+      path: "/admin/programs",
       icon: UserOutlined,
     },
 

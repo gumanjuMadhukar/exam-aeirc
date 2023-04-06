@@ -82,16 +82,18 @@ const SidebarLayout = ({ role, children }: Props) => {
 
   const router = useRouter();
 
-  const navItems: routeItemProp[] = role
-    ? [
-        ...(urls?.commonNavItems || []).filter(
-          (item) => item.title !== "Holiday"
-        ), // filter out Holiday item
-        ...urls.adminNavitems,
-        ...(urls?.commonNavItems?.filter((item) => item.title === "Holiday") ||
-          []),
-      ]
-    : [];
+  const navItems: routeItemProp[] =
+    // role
+    //   ?
+    [
+      ...(urls?.commonNavItems || []).filter(
+        (item) => item.title !== "Holiday"
+      ), // filter out Holiday item
+      ...urls.administrationNavitems,
+      ...(urls?.commonNavItems?.filter((item) => item.title === "Holiday") ||
+        []),
+    ];
+  // : [];
 
   const defaultOpenKeys = getDefaultOpenKeys(router.pathname);
 

@@ -28,21 +28,20 @@ const Login: NextPage = (props): JSX.Element => {
   const onFinish = (data: LoginPayload) => {
     loginMutation.mutate(data, {
       onSuccess: (response) => {
-        const token = response.data.data.access_token;
-        const refresh_token = response.data.data.refresh_token;
-        const decoded: any = jwt_decode(token);
-        const role = decoded.role;
-        const username = decoded.username;
+        console.log(response);
+        const token = response.data.token;
+        const role = response.data.user.roles[0].name;
+        const user = response.data.user.name;
         Cookies.set("token", token);
-        Cookies.set("refresh-token", refresh_token);
         Cookies.set("role", role);
-        Cookies.set("username", username);
+        Cookies.set("user", user);
         setTokenInHeader(http, token);
         router.push("/dashboard");
       },
       onError: (data: any) => {
-        const errorMessage = data?.response?.data?.message;
-        message.error(errorMessage);
+        // console.log(data);
+        const errorMessage = data?.message;
+        message.error("Invalid Credentials");
         if (
           data?.response?.data?.error_code &&
           data?.response?.data?.error_code === "USER_NOT_VERIFIED"

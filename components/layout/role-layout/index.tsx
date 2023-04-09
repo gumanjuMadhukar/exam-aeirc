@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { Roles } from 'utils/enums';
+import { ReactNode } from "react";
+import { Roles } from "utils/enums";
 
 interface Iprops {
   role: string | undefined;
@@ -7,7 +7,9 @@ interface Iprops {
 }
 
 const RoleLayout = ({ role, children }: Iprops) => {
-  return role === Roles.ADMIN || role === Roles.SUPERADMIN ? (
+  return role === Roles.ADMIN ||
+    role === Roles.SUPERADMIN ||
+    role === Roles.ADMINISTRATOR ? (
     <>{children}</>
   ) : (
     <></>

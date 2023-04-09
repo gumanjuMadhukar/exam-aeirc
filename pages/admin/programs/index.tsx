@@ -50,11 +50,11 @@ const Programs = () => {
               <Link href="/dashboard">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <span style={{ color: Colors.BLACK }}>Employee</span>
+              <span style={{ color: Colors.BLACK }}>Programs</span>
             </Breadcrumb.Item>
           </Breadcrumb>
           <TitleContent>
-            <h2>Employee</h2>
+            <h2>Programs</h2>
             <Button
               style={{
                 background: Colors.COLOR_PRIMARY_BG,
@@ -64,7 +64,7 @@ const Programs = () => {
               // type="primary"
               icon={<UserAddOutlined />}
             >
-              Add New Employee
+              Add New Programs
             </Button>
           </TitleContent>
         </PageHeaderNaviagtion>

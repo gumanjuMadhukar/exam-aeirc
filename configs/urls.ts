@@ -6,6 +6,7 @@ import {
   ManOutlined,
   UserOutlined,
   ReadOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 const urls = {
@@ -44,17 +45,18 @@ const urls = {
       icon: LogoutOutlined,
     },
   ],
-  administrationNavitems: [
+  adminNavitems: [
+    {
+      title: "Users",
+      path: "/admin/users",
+      icon: UserOutlined,
+    },
     {
       title: "Attendance",
       path: "/admin/attendance",
       icon: ClockCircleOutlined,
     },
-    {
-      title: "Users",
-      path: "/admin/employee",
-      icon: UserOutlined,
-    },
+
     {
       title: "Program",
       path: "/admin/programs",
@@ -77,17 +79,28 @@ const urls = {
       path: "/admin/leaves",
       icon: LogoutOutlined,
     },
-    // {
-    //   title: 'Salary',
-    //   path: '/admin/salary',
-    //   icon: MoneyCollectOutlined
-    // },
-
-    // {
-    //   title: 'Settings',
-    //   path: '/admin/settings',
-    //   icon: SettingOutlined
-    // }
+  ],
+  administrationNavitems: [
+    {
+      title: "Program",
+      path: "/dir/program",
+      icon: UserOutlined,
+    },
+    {
+      title: "Student",
+      path: "/dir/student",
+      icon: LogoutOutlined,
+    },
+    {
+      title: "Quiz",
+      path: "/dir/quiz",
+      icon: SettingOutlined,
+    },
+    {
+      title: "Settings",
+      path: "/adminis/settings",
+      icon: SettingOutlined,
+    },
   ],
 };
 

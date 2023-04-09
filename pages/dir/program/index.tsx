@@ -3,19 +3,27 @@ import {
   Breadcrumb,
   Button,
   Input,
-  Menu,
   Table,
   Pagination,
-  Image,
+  MenuProps,
   Row,
   Col,
+  Dropdown,
+  message,
 } from "antd";
 import Link from "next/link";
-import { UserAddOutlined } from "@ant-design/icons";
+import {
+  UserAddOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  EllipsisOutlined,
+  ExclamationOutlined,
+} from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
-import EmployeeAPI from "apis/employee";
-import { useQuery } from "react-query";
+import ProgramAPI from "apis/program";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 
 import {
@@ -27,7 +35,8 @@ import {
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import { imageFullPath } from "utils/helpers";
+import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
+import ConfirmModal from "components/ConfirmModal";
 
 interface FilterParams {
   currentPage: number;
@@ -43,16 +52,77 @@ const DefaultFilterParams = {
   search: "",
 };
 
-const Employee = () => {
+interface IViewDropDown {
+  showModalView: (id: string) => void;
+  showModalEdit: (id: string) => void;
+  openCloseDeleteLeaveModal: (id?: string | undefined) => void;
+  id: string;
+}
+
+const ViewDropDown = ({
+  showModalView,
+  showModalEdit,
+  openCloseDeleteLeaveModal,
+  id,
+}: IViewDropDown) => {
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <Link href={`question/${id}`}>
+          <EyeOutlined />
+          {" View Question"}
+        </Link>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Link href={`student/${id}`}>
+          <EyeOutlined />
+          {" View Students"}
+        </Link>
+      ),
+    },
+    // {
+    //   key: "2",
+    //   label: (
+    //     <div onClick={() => showModalEdit(id)}>
+    //       <EditOutlined />
+    //       {" Edit"}
+    //     </div>
+    //   ),
+    // },
+    {
+      key: "3",
+      label: (
+        <div onClick={() => openCloseDeleteLeaveModal(id)}>
+          <DeleteOutlined />
+          {" Delete"}
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <Dropdown menu={{ items }} placement="bottom" arrow>
+      <EllipsisOutlined className="rotate-90" />
+    </Dropdown>
+  );
+};
+
+const Student = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
-  const employeeAPI = new EmployeeAPI();
+  const programAPI = new ProgramAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-
+  const [openView, setOpenView] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const queryClient = useQueryClient();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
   };
-  const employeeListColumns: any = [
+  const programListColumns: any = [
     {
       title: "Name",
       key: "name",
@@ -60,30 +130,36 @@ const Employee = () => {
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Email",
-      dataIndex: "email",
+      title: "Display Name",
+      dataIndex: "display_name",
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Phone Number",
-      dataIndex: "phone_number",
-      key: "phone_number",
-      responsive: ["sm", "md", "lg"],
+      title: "",
+      dataIndex: "",
+      render: (row: any) => (
+        <ViewDropDown
+          showModalView={showModalView}
+          showModalEdit={showModalEdit}
+          openCloseDeleteLeaveModal={openCloseDeleteLeaveModal}
+          id={row.id}
+        />
+      ),
     },
-    // {
-    //   title: 'Action',
-    //   key: 'action',
-    //   render: record => <ViewDropDown record={record} router={router} />,
-    //   responsive: ['sm', 'md', 'lg']
-    // }
   ];
+  const [isDeleteLeaveModalOpen, setIsDeleteLeaveModalOpen] = useState(false);
+  const [currentItem, setCurrentItem] = useState<string>("");
 
+  const openCloseDeleteLeaveModal = (id?: string) => {
+    id ? setCurrentItem(id) : setCurrentItem("");
+    setIsDeleteLeaveModalOpen(!isDeleteLeaveModalOpen);
+  };
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
 
   const queryList = useQuery(
     [
-      "employeeList",
+      "ProgramList",
       {
         status: filterParams.status,
         page: filterParams.currentPage,
@@ -97,13 +173,13 @@ const Employee = () => {
         limit: filterParams.pageSize,
       };
       if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await employeeAPI.listall(queryParams);
-      return response?.data?.data;
+      const response = await programAPI.list(queryParams);
+      return response?.data;
     }
   );
 
-  const employeeList = queryList?.data;
-  const metaData = queryList?.data?.meta_data;
+  const programList = queryList?.data?.data;
+  const metaData = queryList?.data?.meta;
 
   const handleSearch = (e: any) => {
     const { name, value } = e.target;
@@ -114,8 +190,42 @@ const Employee = () => {
     }));
   };
 
+  const showModalView = (id: string) => {
+    setCurrentItem(id);
+    setOpenView(true);
+  };
+
+  const hideModalView = () => {
+    setCurrentItem("");
+    setOpenView(false);
+  };
+
+  const showModalEdit = (id: string) => {
+    setCurrentItem(id);
+    setOpenEdit(true);
+  };
+
+  const removeEmployeeDocsMutation = useMutation((employeeId: any) =>
+    programAPI.destroy(employeeId)
+  );
+
+  console.log(currentItem, "CurrentItem");
+  const onConfirmDelete = () => {
+    removeEmployeeDocsMutation.mutate(currentItem, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["ProgramList"]);
+        message.success("Removed Program Successfully");
+        openCloseDeleteLeaveModal();
+      },
+      onError: (data: any) => {
+        const errorMessage = data?.response?.data?.message;
+        message.error(errorMessage);
+      },
+    });
+  };
+
   return (
-    <EmployeeContainer>
+    <UsersContainer>
       <PageHeader>
         <PageHeaderNaviagtion>
           <Breadcrumb>
@@ -123,11 +233,11 @@ const Employee = () => {
               <Link href="/dashboard">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <span style={{ color: Colors.BLACK }}>Employee</span>
+              <span style={{ color: Colors.BLACK }}>Program</span>
             </Breadcrumb.Item>
           </Breadcrumb>
           <TitleContent>
-            <h2>Employee</h2>
+            <h2>Program</h2>
             <Button
               style={{
                 background: Colors.COLOR_PRIMARY_BG,
@@ -138,7 +248,7 @@ const Employee = () => {
               icon={<UserAddOutlined />}
               onClick={openCloseModal}
             >
-              Add New Employee
+              Add New Program
             </Button>
           </TitleContent>
         </PageHeaderNaviagtion>
@@ -209,41 +319,49 @@ const Employee = () => {
       </PageHeader>
       <TableBodyContainer>
         <Table
-          columns={employeeListColumns}
-          dataSource={employeeList}
+          columns={programListColumns}
+          dataSource={programList}
           scroll={{ x: 1000 }}
-          // pagination={
-          //   employeeList?.meta_data?.total_items > 10 && {
-          //     defaultPageSize: 10,
-          //     total: metaData?.total_items,
-          //     hideOnSinglePage: true,
-          //     showSizeChanger: true,
-          //     showTotal: (total, range) =>
-          //       `${range[0]}-${range[1]} of ${total} items`,
-          //     onChange: (page, pageSize) => {
-          //       setFilterParams({
-          //         ...filterParams,
-          //         currentPage: page,
-          //         pageSize,
-          //       });
-          //     },
-          //     className: "bg-white-halfrem",
-          //     responsive: true,
-          //   }
-          // }
+          pagination={
+            queryList?.data?.meta?.total > 10 && {
+              defaultPageSize: 10,
+              total: metaData?.total,
+              hideOnSinglePage: true,
+              showSizeChanger: true,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
+              onChange: (page, pageSize) => {
+                setFilterParams({
+                  ...filterParams,
+                  currentPage: page,
+                  pageSize,
+                });
+              },
+              className: "bg-white-halfrem",
+              responsive: true,
+            }
+          }
         />
       </TableBodyContainer>
-      {/* <AddEmployeeModal
+      <ConfirmModal
+        buttonTitle="Confirm"
+        openCloseModal={openCloseDeleteLeaveModal}
+        open={isDeleteLeaveModalOpen}
+        confirmText="remove the document"
+        onConfirmModal={onConfirmDelete}
+        icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
+      />
+      <ImportProgramModal
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
-      /> */}
-    </EmployeeContainer>
+      />
+    </UsersContainer>
   );
 };
 
-export default Employee;
+export default Student;
 
-const EmployeeContainer = styled.div``;
+const UsersContainer = styled.div``;
 
 const StyledPagination = styled(Pagination)`
   // position: absolute;

@@ -677,3 +677,14 @@ p {
 pt-15 {
   padding-top: 15px;
 }
+
+
+.ant-checkbox-group-item {
+  display: block;
+  margin-right: 0;
+}
+
+.css-dev-only-do-not-override-1v518l7.ant-checkbox-group {
+  display: block;
+  padding-left: 20px;
+}

@@ -11,11 +11,18 @@ class QuestionAPI extends Resource {
 
   getRandomQuestion(subject_id: any) {
     return http({
-      url: `/getRandomQuestion/${subject_id}`,
+      url: `/attempts/${subject_id}`,
       method: "get",
     });
   }
 
+  postQuestionsAnswer(data: any) {
+    return http({
+      url: `/attempts`,
+      method: "post",
+      data,
+    });
+  }
   constructor() {
     super("questions");
   }

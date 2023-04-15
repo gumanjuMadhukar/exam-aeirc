@@ -1,6 +1,6 @@
-import { Col, Row } from 'antd';
-import styled from 'styled-components';
-import { Colors } from 'utils/colors';
+import { Col, Row } from "antd";
+import styled from "styled-components";
+import { Colors } from "utils/colors";
 
 export const DetailItem = styled(Row)`
   width: 100%;
@@ -24,7 +24,7 @@ export const DetailValue = styled(Col)`
 
 export const DetailWrapper = styled.div`
   background: #fff;
-  margin-bottom: 25px;
+  // margin-bottom: 25px;
   margin-left: 25px;
   padding: 25px;
   @media (max-width: 988px) {

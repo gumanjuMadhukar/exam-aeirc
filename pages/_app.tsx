@@ -19,11 +19,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     setRole(getRole);
   }, [Cookies.get("role")]);
 
+  console.log(router.pathname.startsWith("/student"));
   const getLayout =
     Component.getLayout ??
     ((page: any) => {
       return publicRoutes.includes(router.pathname) ||
-        page.type?.name === "Verification" ? (
+        page.type?.name === "Verification" ||
+        router.pathname.startsWith("/student") ? (
         page
       ) : (
         <SidebarLayout role={role}>{page}</SidebarLayout>

@@ -688,3 +688,26 @@ pt-15 {
   display: block;
   padding-left: 20px;
 }
+
+.segmented-options {
+  display: flex;
+  flex-wrap: wrap;
+  /* Use flex-wrap property to wrap options to next line */
+  gap: 4px;
+  /* Use gap to add spacing between options */
+  /* max-width: 100%; */
+  /* Set maximum width to 100% to allow wrapping */
+}
+
+.css-dev-only-do-not-override-1v518l7.ant-segmented .ant-segmented-group {
+  display: flex;
+  flex-wrap: wrap;
+  /* Use flex-wrap property to wrap options to next line */
+  gap: 4px;
+  /* Use gap to add spacing between options */
+  max-width: 100%;
+}
+
+.ant-segmented-item {
+  transition: none !important;
+}

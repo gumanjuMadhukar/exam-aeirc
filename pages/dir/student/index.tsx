@@ -338,6 +338,9 @@ const Student = () => {
           columns={programListColumns}
           dataSource={programList}
           scroll={{ x: 1000 }}
+          onRow={(record) => ({
+            onClick: () => router.push(`/dir/student/${record.id}`),
+          })}
           pagination={
             queryList?.data?.meta?.total > 10 && {
               defaultPageSize: 10,

@@ -14,12 +14,15 @@ import {
   Tag,
 } from "antd";
 import styled from "styled-components";
-
 import { Colors } from "utils/colors";
 import html2canvas from "html2canvas";
 import { ExclamationOutlined } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ConfirmModal from "components/ConfirmModal";
+import PageHeader from "pages/student/layout/page-header";
+import Clock from "utils/clock";
+import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 const Quiz = () => {
   const [questions, setQuestions] = useState<any>([]); // Store the fetched questions
@@ -28,10 +31,11 @@ const Quiz = () => {
   const questionAPI = new QuestionAPI();
   const queryClient = useQueryClient();
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
-  const [submitQuiz, setSumitQuiz] = useState<boolean>(true);
-
+  const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
+  const router = useRouter();
+  const student_id = Cookies.get("student_id");
   const queryList = useQuery(["RandomList"], async () => {
-    const response = await questionAPI.getRandomQuestion(2);
+    const response = await questionAPI.getRandomQuestion(student_id);
 
     return response?.data?.data;
   });
@@ -40,6 +44,24 @@ const Quiz = () => {
     questionAPI.postQuestionsAnswer(data)
   );
 
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Escape") {
+        event.preventDefault(); // Prevent default behavior of Esc key
+        // Do any other actions you want to perform when Esc key is pressed
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown); // Clean up event listener
+    };
+  }, []);
   const FullScreenPage = () => {
     useEffect(() => {
       const enterFullScreen = () => {
@@ -143,6 +165,10 @@ const Quiz = () => {
 
   const handleModalSubmit = () => {
     setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+    Cookies.remove("token");
+    Cookies.remove("role");
+    Cookies.remove("student_id");
+    router.push("/student/auth/finish");
   };
 
   useEffect(() => {
@@ -158,7 +184,7 @@ const Quiz = () => {
   if (questions?.length === 0 || currentQuestion >= questions?.length) {
     return (
       <QuizFinished>
-        <h1>Thank you! All the best for the result</h1>;
+        <h1>Thank you! All the best for the result</h1>
       </QuizFinished>
     );
   } else {
@@ -169,6 +195,38 @@ const Quiz = () => {
       return (
         <div>
           {" "}
+          <PageHeaderNaviagtion>
+            <Row justify="space-between" gutter={[16, 24]}>
+              <Col span={8}>
+                <img
+                  src="profile-default.png"
+                  style={{ border: "1px solid black" }}
+                ></img>
+              </Col>
+              <Col
+                span={8}
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  marginTop: "25px",
+                  fontSize: "25px",
+                }}
+              >
+                {currentQuestion + 1} / {questions?.length} Question
+              </Col>
+              <Col
+                span={8}
+                style={{
+                  textAlign: "right",
+                  fontWeight: "bold",
+                  marginTop: "20px",
+                  fontSize: "25px",
+                }}
+              >
+                <Clock />
+              </Col>
+            </Row>
+          </PageHeaderNaviagtion>
           <Space size={[0, 8]} wrap>
             <StyleTag color="blue">
               Question {currentQuestion + 1} of {questions?.length}
@@ -250,7 +308,7 @@ const Quiz = () => {
           </QuizContainer>
           <Card
             style={{
-              width: "30%",
+              width: "26%",
               float: "left",
               height: "500px",
               overflow: "auto",
@@ -294,11 +352,14 @@ const Quiz = () => {
 export default Quiz;
 
 const QuizContainer = styled.div`
-  // background: white;
-  padding: 10px;
+  background: white;
+  padding: 30px;
   width: 70%;
   margin: auto;
   float: left;
+  min-height: 500px;
+  margin-right: 40px;
+
   // display: flex;
   // justify-content: center;
   // flex-direction: column;
@@ -337,8 +398,16 @@ const OptionText = styled.div`
 `;
 
 const CustomizedButtonGroup = styled.div`
-  float: right;
-  margin-top: 10px;
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+`;
 
-  margin-right: 50px;
+const PageHeaderNaviagtion = styled.div`
+  top: 0;
+  position: fixed;
+  width: 100%;
+  background: #fff;
+  padding: 5px;
 `;

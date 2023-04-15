@@ -30,11 +30,14 @@ const Login: NextPage = (props): JSX.Element => {
       onSuccess: (response) => {
         console.log(response);
         const token = response.data.token;
+        const refresh_token = response.data.refresh_token;
+
         const role = response.data.user.roles[0].name;
         const user = response.data.user.name;
         Cookies.set("token", token);
         Cookies.set("role", role);
         Cookies.set("user", user);
+        Cookies.set("refresh_token", refresh_token);
         setTokenInHeader(http, token);
         router.push("/dashboard");
       },

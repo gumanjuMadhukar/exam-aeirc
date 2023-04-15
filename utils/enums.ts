@@ -17,6 +17,7 @@ export enum Roles {
   EMPLOYEE = "Employee",
   SUPERADMIN = "superadmin",
   ADMINISTRATOR = "administrator",
+  STUDENT = "Student",
 }
 
 export enum Leaves {

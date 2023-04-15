@@ -14,7 +14,7 @@ const urls = {
   forgotPassword: "/auth/forgot-pw",
   register: "/auth/register",
   changePassword: "auth/change-password",
-  student: "student",
+  student: "/student",
 
   commonNavItems: [
     {
@@ -51,34 +51,34 @@ const urls = {
       path: "/admin/users",
       icon: UserOutlined,
     },
-    {
-      title: "Attendance",
-      path: "/admin/attendance",
-      icon: ClockCircleOutlined,
-    },
+    // {
+    //   title: "Attendance",
+    //   path: "/admin/attendance",
+    //   icon: ClockCircleOutlined,
+    // },
 
-    {
-      title: "Program",
-      path: "/admin/programs",
-      icon: UserOutlined,
-    },
+    // {
+    //   title: "Program",
+    //   path: "/admin/programs",
+    //   icon: UserOutlined,
+    // },
 
-    {
-      title: "Payroll",
-      icon: ReadOutlined,
-      children: [
-        {
-          title: "Go Payroll",
-          path: "/admin/payroll/go-payroll",
-          key: "go-payroll",
-        },
-      ],
-    },
-    {
-      title: "Leaves",
-      path: "/admin/leaves",
-      icon: LogoutOutlined,
-    },
+    // {
+    //   title: "Payroll",
+    //   icon: ReadOutlined,
+    //   children: [
+    //     {
+    //       title: "Go Payroll",
+    //       path: "/admin/payroll/go-payroll",
+    //       key: "go-payroll",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Leaves",
+    //   path: "/admin/leaves",
+    //   icon: LogoutOutlined,
+    // },
   ],
   administrationNavitems: [
     {
@@ -92,13 +92,8 @@ const urls = {
       icon: LogoutOutlined,
     },
     {
-      title: "Quiz",
-      path: "/dir/quiz",
-      icon: SettingOutlined,
-    },
-    {
       title: "Settings",
-      path: "/adminis/settings",
+      path: "/dir/settings",
       icon: SettingOutlined,
     },
   ],

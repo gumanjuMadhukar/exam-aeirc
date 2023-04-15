@@ -24,7 +24,9 @@ export const publicRoutes = [
   "/auth/reset-password",
   "/auth/reset-verification",
   // "/dashboard",
-  // "/student",
+  "/student/auth",
+  "/student/auth/finish",
+
   // "/admin/employee",
 ];
 
@@ -51,6 +53,7 @@ export default function middleware(req: NextRequest) {
 
   const pattern = new URLPattern();
   const pageName = pattern.exec(url)?.pathname.input.split(/\/\d/)[0];
+
   if (!pageName) {
     return NextResponse.next();
   }
@@ -62,7 +65,9 @@ export default function middleware(req: NextRequest) {
       (url.pathname.startsWith("/admin") &&
         role?.value !== Roles.ADMIN &&
         role?.value !== Roles.SUPERADMIN) ||
-      (url.pathname.startsWith("/dir") && role?.value !== Roles.ADMINISTRATOR)
+      (url.pathname.startsWith("/dir") &&
+        role?.value !== Roles.ADMINISTRATOR) ||
+      (url.pathname.startsWith("/student") && role?.value !== Roles.STUDENT)
     ) {
       url.pathname = "/dashboard";
       return verifyOrRedirectRoute(publicRoutes.includes(pageName), url);
@@ -71,6 +76,10 @@ export default function middleware(req: NextRequest) {
       return verifyOrRedirectRoute(true, url, pageName.startsWith("/auth"));
     }
   } else {
+    if (url.pathname.startsWith("/student")) {
+      url.pathname = "/student/auth";
+      return verifyOrRedirectRoute(publicRoutes.includes(pageName), url);
+    }
     url.pathname = "/auth/login";
     return verifyOrRedirectRoute(publicRoutes.includes(pageName), url);
   }

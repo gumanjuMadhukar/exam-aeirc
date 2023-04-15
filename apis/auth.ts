@@ -8,6 +8,15 @@ export function login(data: any) {
     data,
   });
 }
+
+export function studentLogin(data: any) {
+  return http({
+    url: "generateToken",
+    method: "post",
+    data,
+  });
+}
+
 export function register(data: any) {
   return http({
     url: "/user/register",

@@ -10,6 +10,8 @@ import {
   Col,
   Dropdown,
   message,
+  Image,
+  Tag,
 } from "antd";
 import Link from "next/link";
 import {
@@ -24,6 +26,8 @@ import { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import StudentAPI from "apis/student";
 import ProgramAPI from "apis/program";
+import QuestionAPI from "apis/question";
+
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 
@@ -38,6 +42,7 @@ import {
 import { Colors } from "utils/colors";
 import ConfirmModal from "components/ConfirmModal";
 import { ImportStudentModal } from "components/admin/student/importStudentModal";
+import { BasicInformation } from "./BasicInformation";
 
 interface FilterParams {
   currentPage: number;
@@ -53,152 +58,76 @@ const DefaultFilterParams = {
   search: "",
 };
 
-interface IViewDropDown {
-  showModalView: (id: string) => void;
-  showModalEdit: (id: string) => void;
-  openCloseDeleteLeaveModal: (id?: string | undefined) => void;
-  id: string;
-}
-
-const ViewDropDown = ({
-  showModalView,
-  showModalEdit,
-  openCloseDeleteLeaveModal,
-  id,
-}: IViewDropDown) => {
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <div onClick={() => showModalView(id)}>
-          <EyeOutlined />
-          {" View Question"}
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <div onClick={() => showModalView(id)}>
-          <EyeOutlined />
-          {" View Students"}
-        </div>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <div onClick={() => openCloseDeleteLeaveModal(id)}>
-          <DeleteOutlined />
-          {" Delete"}
-        </div>
-      ),
-    },
-  ];
-
-  return (
-    <Dropdown menu={{ items }} placement="bottom" arrow>
-      <EllipsisOutlined className="rotate-90" />
-    </Dropdown>
-  );
-};
-
-const Student = () => {
+const StudentDetails = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
   const { programId } = router.query;
+  const id = programId;
   const studentAPI = new StudentAPI();
-  const programAPI = new ProgramAPI();
-  const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-  const [openView, setOpenView] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+  const questionAPI = new QuestionAPI();
   const queryClient = useQueryClient();
-  const openCloseModal = () => {
-    setCreateUserModalOpen(!createUserModalOpen);
-  };
+
   const programListColumns: any = [
     {
-      title: "Name",
-      key: "name",
-      dataIndex: "name",
+      title: "S.N",
+      render: (text: any, record: any, index: number) => index + 1,
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Email",
-      key: "email",
-      dataIndex: "email",
+      title: "Question",
+      key: "question_text",
+      render: (row: any) => <text>{row?.question?.question_text}</text>,
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Symbol Number",
-      key: "symbol_number",
-      dataIndex: "symbol_number",
+      title: "Question Type",
+      render: (row: any) => <text>{row?.question?.question_type}</text>,
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Phone Number",
-      key: "phone_number",
-      dataIndex: "phone_number",
-      responsive: ["sm", "md", "lg"],
-    },
-    {
-      title: "Program",
-      key: "subject",
-      render: (row: any) => <text>{row.subject.name}</text>,
-      responsive: ["sm", "md", "lg"],
-    },
-    {
-      title: "Date of Birth",
-      key: "date_of_birth",
-      dataIndex: "date_of_birth",
-      responsive: ["sm", "md", "lg"],
-    },
-    {
-      title: "",
-      dataIndex: "",
+      title: "Options",
       render: (row: any) => (
-        <ViewDropDown
-          showModalView={showModalView}
-          showModalEdit={showModalEdit}
-          openCloseDeleteLeaveModal={openCloseDeleteLeaveModal}
-          id={row.id}
-        />
+        <text>
+          {row.options.map((option: any) => `${option.option_text} : `)}
+        </text>
       ),
+      responsive: ["sm", "md", "lg"],
+    },
+    // {
+    //   title: "Correct Answer",
+    //   render: (row: any) => (
+    //     <text>
+    //       {row.options.map((option: any) =>
+    //         row.correct_answers?.map((correct: any) => {
+    //           if (option.id === correct.option_id)
+    //             // Update here: Use === for comparison
+    //             return (
+    //               <StyledTag color={"success"}>{option.option_text}<hjr /StyledTag>
+    //             );
+    //         })
+    //       )}
+    //     </text>
+    //   ),
+    //   responsive: ["sm", "md", "lg"],
+    // },
+    {
+      title: "Attempted Answer",
+      render: (row: any) => (
+        <text>
+          {row.attempted_options?.map((correct: any) => {
+            // Update here: Use === for comparison
+            return (
+              <StyledTag color={"success"}>{correct.option_text}</StyledTag>
+            );
+          })}
+        </text>
+      ),
+      responsive: ["sm", "md", "lg"],
     },
   ];
-  const [isDeleteLeaveModalOpen, setIsDeleteLeaveModalOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState<string>("");
 
-  const openCloseDeleteLeaveModal = (id?: string) => {
-    id ? setCurrentItem(id) : setCurrentItem("");
-    setIsDeleteLeaveModalOpen(!isDeleteLeaveModalOpen);
-  };
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
-
-  const queryList = useQuery(
-    [
-      "StudentList",
-      {
-        status: filterParams.status,
-        page: filterParams.currentPage,
-        limit: filterParams.pageSize,
-        search: filterParams.search,
-      },
-    ],
-    async () => {
-      const queryParams: any = {
-        page: filterParams.currentPage,
-        limit: filterParams.pageSize,
-      };
-      if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await studentAPI.getStudentBasedOnSubject(programId);
-      return response?.data;
-    }
-  );
-
-  const programList = queryList?.data?.data;
-  const metaData = queryList?.data?.meta;
 
   const handleSearch = (e: any) => {
     const { name, value } = e.target;
@@ -209,44 +138,34 @@ const Student = () => {
     }));
   };
 
-  const showModalView = (id: string) => {
-    setCurrentItem(id);
-    setOpenView(true);
-  };
-
-  const hideModalView = () => {
-    setCurrentItem("");
-    setOpenView(false);
-  };
-
-  const showModalEdit = (id: string) => {
-    setCurrentItem(id);
-    setOpenEdit(true);
-  };
-
-  const programListQuery = useQuery("program-list", () =>
-    programAPI.get(programId).then((res: any) => res.data)
+  const studentQuery = useQuery(
+    ["StudentData"],
+    async () =>
+      await studentAPI
+        .get(id)
+        .then((res) => res.data.data)
+        .catch((err) => err),
+    {
+      enabled: !!id,
+    }
   );
 
-  const program = programListQuery?.data?.data;
-  const removeEmployeeDocsMutation = useMutation((employeeId: any) =>
-    studentAPI.destroy(employeeId)
+  const queryList = useQuery(
+    ["StudentList"],
+    async () =>
+      await questionAPI
+        .getRandomQuestion(id)
+        .then((res) => res.data.data)
+        .catch((err) => err),
+    {
+      enabled: !!id,
+    }
   );
 
-  const onConfirmDelete = () => {
-    removeEmployeeDocsMutation.mutate(currentItem, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["StudentList"]);
-        message.success("Removed Student Successfully");
-        openCloseDeleteLeaveModal();
-      },
-      onError: (data: any) => {
-        const errorMessage = data?.response?.data?.message;
-        message.error(errorMessage);
-      },
-    });
-  };
+  console.log(queryList);
+  const programList = queryList?.data;
 
+  const studentData = studentQuery?.data;
   return (
     <UsersContainer>
       <PageHeader>
@@ -256,135 +175,60 @@ const Student = () => {
               <Link href="/dashboard">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <span style={{ color: Colors.BLACK }}>
-                Student of {program?.name}
-              </span>
+              <span style={{ color: Colors.BLACK }}>{studentData?.name}</span>
             </Breadcrumb.Item>
           </Breadcrumb>
           <TitleContent>
-            <h2>Student of {program?.name}</h2>
-            <Button
-              style={{
-                background: Colors.COLOR_PRIMARY_BG,
-                boxShadow: "none",
-                color: Colors.WHITE,
-              }}
-              // type="primary"
-              icon={<UserAddOutlined />}
-              onClick={openCloseModal}
-            >
-              Import Student
-            </Button>
+            <h2>{studentData?.name} </h2>
+            <Tag color={"success"}>Passed</Tag>
           </TitleContent>
         </PageHeaderNaviagtion>
-        <SearchBar>
-          <SearchBarContent>
-            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-              <Col
-                span={12}
-                xs={{ span: 24 }}
-                sm={{ span: 24 }}
-                md={{ span: 12 }}
-                lg={{ span: 12 }}
-              >
-                <Input
-                  name="search"
-                  id="search"
-                  type="text"
-                  placeholder="Search By Name"
-                  autoComplete="false"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                />
-              </Col>
-              <Col
-                span={6}
-                xs={{ span: 12 }}
-                sm={{ span: 12 }}
-                md={{ span: 6 }}
-                lg={{ span: 6 }}
-                className="search-col-margin"
-              >
-                <Button
-                  type="ghost"
-                  ghost
-                  style={{
-                    boxShadow: "none",
-                    borderColor: Colors.PRIMARY,
-                    color: Colors.PRIMARY,
-                    width: "100%",
-                  }}
-                  onClick={() => {
-                    setSearchValue("");
-                    setFilterParams(DefaultFilterParams);
-                  }}
-                >
-                  Reset
-                </Button>
-              </Col>
-              <Col
-                span={6}
-                xs={{ span: 12 }}
-                sm={{ span: 12 }}
-                md={{ span: 6 }}
-                lg={{ span: 6 }}
-                className="search-col-margin"
-              >
-                <Button
-                  type="primary"
-                  style={{ boxShadow: "none", width: "100%" }}
-                  // onClick={handleSearch}
-                >
-                  Search
-                </Button>
-              </Col>
-            </Row>
-          </SearchBarContent>
-        </SearchBar>
       </PageHeader>
+      <ProfileWrapper>
+        <LeftProfile lg={5} sm={24}>
+          <ImageWrapper>
+            <div>
+              <ProfileImage>
+                <Image className={`profile-img`} alt="avatar" src={""} />
+              </ProfileImage>
+            </div>
+          </ImageWrapper>
+        </LeftProfile>
+        <Col lg={19} sm={24} className="search-col-margin">
+          <BasicInformation data={studentData} />
+        </Col>
+      </ProfileWrapper>
       <TableBodyContainer>
         <Table
           columns={programListColumns}
           dataSource={programList}
           scroll={{ x: 1000 }}
-          pagination={
-            queryList?.data?.meta?.total > 10 && {
-              defaultPageSize: 10,
-              total: metaData?.total,
-              hideOnSinglePage: true,
-              showSizeChanger: true,
-              showTotal: (total, range) =>
-                `${range[0]}-${range[1]} of ${total} items`,
-              onChange: (page, pageSize) => {
-                setFilterParams({
-                  ...filterParams,
-                  currentPage: page,
-                  pageSize,
-                });
-              },
-              className: "bg-white-halfrem",
-              responsive: true,
-            }
-          }
+          // pagination={
+          //   queryList?.data?.meta?.total > 10 && {
+          //     defaultPageSize: 10,
+          //     total: metaData?.total,
+          //     hideOnSinglePage: true,
+          //     showSizeChanger: true,
+          //     showTotal: (total, range) =>
+          //       `${range[0]}-${range[1]} of ${total} items`,
+          //     onChange: (page, pageSize) => {
+          //       setFilterParams({
+          //         ...filterParams,
+          //         currentPage: page,
+          //         pageSize,
+          //       });
+          //     },
+          //     className: "bg-white-halfrem",
+          //     responsive: true,
+          //   }
+          // }
         />
       </TableBodyContainer>
-      <ConfirmModal
-        buttonTitle="Confirm"
-        openCloseModal={openCloseDeleteLeaveModal}
-        open={isDeleteLeaveModalOpen}
-        confirmText="remove the document"
-        onConfirmModal={onConfirmDelete}
-        icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
-      />
-      <ImportStudentModal
-        handleCancel={openCloseModal}
-        isModalOpen={createUserModalOpen}
-      />
     </UsersContainer>
   );
 };
 
-export default Student;
+export default StudentDetails;
 
 const UsersContainer = styled.div``;
 
@@ -392,4 +236,39 @@ const StyledPagination = styled(Pagination)`
   // position: absolute;
   // bottom: 24px;
   // right: 24px;
+`;
+
+const ProfileWrapper = styled(Row)`
+  padding: 25px;
+`;
+
+const LeftProfile = styled(Col)`
+  background-color: #fff;
+  height: 300px;
+`;
+
+const ProfileImage = styled.div`
+  width: 200px;
+  text-align: center;
+  .ant-image {
+    width: 100%;
+    .profile-img {
+      &.img-padding {
+        padding: 40px;
+      }
+      background: ${Colors.LIGHTER_BG};
+      border-radius: 50%;
+    }
+  }
+`;
+
+const ImageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`;
+
+const StyledTag = styled(Tag)`
+  margin-left: 15px;
 `;

@@ -61,7 +61,7 @@ const Login: NextPage = (props): JSX.Element => {
     <LoginPage>
       <PageLogo>
         {/* <img src="/AEICE.jpeg" alt="logo" width="168px" /> */}
-        <LoginHeading>AEICE</LoginHeading>
+        <LoginHeading>AEIRC</LoginHeading>
       </PageLogo>
       <LoginContainer>
         <LoginImageBlock>
@@ -110,14 +110,17 @@ const Login: NextPage = (props): JSX.Element => {
             <span>
               <CustomLink
                 text="Forgot your Password?"
-                url={urls.forgotPassword}
+                // url={urls.forgotPassword}
                 customStyle={{ color: "#aaa" }}
               />
             </span>
             <br />
             <span>
               Don&apos;t have an Account?&nbsp;&nbsp;
-              <CustomLink text="Register" url={urls.register} />
+              <CustomLink
+                text="Register"
+                //  url={urls.register}
+              />
             </span>
           </TextBlock>
         </AuthBlock>

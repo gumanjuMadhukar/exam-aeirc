@@ -3,19 +3,27 @@ import {
   Breadcrumb,
   Button,
   Input,
-  Menu,
   Table,
   Pagination,
-  Image,
+  MenuProps,
   Row,
   Col,
+  Dropdown,
+  message,
 } from "antd";
 import Link from "next/link";
-import { UserAddOutlined } from "@ant-design/icons";
+import {
+  UserAddOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  EllipsisOutlined,
+  ExclamationOutlined,
+} from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
-import UserAPI from "apis/user";
-import { useQuery } from "react-query";
+import StudentAPI from "apis/student";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 
 import {
@@ -27,7 +35,9 @@ import {
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import { AddUserModal } from "components/admin/users/AddUserModal";
+import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
+import ConfirmModal from "components/ConfirmModal";
+import { ImportStudentModal } from "components/admin/student/importStudentModal";
 
 interface FilterParams {
   currentPage: number;
@@ -43,16 +53,68 @@ const DefaultFilterParams = {
   search: "",
 };
 
-const User = () => {
+interface IViewDropDown {
+  showModalView: (id: string) => void;
+  showModalEdit: (id: string) => void;
+  openCloseDeleteLeaveModal: (id?: string | undefined) => void;
+  id: string;
+}
+
+const ViewDropDown = ({
+  showModalView,
+  showModalEdit,
+  openCloseDeleteLeaveModal,
+  id,
+}: IViewDropDown) => {
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <div onClick={() => showModalView(id)}>
+          <EyeOutlined />
+          {" View Question"}
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <div onClick={() => showModalView(id)}>
+          <EyeOutlined />
+          {" View Students"}
+        </div>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <div onClick={() => openCloseDeleteLeaveModal(id)}>
+          <DeleteOutlined />
+          {" Delete"}
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <Dropdown menu={{ items }} placement="bottom" arrow>
+      <EllipsisOutlined className="rotate-90" />
+    </Dropdown>
+  );
+};
+
+const Student = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
-  const userAPI = new UserAPI();
+  const studentAPI = new StudentAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-
+  const [openView, setOpenView] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const queryClient = useQueryClient();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
   };
-  const userListColumns: any = [
+  const programListColumns: any = [
     {
       title: "Name",
       key: "name",
@@ -61,28 +123,60 @@ const User = () => {
     },
     {
       title: "Email",
+      key: "email",
       dataIndex: "email",
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Phone Number",
-      dataIndex: "phone_number",
-      key: "phone_number",
+      title: "Symbol Number",
+      key: "symbol_number",
+      dataIndex: "symbol_number",
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Action",
-      key: "action",
+      title: "Phone Number",
+      key: "phone_number",
+      dataIndex: "phone_number",
       responsive: ["sm", "md", "lg"],
     },
+    {
+      title: "Program",
+      key: "subject",
+      render: (row: any) => <text>{row.subject.name}</text>,
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Date of Birth",
+      key: "date_of_birth",
+      dataIndex: "date_of_birth",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "",
+      dataIndex: "",
+      render: (row: any) => (
+        <ViewDropDown
+          showModalView={showModalView}
+          showModalEdit={showModalEdit}
+          openCloseDeleteLeaveModal={openCloseDeleteLeaveModal}
+          id={row.id}
+        />
+      ),
+    },
   ];
+  const [isDeleteLeaveModalOpen, setIsDeleteLeaveModalOpen] = useState(false);
+  const [currentItem, setCurrentItem] = useState<string>("");
 
+  const openCloseDeleteLeaveModal = (id?: string) => {
+    id ? setCurrentItem(id) : setCurrentItem("");
+    setIsDeleteLeaveModalOpen(!isDeleteLeaveModalOpen);
+  };
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
 
   const queryList = useQuery(
     [
-      "employeeList",
+      "StudentList",
       {
         status: filterParams.status,
         page: filterParams.currentPage,
@@ -96,13 +190,13 @@ const User = () => {
         limit: filterParams.pageSize,
       };
       if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await userAPI.list(queryParams);
-      return response?.data?.data;
+      const response = await studentAPI.list(queryParams);
+      return response?.data;
     }
   );
 
-  const userList = queryList?.data;
-  const metaData = queryList?.data?.meta_data;
+  const programList = queryList?.data?.data;
+  const metaData = queryList?.data?.meta;
 
   const handleSearch = (e: any) => {
     const { name, value } = e.target;
@@ -111,6 +205,39 @@ const User = () => {
       currentPage: INITIAL_CURRENT_PAGE,
       search: searchValue,
     }));
+  };
+
+  const showModalView = (id: string) => {
+    setCurrentItem(id);
+    setOpenView(true);
+  };
+
+  const hideModalView = () => {
+    setCurrentItem("");
+    setOpenView(false);
+  };
+
+  const showModalEdit = (id: string) => {
+    setCurrentItem(id);
+    setOpenEdit(true);
+  };
+
+  const removeEmployeeDocsMutation = useMutation((employeeId: any) =>
+    studentAPI.destroy(employeeId)
+  );
+
+  const onConfirmDelete = () => {
+    removeEmployeeDocsMutation.mutate(currentItem, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["StudentList"]);
+        message.success("Removed Student Successfully");
+        openCloseDeleteLeaveModal();
+      },
+      onError: (data: any) => {
+        const errorMessage = data?.response?.data?.message;
+        message.error(errorMessage);
+      },
+    });
   };
 
   return (
@@ -122,11 +249,11 @@ const User = () => {
               <Link href="/dashboard">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <span style={{ color: Colors.BLACK }}>Users</span>
+              <span style={{ color: Colors.BLACK }}>Student</span>
             </Breadcrumb.Item>
           </Breadcrumb>
           <TitleContent>
-            <h2>Users</h2>
+            <h2>Student</h2>
             <Button
               style={{
                 background: Colors.COLOR_PRIMARY_BG,
@@ -137,7 +264,7 @@ const User = () => {
               icon={<UserAddOutlined />}
               onClick={openCloseModal}
             >
-              Add New User
+              Add Student
             </Button>
           </TitleContent>
         </PageHeaderNaviagtion>
@@ -208,34 +335,39 @@ const User = () => {
       </PageHeader>
       <TableBodyContainer>
         <Table
-          columns={userListColumns}
-          dataSource={userList}
+          columns={programListColumns}
+          dataSource={programList}
           scroll={{ x: 1000 }}
-          onRow={(record) => ({
-            onClick: () => router.push(`/admin/users/details/${record.id}`),
-          })}
-          // pagination={
-          //   employeeList?.meta_data?.total_items > 10 && {
-          //     defaultPageSize: 10,
-          //     total: metaData?.total_items,
-          //     hideOnSinglePage: true,
-          //     showSizeChanger: true,
-          //     showTotal: (total, range) =>
-          //       `${range[0]}-${range[1]} of ${total} items`,
-          //     onChange: (page, pageSize) => {
-          //       setFilterParams({
-          //         ...filterParams,
-          //         currentPage: page,
-          //         pageSize,
-          //       });
-          //     },
-          //     className: "bg-white-halfrem",
-          //     responsive: true,
-          //   }
-          // }
+          pagination={
+            queryList?.data?.meta?.total > 10 && {
+              defaultPageSize: 10,
+              total: metaData?.total,
+              hideOnSinglePage: true,
+              showSizeChanger: true,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`,
+              onChange: (page, pageSize) => {
+                setFilterParams({
+                  ...filterParams,
+                  currentPage: page,
+                  pageSize,
+                });
+              },
+              className: "bg-white-halfrem",
+              responsive: true,
+            }
+          }
         />
       </TableBodyContainer>
-      <AddUserModal
+      <ConfirmModal
+        buttonTitle="Confirm"
+        openCloseModal={openCloseDeleteLeaveModal}
+        open={isDeleteLeaveModalOpen}
+        confirmText="remove the document"
+        onConfirmModal={onConfirmDelete}
+        icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
+      />
+      <ImportStudentModal
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
       />
@@ -243,7 +375,7 @@ const User = () => {
   );
 };
 
-export default User;
+export default Student;
 
 const UsersContainer = styled.div``;
 

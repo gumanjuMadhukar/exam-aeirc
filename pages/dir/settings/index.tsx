@@ -14,6 +14,7 @@ import {
   Card,
   Radio,
   Switch,
+  Spin,
 } from "antd";
 import Link from "next/link";
 import {
@@ -27,6 +28,8 @@ import {
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import ProgramAPI from "apis/program";
+import SettingAPI from "apis/setting";
+
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 
@@ -59,43 +62,68 @@ const DefaultFilterParams = {
 const Settings = () => {
   const [searchValue, setSearchValue] = useState("");
   const [isNegativeMarking, setIsNegativeMarking] = useState<boolean>(false);
+  const [isOptionRightMarking, setOptionRightMarking] =
+    useState<boolean>(false);
+
+  const [active, setActive] = useState<boolean>(false);
 
   const router = useRouter();
   const programAPI = new ProgramAPI();
+  const settingAPI = new SettingAPI();
+  const queryClient = useQueryClient();
+
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
 
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
 
-  const queryList = useQuery(
-    [
-      "ProgramList",
-      {
-        status: filterParams.status,
-        page: filterParams.currentPage,
-        limit: filterParams.pageSize,
-        search: filterParams.search,
-      },
-    ],
+  const { data: attendanceData, isLoading } = useQuery(
+    ["SettingData"],
     async () => {
-      const queryParams: any = {
-        page: filterParams.currentPage,
-        limit: filterParams.pageSize,
-      };
-      if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await programAPI.list(queryParams);
+      const response = await settingAPI.list();
       return response?.data;
     }
   );
 
-  const programList = queryList?.data?.data;
-  const metaData = queryList?.data?.meta;
+  const data = attendanceData;
+
+  console.log(attendanceData?.number_of_question_per_student, "This data");
+  console.log(data);
+  useEffect(() => {
+    if (data) {
+      setActive(data?.active);
+    }
+  }, [data]);
+
+  const storeSetting = useMutation((data: any) => settingAPI.store(data));
+
+  console.log(data?.exam_time, "this is data");
 
   const onChange = (checked: boolean) => {
     // console.log(`switch to ${checked}`);
     setIsNegativeMarking(checked);
   };
-  const onFinish = (data: any) => {};
+
+  const onChangeOptionRight = (checked: boolean) => {
+    // console.log(`switch to ${checked}`);
+    setOptionRightMarking(checked);
+  };
+  const onFinish = (data: any) => {
+    const newData = {
+      ...data,
+      is_negative_marking: isNegativeMarking,
+      an_option_right_marking: isOptionRightMarking,
+    };
+    storeSetting.mutate(newData, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["SettingData"]);
+      },
+      onError: (data: any) => {
+        const errorMessageWithNetworkIssue = data?.message;
+        const errorMessage = data?.response?.data?.message;
+      },
+    });
+  };
   return (
     <UsersContainer>
       <PageHeader>
@@ -126,123 +154,138 @@ const Settings = () => {
         </PageHeaderNaviagtion>
       </PageHeader>
       <Card style={{ margin: "20px" }}>
-        <Form
-          name="basic"
-          onFinish={onFinish}
-          autoComplete="off"
-          layout="vertical"
-        >
-          <Row style={{ justifyContent: "space-between" }}>
-            <Col lg={11} xs={24} md={11}>
-              <Form.Item
-                label="Total Question Per Student"
-                name="total_question"
-                // initialValue={firstName}
-                rules={[
-                  {
-                    required: true,
-                    message:
-                      "Please enter total number of question for a student!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col lg={11} xs={24} md={11}>
-              <Form.Item
-                label="Exam Time"
-                name="exam_time"
-                // initialValue={middleName}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter exam time! ",
-                  },
-                ]}
-              >
-                <Input placeholder="HH:mm" />
-              </Form.Item>
-            </Col>
-
-            <Col lg={11} xs={24} md={11}>
-              <Form.Item
-                label="Marks Holding per question"
-                name="marks_per_question"
-                // initialValue={lastName}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter marks for per question!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col lg={11} xs={24} md={11}>
-              <Form.Item
-                label="Passing Mark"
-                name="passing_mark"
-                // initialValue={lastName}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter passing marks!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col lg={11} xs={24} md={11}>
-              <Form.Item
-                label="Is Negative Marking"
-                name="is_negative_marking"
-                // initialValue={data?.gender}
-                rules={[{ required: true, message: "Please choose gender!" }]}
-              >
-                <Switch onChange={onChange} />
-              </Form.Item>
-            </Col>
-
-            {isNegativeMarking && (
+        <Spin spinning={isLoading}>
+          <Form
+            name="basic"
+            onFinish={onFinish}
+            autoComplete="off"
+            layout="vertical"
+          >
+            <Row style={{ justifyContent: "space-between" }}>
               <Col lg={11} xs={24} md={11}>
                 <Form.Item
-                  label="Marks deduct per wrong answerx"
-                  name="negative_marking_per_question"
-                  // initialValue={data?.user?.username}
+                  label="Total Question Per Student"
+                  name="number_of_question_per_student"
+                  initialValue={data?.number_of_question_per_student}
                   rules={[
                     {
-                      required: isNegativeMarking ? true : false,
-                      message: "Please enter is negative marking!",
+                      required: true,
+                      message:
+                        "Please enter total number of question for a student!",
                     },
                   ]}
                 >
-                  <Input />
+                  <Input disabled={active} />
                 </Form.Item>
               </Col>
-            )}
 
-            <Col xs={24}>
-              <CustomizedButtonGroup>
-                <Button
-                  style={{
-                    backgroundColor: Colors.PRIMARY,
-                    color: "#fff",
-                    marginLeft: "10px",
-                  }}
-                  size="large"
-                  htmlType="submit"
+              <Col lg={11} xs={24} md={11}>
+                <Form.Item
+                  label="Exam Time"
+                  name="exam_time"
+                  initialValue={data?.exam_time}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter exam time! ",
+                    },
+                  ]}
                 >
-                  Save
-                </Button>
-              </CustomizedButtonGroup>
-            </Col>
-          </Row>
-        </Form>
+                  <Input disabled={active} />
+                </Form.Item>
+              </Col>
+
+              <Col lg={11} xs={24} md={11}>
+                <Form.Item
+                  label="Marks Holding per question"
+                  name="marks_per_question"
+                  initialValue={data?.mark_per_question}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter marks for per question!",
+                    },
+                  ]}
+                >
+                  <Input
+                    disabled={active}
+                    value={data?.mark_per_question || ""}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col lg={11} xs={24} md={11}>
+                <Form.Item
+                  label="Passing Mark"
+                  name="passing_mark"
+                  initialValue={data?.passing_mark}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter passing marks!",
+                    },
+                  ]}
+                >
+                  <Input disabled={active} />
+                </Form.Item>
+              </Col>
+              <Col lg={11} xs={24} md={11}>
+                <Form.Item
+                  label="Is Negative Marking"
+                  name="is_negative_marking"
+                  initialValue={data?.is_negative_marking}
+                >
+                  <Switch onChange={onChange} disabled={active} />
+                </Form.Item>
+              </Col>
+
+              {isNegativeMarking && (
+                <Col lg={11} xs={24} md={11}>
+                  <Form.Item
+                    label="Marks deduct per wrong answerx"
+                    name="negative_marking_per_question"
+                    initialValue={data?.negative_marking_per_question}
+                    rules={[
+                      {
+                        required: isNegativeMarking ? true : false,
+                        message: "Please enter is negative marking!",
+                      },
+                    ]}
+                  >
+                    <Input disabled={active} />
+                  </Form.Item>
+                </Col>
+              )}
+
+              <Col lg={11} xs={24} md={11}>
+                <Form.Item
+                  label="If an option is right then allocate marks"
+                  name="an_option_right_marking"
+                  initialValue={data?.an_option_right_marking}
+                >
+                  <Switch onChange={onChangeOptionRight} disabled={active} />
+                </Form.Item>
+              </Col>
+
+              <Col xs={24}>
+                <CustomizedButtonGroup>
+                  <Button
+                    style={{
+                      backgroundColor: Colors.PRIMARY,
+                      color: "#fff",
+                      marginLeft: "10px",
+                    }}
+                    size="large"
+                    htmlType="submit"
+                    disabled={active}
+                  >
+                    {active ? "Update" : "Save"}
+                  </Button>
+                </CustomizedButtonGroup>
+              </Col>
+            </Row>
+          </Form>
+        </Spin>
       </Card>
     </UsersContainer>
   );

@@ -58,7 +58,7 @@ const Login: NextPage = (props): JSX.Element => {
     <LoginPage>
       <PageLogo>
         {/* <img src="/AEICE.jpeg" alt="logo" width="168px" /> */}
-        <LoginHeading>AEICE</LoginHeading>
+        <LoginHeading>AEIRC</LoginHeading>
       </PageLogo>
       <LoginContainer>
         <AuthBlock>

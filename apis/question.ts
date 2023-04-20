@@ -24,6 +24,14 @@ class QuestionAPI extends Resource {
     });
   }
 
+  storeMultipleQuestionAnswer(data: any) {
+    return http({
+      url: "/storeMultipleQuestionAnswer",
+      method: "post",
+      data,
+    });
+  }
+
   getPaginatedQuestion(data: any, id: any) {
     return http({
       url: `/pulchockWiseData/${id}`,

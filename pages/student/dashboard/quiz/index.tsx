@@ -23,6 +23,7 @@ import PageHeader from "pages/student/layout/page-header";
 import Clock from "utils/clock";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import { CheckCircleOutlined, CheckOutlined } from "@ant-design/icons";
 
 const Quiz = () => {
   const [questions, setQuestions] = useState<any>([]); // Store the fetched questions
@@ -148,6 +149,22 @@ const Quiz = () => {
           }}
         >
           <div>{i + 1}</div>
+          {question.is_answered && (
+            <div
+              style={{
+                content: "",
+                position: "absolute",
+                top: "30%",
+                right: "15px", // adjust this value to position the tick icon
+                transform: "translateY(-50%)",
+                width: "0.5em",
+                height: "0.5em",
+                color: "green",
+              }}
+            >
+              <CheckOutlined />
+            </div>
+          )}
         </div>
       ),
       value: i,
@@ -247,7 +264,15 @@ const Quiz = () => {
                   value={checkedList}
                 >
                   {question?.options.map((option: any, index: any) => (
-                    <OptionText>
+                    <OptionText
+                      style={{
+                        background: "rgba(218, 247, 166, 25%)",
+                        border: "1px solid rgba(218, 247, 166, 100%)",
+                        width: "65vw",
+                        paddingTop: "15px",
+                        paddingLeft: "10px",
+                      }}
+                    >
                       <Row>
                         <Col lg={24} xs={24} md={24}>
                           <Checkbox
@@ -271,7 +296,14 @@ const Quiz = () => {
                     value={checkedList[0]}
                   >
                     {question?.options.map((option: any, index: any) => (
-                      <OptionText>
+                      <OptionText
+                        style={{
+                          background: "rgba(218, 247, 166, 25%)",
+                          border: "1px solid rgba(218, 247, 166, 100%)",
+                          width: "65vw",
+                          padding: "15px",
+                        }}
+                      >
                         <Radio value={option?.id} style={{ fontSize: "18px" }}>
                           {option?.option_text}
                         </Radio>
@@ -285,30 +317,30 @@ const Quiz = () => {
             <CustomizedButtonGroup>
               <Space>
                 {currentQuestion > 0 && (
-                  <Button
+                  <CustomizedButton
                     style={{ marginTop: "20px" }}
                     type="primary"
                     size="large"
                     onClick={handlePrevButtonClick}
                   >
                     Prev
-                  </Button>
+                  </CustomizedButton>
                 )}
 
-                <Button
+                <CustomizedButton
                   style={{ marginTop: "20px" }}
                   type="primary"
                   size="large"
                   onClick={handleButtonClick}
                 >
                   {currentQuestion >= questions?.length - 1 ? "Submit" : "Next"}
-                </Button>
+                </CustomizedButton>
               </Space>
             </CustomizedButtonGroup>
           </QuizContainer>
           <Card
             style={{
-              width: "26%",
+              width: "24%",
               float: "left",
               height: "500px",
               overflow: "auto",
@@ -325,14 +357,11 @@ const Quiz = () => {
               options={options.map((question: any) => ({
                 label: question.label,
                 value: question.value,
-
-                // Set the selected property to true for the currently selected question
               }))}
-              // onSelect={handleQuestionSelect}
               onChange={handleQuestionSelect}
               value={currentQuestion}
               className="segmented-options"
-              style={{ backgroundColor: Colors.PRIMARY, color: Colors.WHITE }}
+              style={{ color: Colors.WHITE }}
             />
           </Card>
           <ConfirmModal
@@ -359,6 +388,7 @@ const QuizContainer = styled.div`
   float: left;
   min-height: 500px;
   margin-right: 40px;
+  margin-left: 40px;
 
   // display: flex;
   // justify-content: center;
@@ -398,10 +428,21 @@ const OptionText = styled.div`
 `;
 
 const CustomizedButtonGroup = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 30%;
-  transform: translate(-50%, -50%);
+  display: block;
+  position: inherit;
+  text-align: center;
+  // margin-bottom: 20px !important;
+  height: 100px;
+  // width: 100vw;
+  // background-color: red;
+  margin-top: 50px;
+`;
+
+const CustomizedButton = styled(Button)`
+  padding: 10px !important;
+  font-size: 16px !important;
+  height: fit-content !important;
+  width: 30vw !important;
 `;
 
 const PageHeaderNaviagtion = styled.div`

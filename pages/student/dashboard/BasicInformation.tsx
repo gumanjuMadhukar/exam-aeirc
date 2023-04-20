@@ -9,7 +9,7 @@ import {
   DetailTitle,
   DetailValue,
 } from "styles/profileInformation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import StudentAPI from "apis/student";
 import styled from "styled-components";
 import { Button, Checkbox, Col, Form, Image, Row } from "antd";
@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { useMutation, useQueryClient } from "react-query";
 import moment from "moment";
+import MyComponent from "./component";
 
 interface Props {
   data: any;
@@ -83,15 +84,12 @@ export const BasicInformation = (props: Props) => {
     return Promise.resolve();
   };
   const empData = data;
+
   return (
     <>
       <DetailWrapper>
         <DetailTitleWrapper>
           <DetailTitle>Basic Information</DetailTitle>
-          {/* <EditOutlined
-            style={{ color: Colors.BORDER_COLOR }}
-            onClick={openCloseModal}
-          /> */}
         </DetailTitleWrapper>
         <Row>
           <LeftProfile lg={8} md={24} sm={24} xs={24}>
@@ -126,6 +124,10 @@ export const BasicInformation = (props: Props) => {
             </DetailItem>
           </Col>
         </Row>
+        <DetailTitleWrapper>
+          <DetailTitle>Exam Attempter Photo</DetailTitle>
+        </DetailTitleWrapper>
+        <MyComponent />
         <Form form={form} onFinish={handleSubmit}>
           <Form.Item
             name="checkbox"

@@ -103,69 +103,11 @@ const Student: NextPageWithLayout = () => {
     <>
       <DashboardContainer>
         <ProfileWrapper>
-          <Col lg={16} md={24} sm={24} xs={24} className="search-col-margin">
+          <Col lg={24} md={24} sm={24} xs={24} className="search-col-margin">
             <BasicInformation data={studentData} />
-            {/* <PersonalInformation data={empData?.employee} />
-            <SalaryInformation data={empData} />
-            <PaymentInformation data={empData?.employee} />
-            <InsuranceInformation data={empData} /> */}
-            {/* <LeavesInformation data={empData} /> */}
           </Col>
-          <LeftProfile lg={7} md={24} sm={24} xs={24}>
-            <ImageWrapper>
-              <div>
-                <ProfileImage>
-                  {/* <Image
-                      className={`profile-img ${
-                        !empData?.employee?.profile_picture && "img-padding"
-                      }`}
-                      src={imageFullPath(
-                        empData?.employee?.profile_picture,
-                        "/images/default_profile_picture.jpeg"
-                      )}
-                      alt="avatar"
-                    /> */}
-                  <div>
-                    <button onClick={handleStartCamera}>Start Camera</button>
-                    <button onClick={handleStopCamera}>Stop Camera</button>
-                    <button onClick={handleCapturePhoto}>Capture Photo</button>
-                    <video
-                      ref={videoRef}
-                      style={{ display: "none" }}
-                      autoPlay
-                    />
-                    <canvas ref={canvasRef} style={{ display: "none" }} />
-                    <img
-                      ref={imageRef}
-                      style={{ display: "none", maxWidth: "100%" }}
-                      alt="Captured Photo"
-                    />
-                  </div>
-                </ProfileImage>
-                <ProfileButton>
-                  <ProfileText>
-                    {/* {empData?.employee?.profile_picture ? "Edit" : "Upload"}{" "} */}
-                    Photo
-                  </ProfileText>
-                </ProfileButton>
-              </div>
-            </ImageWrapper>
-            {/* <TaxDec>
-            <TaxRightIcon>
-              <EyeOutlined style={{ color: Colors.LIGHT_TEXT_COLOR }} />
-            </TaxRightIcon>
-            <TaxTitle>Tax Deductions</TaxTitle>
-            <TaxInfo>You can view details of tax deduction</TaxInfo>
-          </TaxDec>
-          */}
-          </LeftProfile>
         </ProfileWrapper>
 
-        {/* <ProfilePictureUploadModal
-          isModalOpen={isProfilePictureUploadModalOpen}
-          handleCancel={openCloseProfilePictureUploadModal}
-          closeModal={!!isProfilePictureUploadModalOpen}
-        /> */}
         <PageFooter />
       </DashboardContainer>
     </>

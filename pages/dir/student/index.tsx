@@ -19,6 +19,7 @@ import {
   EyeOutlined,
   EllipsisOutlined,
   ExclamationOutlined,
+  ExportOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
@@ -38,6 +39,8 @@ import { Colors } from "utils/colors";
 import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
 import ConfirmModal from "components/ConfirmModal";
 import { ImportStudentModal } from "components/admin/student/importStudentModal";
+import ButtonGroup from "antd/es/button/button-group";
+import { getStudentDataWithPassFail } from "apis/export";
 
 interface FilterParams {
   currentPage: number;
@@ -240,6 +243,29 @@ const Student = () => {
     });
   };
 
+  const handleDataExport = async () => {
+    await getStudentDataWithPassFail()
+      .then((response) => {
+        // Create a Blob from the response data
+        const blob = new Blob([response.data], {
+          type: "application/vnd.ms-excel",
+        });
+
+        // Create a download link element
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = "students.xlsx"; // Set desired file name
+
+        // Append download link to DOM and click it to trigger download
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      })
+      .catch((error) => {
+        console.error("Failed to export to Excel:", error);
+      });
+  };
+
   return (
     <UsersContainer>
       <PageHeader>
@@ -254,18 +280,34 @@ const Student = () => {
           </Breadcrumb>
           <TitleContent>
             <h2>Student</h2>
-            <Button
-              style={{
-                background: Colors.COLOR_PRIMARY_BG,
-                boxShadow: "none",
-                color: Colors.WHITE,
-              }}
-              // type="primary"
-              icon={<UserAddOutlined />}
-              onClick={openCloseModal}
-            >
-              Import Student
-            </Button>
+            <CustomizedButtonGroup>
+              {" "}
+              <Button
+                style={{
+                  background: Colors.COLOR_PRIMARY_BG,
+                  boxShadow: "none",
+                  color: Colors.WHITE,
+                }}
+                // type="primary"
+                icon={<UserAddOutlined />}
+                onClick={openCloseModal}
+              >
+                Import Student
+              </Button>
+              <Button
+                style={{
+                  background: Colors.COLOR_PRIMARY_BG,
+                  boxShadow: "none",
+                  color: Colors.WHITE,
+                  marginLeft: "10px",
+                }}
+                type="primary"
+                icon={<ExportOutlined />}
+                onClick={handleDataExport}
+              >
+                Export Student Data
+              </Button>
+            </CustomizedButtonGroup>
           </TitleContent>
         </PageHeaderNaviagtion>
         <SearchBar>
@@ -386,4 +428,10 @@ const StyledPagination = styled(Pagination)`
   // position: absolute;
   // bottom: 24px;
   // right: 24px;
+`;
+
+const CustomizedButtonGroup = styled.div`
+  float: right;
+  margin-top: 10px;
+  right: 0;
 `;

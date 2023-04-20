@@ -23,6 +23,15 @@ class QuestionAPI extends Resource {
       data,
     });
   }
+
+  getPaginatedQuestion(data: any, id: any) {
+    return http({
+      url: `/pulchockWiseData/${id}`,
+      method: "get",
+      params: data,
+    });
+  }
+
   constructor() {
     super("questions");
   }

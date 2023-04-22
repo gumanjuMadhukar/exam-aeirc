@@ -24,6 +24,9 @@ import Clock from "utils/clock";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { CheckCircleOutlined, CheckOutlined } from "@ant-design/icons";
+import MyComponent from "../component";
+import { dataURItoBlob } from "utils/helpers";
+import { uploadMyDocs } from "apis/media";
 
 const Quiz = () => {
   const [questions, setQuestions] = useState<any>([]); // Store the fetched questions
@@ -101,13 +104,29 @@ const Quiz = () => {
     // Move to the next question
   };
 
+  const addMediaData = useMutation((data: any) => uploadMyDocs(data));
+
   const handleButtonClick = () => {
     //Code to capture the screenshot
-    // html2canvas(window.document.documentElement).then((canvas) => {
-    //   const dataUrl = canvas.toDataURL();
-    //   console.log(dataUrl);
-    //   // Use the dataUrl for further processing, such as saving the screenshot or displaying it in an image element
-    // });
+    html2canvas(window.document.documentElement).then((canvas) => {
+      const dataUrl = canvas.toDataURL();
+      console.log(dataUrl);
+      // Use the dataUrl for further processing, such as saving the screenshot or displaying it in an image element
+      const formData = new FormData();
+      formData.append("photo", dataURItoBlob(dataUrl));
+      formData.append("image_type", "QUESTION-ATTEMPT");
+      formData.append("origanization", "NHPC");
+      formData.append("symbol_number", "20001");
+      formData.append("student_id", "2");
+
+      addMediaData.mutate(formData, {
+        onSuccess: () => {},
+        onError: (data: any) => {
+          const errorMessageWithNetworkIssue = data?.message;
+          const errorMessage = data?.response?.data?.message;
+        },
+      });
+    });
 
     console.log(answers ? checkedList : answers.option_ids);
     const newData = {
@@ -364,6 +383,9 @@ const Quiz = () => {
               style={{ color: Colors.WHITE }}
             />
           </Card>
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <MyComponent />
+          </div>
           <ConfirmModal
             buttonTitle="Confirm"
             openCloseModal={handleModalOpenClose}

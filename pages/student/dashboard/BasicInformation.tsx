@@ -74,7 +74,8 @@ export const BasicInformation = (props: Props) => {
       onSuccess: () => {
         queryClient.invalidateQueries(["StudentData"]);
         enterFullScreen();
-        router.push("/student/dashboard/quiz");
+        // router.push("/student/dashboard/quiz");
+        router.push("/student/dashboard/quiz/ExamWithPagination");
       },
       onError: (data: any) => {
         const errorMessageWithNetworkIssue = data?.message;

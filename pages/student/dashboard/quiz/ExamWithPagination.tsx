@@ -18,7 +18,7 @@ import {
 import styled from "styled-components";
 import { Colors } from "utils/colors";
 import html2canvas from "html2canvas";
-import { ExclamationOutlined } from "@ant-design/icons";
+import { ExclamationOutlined, CheckOutlined } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ConfirmModal from "components/ConfirmModal";
 import PageHeader from "pages/student/layout/page-header";
@@ -76,6 +76,7 @@ const ExamWithPagination: React.FC<Props> = (props) => {
   const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
   const [answered, setAnswered] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
   const queryList = useQuery(
     [
       "RandomList",
@@ -171,6 +172,44 @@ const ExamWithPagination: React.FC<Props> = (props) => {
     openCloseNextQuestionModal();
   };
 
+  const handleQuestionSelect = (data: any) => {
+    setCurrentQuestion(data);
+  };
+
+  const options = questions?.map((question: any, i: number) => {
+    return {
+      label: (
+        <div
+          style={{
+            padding: 3,
+            color: question.is_answered && Colors.SECONDARY,
+            fontWeight: question.is_answered && 800,
+            fontSize: "18px",
+          }}
+        >
+          <div>{i + 1}</div>
+          {question.is_answered && (
+            <div
+              style={{
+                content: "",
+                position: "absolute",
+                top: "30%",
+                right: "15px", // adjust this value to position the tick icon
+                transform: "translateY(-50%)",
+                width: "0.5em",
+                height: "0.5em",
+                color: "green",
+              }}
+            >
+              <CheckOutlined />
+            </div>
+          )}
+        </div>
+      ),
+      value: i,
+      key: i,
+    };
+  });
   return (
     <>
       <PageHeaderNaviagtion>
@@ -202,105 +241,217 @@ const ExamWithPagination: React.FC<Props> = (props) => {
         </Row>
       </PageHeaderNaviagtion>
       <Container>
-        <Form
-          name="register"
-          onFinish={onFinish}
-          autoComplete="off"
-          style={{ marginBottom: "10px" }}
-        >
-          {questions?.map((question: any, index: number) => (
-            <QuizContainer>
-              <Row style={{ fontSize: "24px", fontWeight: "700" }}>
-                {index + 1} . {"  "} {question?.question?.question_text}
-              </Row>
-              <br />
-              <Row>
-                {question?.question?.question_type === "checkbox" ? (
-                  <Form.Item name={question?.question?.id}>
-                    <Checkbox.Group key={question?.question?.id}>
-                      {question?.options.map((option: any, index: any) => (
-                        <OptionText
-                          style={{
-                            background: "rgba(218, 247, 166, 25%)",
-                            border: "1px solid rgba(218, 247, 166, 100%)",
-                            width: "90vw",
-                            paddingTop: "15px",
-                            paddingLeft: "10px",
-                          }}
-                        >
-                          <Row>
-                            <Col lg={24} xs={24} md={24}>
-                              <Checkbox
-                                key={index}
-                                value={option?.id}
-                                style={{ fontSize: "18px" }}
-                              >
-                                {option?.option_text}
-                              </Checkbox>
-                            </Col>
-                          </Row>
-                          <br></br>
-                        </OptionText>
-                      ))}
-                    </Checkbox.Group>
-                  </Form.Item>
-                ) : (
-                  question?.question?.question_type === "radio" && (
-                    <Form.Item name={question?.question?.id}>
-                      <Radio.Group style={{ paddingLeft: "18px" }}>
-                        {question?.options.map((option: any, index: any) => (
-                          <OptionText
-                            style={{
-                              background: "rgba(218, 247, 166, 25%)",
-                              border: "1px solid rgba(218, 247, 166, 100%)",
-                              width: "90vw",
-                              padding: "15px",
-                              // paddingLeft: "10px",
-                            }}
-                          >
-                            <Radio
-                              value={option?.id}
-                              style={{ fontSize: "18px" }}
+        <Row>
+          <Col md={16} lg={16}>
+            <Form
+              name="register"
+              onFinish={onFinish}
+              autoComplete="off"
+              style={{ marginBottom: "10px", width: "100%" }}
+            >
+              {questions?.map((question: any, index: number) => (
+                <QuizContainer>
+                  <Row
+                    style={{
+                      fontSize: "13px",
+                      marginLeft: "15px",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Col md={18}>Question {index + 1}</Col>
+                    <Col>
+                      <Tag color="#87d068">2 marks</Tag>
+                    </Col>
+                  </Row>
+                  <Row
+                    style={{
+                      fontSize: "15px",
+                      marginLeft: "15px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    {question?.question?.question_text}
+                  </Row>
+                  <Row
+                    style={{
+                      width: "100%",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {question?.question?.question_type === "checkbox" ? (
+                      <Col md={24} lg={24}>
+                        <Form.Item name={question?.question?.id}>
+                          <Checkbox.Group key={question?.question?.id}>
+                            <Row
+                              style={{
+                                justifyContent: "space-between",
+                              }}
                             >
-                              {option?.option_text}
-                            </Radio>
-                            <br />
-                          </OptionText>
-                        ))}
-                      </Radio.Group>
-                    </Form.Item>
-                  )
-                )}
-              </Row>
-            </QuizContainer>
-          ))}
+                              {question?.options.map(
+                                (option: any, index: any) => (
+                                  <Col
+                                    lg={11}
+                                    xs={11}
+                                    md={11}
+                                    style={{ width: "100%", marginTop: "10px" }}
+                                  >
+                                    <Checkbox
+                                      key={index}
+                                      value={option?.id}
+                                      style={{
+                                        border: "1px solid #ecf1f6",
+                                        borderRadius: "10px",
+                                        padding: "10px",
+                                        marginRight: "10px",
+                                        width: "100%",
+                                        transition: "background-color 0.3s",
+                                      }}
+                                      className="hover-checkbox"
+                                    >
+                                      {option?.option_text}
+                                    </Checkbox>
+                                  </Col>
+                                )
+                              )}
+                            </Row>
+                          </Checkbox.Group>
+                        </Form.Item>
+                      </Col>
+                    ) : (
+                      question?.question?.question_type === "radio" && (
+                        <Col md={24} lg={24} xl={24}>
+                          <Form.Item name={question?.question?.id}>
+                            <Radio.Group>
+                              <Row
+                                style={{
+                                  justifyContent: "space-between",
+                                  width: "48vw",
+                                }}
+                              >
+                                {question?.options.map(
+                                  (option: any, index: any) => (
+                                    <Col
+                                      lg={11}
+                                      xs={11}
+                                      md={11}
+                                      style={{
+                                        width: "100%",
+                                        marginTop: "10px",
+                                      }}
+                                    >
+                                      <Radio
+                                        value={option?.id}
+                                        style={{
+                                          border: "1px solid #ecf1f6",
+                                          borderRadius: "10px",
+                                          padding: "10px",
+                                          marginRight: "10px",
+                                          width: "100%",
+                                          transition: "background-color 0.3s",
+                                        }}
+                                        className="hover-checkbox"
+                                      >
+                                        {option?.option_text}
+                                      </Radio>
+                                    </Col>
+                                  )
+                                )}
+                              </Row>
+                            </Radio.Group>
+                          </Form.Item>
+                        </Col>
+                      )
+                    )}
+                  </Row>
+                </QuizContainer>
+              ))}
 
-          <CustomizedButtonGroup>
-            <Space>
-              {filterParams.currentPage > 1 && (
-                <CustomizedButton
-                  style={{ marginTop: "20px" }}
-                  type="primary"
-                  size="large"
-                  //   onClick={handlePrevButtonClick}
-                  onClick={Prev}
-                >
-                  Previous
-                </CustomizedButton>
-              )}
+              <CustomizedButtonGroup>
+                <Space>
+                  {filterParams.currentPage > 1 && (
+                    <CustomizedButton
+                      style={{ marginTop: "20px" }}
+                      type="primary"
+                      size="large"
+                      //   onClick={handlePrevButtonClick}
+                      onClick={Prev}
+                    >
+                      Previous
+                    </CustomizedButton>
+                  )}
 
-              <CustomizedButton
-                style={{ marginTop: "20px" }}
-                type="primary"
-                size="large"
-                htmlType="submit"
-                // onClick={handleButtonClick}
+                  <CustomizedButton
+                    style={{ marginTop: "20px" }}
+                    type="primary"
+                    size="large"
+                    htmlType="submit"
+                    // onClick={handleButtonClick}
+                  >
+                    {filterParams.currentPage >= 1 ? "Submit" : "Next"}
+                  </CustomizedButton>
+                </Space>
+              </CustomizedButtonGroup>
+            </Form>
+          </Col>
+          <Col md={8} lg={8}>
+            <Card
+              style={{
+                float: "left",
+                height: "500px",
+                overflow: "auto",
+                marginLeft: "10px",
+                width: "25%",
+                position: "fixed",
+              }}
+              headStyle={{
+                position: "sticky",
+                top: 0,
+                background: "#fff",
+                zIndex: 1,
+              }}
+              title={
+                <>
+                  <OptionText> IOE Model Test </OptionText>
+
+                  <span style={{ color: Colors.GREY8, fontSize: "14px" }}>
+                    100 Questions - 2.00 hours
+                  </span>
+                </>
+              }
+            >
+              <Row
+                style={{
+                  justifyContent: "space-around",
+                  textAlign: "center",
+                  background: "rgba(245, 247, 255, 255)",
+                  padding: "10px",
+                  border: "1px solid black",
+                }}
               >
-                {filterParams.currentPage >= 1 ? "Submit" : "Next"}
-              </CustomizedButton>
-            </Space>
-          </CustomizedButtonGroup>
-        </Form>
+                <Col style={{ textAlign: "center" }}>
+                  <Tag>10</Tag> <br></br>
+                  Unanswered
+                </Col>
+                {/* <Divider orientation="center"></Divider> */}
+
+                <Col style={{ textAlign: "center" }}>
+                  {" "}
+                  <Tag>10</Tag> <br></br>Answered
+                </Col>
+              </Row>
+              <Segmented
+                options={options?.map((question: any) => ({
+                  label: question.label,
+                  value: question.value,
+                }))}
+                onChange={handleQuestionSelect}
+                value={currentQuestion}
+                className="segmented-options"
+                style={{ color: Colors.WHITE }}
+              />
+            </Card>
+          </Col>
+        </Row>
         <ConfirmModal
           buttonTitle="Confirm"
           openCloseModal={openCloseNextQuestionModal}
@@ -322,11 +473,13 @@ export default ExamWithPagination;
 
 const Container = styled.div`
   padding: 10px;
-  position: absolute;
-  width: 100%;
   height: 100%;
   margin-bottom: 20px !important;
   margin-top: 80px !important;
+
+  margin-left: 10%;
+  margin-right: 10%;
+  border-radius: 20px;
 `;
 const QuizContainer = styled.div`
   background: white;
@@ -334,13 +487,12 @@ const QuizContainer = styled.div`
   width: 100%;
   height: 100%;
   margin-bottom: 20px !important;
+  border-shadow: ;
 `;
 
 const OptionText = styled.div`
-  // font-size: 22px;
-  font-weight: 500;
-  margin-top: 10px;
-  // width: 100vw;
+  font-size: 22px;
+  font-weight: 700;
 `;
 
 const CustomizedButtonGroup = styled.div`
@@ -357,7 +509,7 @@ const CustomizedButton = styled(Button)`
   padding: 10px !important;
   font-size: 16px !important;
   height: fit-content !important;
-  width: 45vw !important;
+  // width: 45vw !important;
 `;
 const PageHeaderNaviagtion = styled.div`
   top: 0;

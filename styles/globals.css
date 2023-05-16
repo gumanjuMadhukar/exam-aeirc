@@ -686,7 +686,7 @@ pt-15 {
 
 .css-dev-only-do-not-override-1v518l7.ant-checkbox-group {
   display: block;
-  padding-left: 20px;
+  /* padding-left: 20px; */
 }
 
 .segmented-options {
@@ -710,4 +710,20 @@ pt-15 {
 
 .ant-segmented-item {
   transition: none !important;
+}
+
+.hover-checkbox:hover {
+  background-color: rgba(245, 247, 255, 255);
+  border: 1px solid #85a3fd !important;
+  /* Add other hover styles here */
+}
+
+:where(.css-dev-only-do-not-override-1v518l7).ant-checkbox-wrapper-checked {
+  background-color: rgba(245, 247, 255, 255) !important;
+  border: 1px solid #85a3fd !important;
+}
+
+:where(.css-dev-only-do-not-override-1v518l7).ant-radio-wrapper-checked {
+  background-color: rgba(245, 247, 255, 255) !important;
+  border: 1px solid #85a3fd !important;
 }

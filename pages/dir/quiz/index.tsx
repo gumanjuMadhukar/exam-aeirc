@@ -64,8 +64,6 @@ const Quiz = () => {
     setQuestions(queryList?.data);
   }, [queryList]);
   // Handle answer submission
-
-  // console.log(queryList?.data?.question);
   const handleAnswerSubmit = (answer: any) => {
     // Store the answer in the answers object
     const question = questions[currentQuestion];
@@ -85,8 +83,6 @@ const Quiz = () => {
     //   console.log(dataUrl);
     //   // Use the dataUrl for further processing, such as saving the screenshot or displaying it in an image element
     // });
-
-    console.log(answers ? checkedList : answers.option_ids);
     const newData = {
       student_id: 2,
       question_id: questions[currentQuestion]?.question.id,
@@ -165,7 +161,6 @@ const Quiz = () => {
     if (questions) {
       const question = questions[currentQuestion];
 
-      console.log(checkedList);
       return (
         <div>
           {" "}

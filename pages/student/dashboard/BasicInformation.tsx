@@ -21,11 +21,12 @@ import { useMutation, useQueryClient } from "react-query";
 import moment from "moment";
 import MyComponent from "./component";
 import { dataURItoBlob } from "utils/helpers";
+import { allocateRandomQuestion } from "apis/question";
 
 interface Props {
   data: any;
 }
-export const BasicInformation = (props: Props) => {
+const BasicInformation = (props: Props) => {
   const { data } = props;
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -49,6 +50,20 @@ export const BasicInformation = (props: Props) => {
 
   const addMediaData = useMutation((data: any) => uploadMyDocs(data));
 
+  const allocateQuestion = useMutation(allocateRandomQuestion, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["StudentData"]);
+
+      enterFullScreen();
+      // router.push("/student/dashboard/quiz/ExamWithPagination");
+      router.push("/student/dashboard/quiz");
+    },
+    onError: (data: any) => {
+      const errorMessageWithNetworkIssue = data?.message;
+      const errorMessage = data?.response?.data?.message;
+    },
+  });
+
   const handleCheckboxChange = (e: any) => {
     setIsChecked(e.target.checked);
   };
@@ -64,18 +79,19 @@ export const BasicInformation = (props: Props) => {
 
   const handleSubmit = (data: any) => {
     // Handle form submission logic here
-    console.log(data.checkbox);
-    handleCapturePhoto();
+    // handleCapturePhoto();
     const newData = {
       is_terms_and_condition_accepted: data.checkbox,
       start_time: moment(),
     };
+
+    const allocateData = {
+      student_id,
+    };
+
     updateStudentData.mutate(newData, {
       onSuccess: () => {
-        queryClient.invalidateQueries(["StudentData"]);
-        enterFullScreen();
-        // router.push("/student/dashboard/quiz");
-        router.push("/student/dashboard/quiz/ExamWithPagination");
+        allocateQuestion.mutate(allocateData);
       },
       onError: (data: any) => {
         const errorMessageWithNetworkIssue = data?.message;
@@ -92,65 +108,65 @@ export const BasicInformation = (props: Props) => {
   };
   const empData = data;
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
+  // const videoRef = useRef<HTMLVideoElement>(null);
+  // const canvasRef = useRef<HTMLCanvasElement>(null);
+  // const imageRef = useRef<HTMLImageElement>(null);
 
-  const handleCapturePhoto = () => {
-    const videoElement = videoRef.current;
-    const canvasElement = canvasRef.current;
-    const imageElement = imageRef.current;
+  // const handleCapturePhoto = () => {
+  //   const videoElement = videoRef.current;
+  //   const canvasElement = canvasRef.current;
+  //   const imageElement = imageRef.current;
 
-    if (videoElement && canvasElement && imageElement) {
-      // Get the video element dimensions
-      const videoWidth = videoElement.videoWidth;
-      const videoHeight = videoElement.videoHeight;
+  //   if (videoElement && canvasElement && imageElement) {
+  //     // Get the video element dimensions
+  //     const videoWidth = videoElement.videoWidth;
+  //     const videoHeight = videoElement.videoHeight;
 
-      // Set the canvas element dimensions to match the video element
-      canvasElement.width = videoWidth;
-      canvasElement.height = videoHeight;
+  //     // Set the canvas element dimensions to match the video element
+  //     canvasElement.width = videoWidth;
+  //     canvasElement.height = videoHeight;
 
-      // Draw the current video frame onto the canvas
-      const canvasContext = canvasElement.getContext("2d");
-      if (canvasContext) {
-        canvasContext.drawImage(videoElement, 0, 0, videoWidth, videoHeight);
-        const imageDataUrl = canvasElement.toDataURL("image/jpeg"); // Get the data URL of the captured photo
-        const formData = new FormData();
-        formData.append("photo", dataURItoBlob(imageDataUrl));
-        formData.append("image_type", "SELF");
-        formData.append("origanization", "NHPC");
-        formData.append("symbol_number", data.symbol_number);
-        formData.append("student_id", "2");
+  //     // Draw the current video frame onto the canvas
+  //     const canvasContext = canvasElement.getContext("2d");
+  //     if (canvasContext) {
+  //       canvasContext.drawImage(videoElement, 0, 0, videoWidth, videoHeight);
+  //       const imageDataUrl = canvasElement.toDataURL("image/jpeg"); // Get the data URL of the captured photo
+  //       const formData = new FormData();
+  //       formData.append("photo", dataURItoBlob(imageDataUrl));
+  //       formData.append("image_type", "SELF");
+  //       formData.append("origanization", "NHPC");
+  //       formData.append("symbol_number", data.symbol_number);
+  //       formData.append("student_id", "2");
 
-        addMediaData.mutate(formData, {
-          onSuccess: () => {},
-          onError: (data: any) => {
-            const errorMessageWithNetworkIssue = data?.message;
-            const errorMessage = data?.response?.data?.message;
-          },
-        });
-      }
-    }
-  };
+  //       addMediaData.mutate(formData, {
+  //         onSuccess: () => {},
+  //         onError: (data: any) => {
+  //           const errorMessageWithNetworkIssue = data?.message;
+  //           const errorMessage = data?.response?.data?.message;
+  //         },
+  //       });
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    handleStartCamera();
-  }, []);
-  const handleStartCamera = async () => {
-    const videoElement = videoRef.current;
+  // useEffect(() => {
+  //   handleStartCamera();
+  // }, []);
+  // const handleStartCamera = async () => {
+  //   const videoElement = videoRef.current;
 
-    if (videoElement) {
-      try {
-        // Get user media (camera) and set it as video source
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        videoElement.srcObject = mediaStream;
-      } catch (error) {
-        console.error("Error accessing camera:", error);
-      }
-    }
-  };
+  //   if (videoElement) {
+  //     try {
+  //       // Get user media (camera) and set it as video source
+  //       const mediaStream = await navigator.mediaDevices.getUserMedia({
+  //         video: true,
+  //       });
+  //       videoElement.srcObject = mediaStream;
+  //     } catch (error) {
+  //       console.error("Error accessing camera:", error);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -165,16 +181,14 @@ export const BasicInformation = (props: Props) => {
                 <ProfileImage>
                   <Image
                     className={`profile-img`}
-                    src={
-                      "https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg"
-                    }
+                    src={`http://103.175.192.52/storage/documents/${empData?.photo}`}
                     alt="avatar"
                   />
                 </ProfileImage>
               </div>
             </ImageWrapper>
           </LeftProfile>
-          <Col lg={16} md={24} sm={24} xs={24} className="search-col-margin">
+          <Col lg={8} md={24} sm={24} xs={24} className="search-col-margin">
             <DetailItem>
               <DetailLabel xs={8}>Name:</DetailLabel>
               <DetailValue xs={16}>{empData?.name}</DetailValue>
@@ -190,30 +204,37 @@ export const BasicInformation = (props: Props) => {
               </DetailValue>
             </DetailItem>
           </Col>
+          {/* <Col
+            lg={8}
+            md={24}
+            sm={24}
+            xs={24}
+            style={{ right: "0" }}
+            className={`profile-img`}
+          >
+            <div>
+              <video
+                ref={videoRef}
+                // style={{ display: "none" }}
+                style={{ width: "180px" }}
+                autoPlay
+              />
+              <canvas
+                ref={canvasRef}
+                style={{ display: "none", maxWidth: "30%" }}
+              />
+              <img
+                ref={imageRef}
+                style={{ display: "none", maxWidth: "30%" }}
+                alt="Captured Photo"
+              />
+            </div>
+          </Col> */}
         </Row>
-        <DetailTitleWrapper>
-          <DetailTitle>Exam Attempter Photo</DetailTitle>
+        <DetailTitleWrapper style={{ marginTop: "20px" }}>
+          <DetailTitle>Instructions</DetailTitle>
         </DetailTitleWrapper>
-        <div>
-          <video
-            ref={videoRef}
-            // style={{ display: "none" }}
-            style={{ width: "180px" }}
-            autoPlay
-          />
-          <canvas
-            ref={canvasRef}
-            style={{ display: "none", maxWidth: "30%" }}
-          />
-          <img
-            ref={imageRef}
-            style={{ display: "none", maxWidth: "30%" }}
-            alt="Captured Photo"
-          />
-          {/* <button onClick={handleStartCamera}>Start Camera</button> */}
-          {/* <button onClick={handleStopCamera}>Stop Camera</button>
-      <button onClick={handleCapturePhoto}>Capture Photo</button> */}
-        </div>
+
         <Form form={form} onFinish={handleSubmit}>
           <Form.Item
             name="checkbox"
@@ -226,8 +247,16 @@ export const BasicInformation = (props: Props) => {
               any mistake on the data that is of my responsibility
             </Checkbox>
           </Form.Item>
-          <Button type="primary" htmlType="submit">
-            Start Exam
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{
+              left: "50%",
+              right: "50%",
+              height: "30px",
+            }}
+          >
+            Take Examination
           </Button>
         </Form>
         {/* <BasicInformationEdit
@@ -243,7 +272,7 @@ export const BasicInformation = (props: Props) => {
 
 const LeftProfile = styled(Col)`
   background-color: #fff;
-  height: 300px;
+  // height: 300px;
 `;
 
 const ProfileImage = styled.div`
@@ -282,3 +311,5 @@ const ImageWrapper = styled.div`
   // justify-content: center;
   height: 100%;
 `;
+
+export default BasicInformation;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import QuestionAPI from "apis/question";
+import QuestionAPI, { calculateStudentMarks } from "apis/question";
 import {
   Button,
   Card,
@@ -23,7 +23,11 @@ import PageHeader from "pages/student/layout/page-header";
 import Clock from "utils/clock";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import { CheckCircleOutlined, CheckOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import MyComponent from "../component";
 import { dataURItoBlob } from "utils/helpers";
 import { uploadMyDocs } from "apis/media";
@@ -38,6 +42,7 @@ const Quiz = () => {
   const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
   const router = useRouter();
   const student_id = Cookies.get("student_id");
+  const photo = Cookies.get("photo");
   const queryList = useQuery(["RandomList"], async () => {
     const response = await questionAPI.getRandomQuestion(student_id);
 
@@ -47,6 +52,8 @@ const Quiz = () => {
   const saveQuestionsAnswer = useMutation((data: any) =>
     questionAPI.postQuestionsAnswer(data)
   );
+
+  const storeStudentMarks = useMutation((id: any) => calculateStudentMarks(id));
 
   useEffect(() => {
     const handleKeyDown = (event: any) => {
@@ -101,52 +108,31 @@ const Quiz = () => {
     }));
     setCheckedList(answer);
 
-    // Move to the next question
-  };
-
-  const addMediaData = useMutation((data: any) => uploadMyDocs(data));
-
-  const handleButtonClick = () => {
-    //Code to capture the screenshot
-    html2canvas(window.document.documentElement).then((canvas) => {
-      const dataUrl = canvas.toDataURL();
-      console.log(dataUrl);
-      // Use the dataUrl for further processing, such as saving the screenshot or displaying it in an image element
-      const formData = new FormData();
-      formData.append("photo", dataURItoBlob(dataUrl));
-      formData.append("image_type", "QUESTION-ATTEMPT");
-      formData.append("origanization", "NHPC");
-      formData.append("symbol_number", "20001");
-      formData.append("student_id", "2");
-
-      addMediaData.mutate(formData, {
-        onSuccess: () => {},
-        onError: (data: any) => {
-          const errorMessageWithNetworkIssue = data?.message;
-          const errorMessage = data?.response?.data?.message;
-        },
-      });
-    });
-
-    console.log(answers ? checkedList : answers.option_ids);
     const newData = {
-      student_id: 2,
+      student_id: student_id,
       question_id: questions[currentQuestion]?.question.id,
-      option_ids: answers ? checkedList : answers.option_ids,
+      option_ids: answer,
     };
     saveQuestionsAnswer.mutate(newData, {
       onSuccess: () => {
         queryClient.invalidateQueries(["RandomList"]);
-        currentQuestion >= questions?.length - 1
-          ? setSumitQuiz(true)
-          : setCurrentQuestion((prevQuestion) => prevQuestion + 1);
-        setAnswers({});
       },
       onError: (data: any) => {
         const errorMessageWithNetworkIssue = data?.message;
         const errorMessage = data?.response?.data?.message;
       },
     });
+
+    // Move to the next question
+  };
+
+  // const addMediaData = useMutation((data: any) => uploadMyDocs(data));
+
+  const handleButtonClick = () => {
+    currentQuestion >= questions?.length - 1
+      ? setSumitQuiz(true)
+      : setCurrentQuestion((prevQuestion) => prevQuestion + 1);
+    setAnswers({});
   };
 
   const handlePrevButtonClick = () => {
@@ -161,29 +147,13 @@ const Quiz = () => {
       label: (
         <div
           style={{
-            padding: 3,
-            color: question.is_answered && Colors.SECONDARY,
+            // padding: 3,
+            color: question.is_answered ? Colors.GREEN : Colors.GREY8,
             fontWeight: question.is_answered && 800,
             fontSize: "18px",
           }}
         >
           <div>{i + 1}</div>
-          {question.is_answered && (
-            <div
-              style={{
-                content: "",
-                position: "absolute",
-                top: "30%",
-                right: "15px", // adjust this value to position the tick icon
-                transform: "translateY(-50%)",
-                width: "0.5em",
-                height: "0.5em",
-                color: "green",
-              }}
-            >
-              <CheckOutlined />
-            </div>
-          )}
         </div>
       ),
       value: i,
@@ -199,12 +169,19 @@ const Quiz = () => {
     setSumitQuiz(!submitQuiz);
   };
 
-  const handleModalSubmit = () => {
-    setCurrentQuestion((prevQuestion) => prevQuestion + 1);
-    Cookies.remove("token");
-    Cookies.remove("role");
-    Cookies.remove("student_id");
-    router.push("/student/auth/finish");
+  const handleModal = () => {
+    storeStudentMarks.mutate(student_id, {
+      onSuccess: () => {
+        Cookies.remove("token");
+        Cookies.remove("role");
+        Cookies.remove("student_id");
+        router.push("/student/auth/finish");
+      },
+      onError: (data: any) => {
+        const errorMessageWithNetworkIssue = data?.message;
+        const errorMessage = data?.response?.data?.message;
+      },
+    });
   };
 
   useEffect(() => {
@@ -227,7 +204,6 @@ const Quiz = () => {
     if (questions) {
       const question = questions[currentQuestion];
 
-      console.log(checkedList);
       return (
         <div>
           {" "}
@@ -235,8 +211,9 @@ const Quiz = () => {
             <Row justify="space-between" gutter={[16, 24]}>
               <Col span={8}>
                 <img
-                  src="profile-default.png"
+                  src={`http://103.175.192.52/storage/documents/${photo}`}
                   style={{ border: "1px solid black" }}
+                  width="50px"
                 ></img>
               </Col>
               <Col
@@ -274,7 +251,12 @@ const Quiz = () => {
               {currentQuestion + 1}. {"  "} {question?.question?.question_text}
             </Row>
             <br />
-            <Row>
+            <Row
+              style={{
+                width: "100%",
+                justifyContent: "space-between",
+              }}
+            >
               {question?.question?.question_type === "checkbox" ? (
                 <Checkbox.Group
                   onChange={(checkedValues) =>
@@ -285,8 +267,6 @@ const Quiz = () => {
                   {question?.options.map((option: any, index: any) => (
                     <OptionText
                       style={{
-                        background: "rgba(218, 247, 166, 25%)",
-                        border: "1px solid rgba(218, 247, 166, 100%)",
                         width: "65vw",
                         paddingTop: "15px",
                         paddingLeft: "10px",
@@ -317,8 +297,6 @@ const Quiz = () => {
                     {question?.options.map((option: any, index: any) => (
                       <OptionText
                         style={{
-                          background: "rgba(218, 247, 166, 25%)",
-                          border: "1px solid rgba(218, 247, 166, 100%)",
                           width: "65vw",
                           padding: "15px",
                         }}
@@ -363,6 +341,8 @@ const Quiz = () => {
               float: "left",
               height: "500px",
               overflow: "auto",
+              marginBottom: "20px",
+              paddingLeft: "-20px",
             }}
             headStyle={{
               position: "sticky",
@@ -372,26 +352,38 @@ const Quiz = () => {
             }}
             title="Number of Question"
           >
-            <Segmented
-              options={options.map((question: any) => ({
-                label: question.label,
-                value: question.value,
-              }))}
-              onChange={handleQuestionSelect}
-              value={currentQuestion}
-              className="segmented-options"
-              style={{ color: Colors.WHITE }}
-            />
+            <Row gutter={[16, 16]}>
+              {options.map((question: any) => (
+                <Col
+                  span={6}
+                  key={question.value}
+                  style={{ paddingLeft: "0px" }}
+                >
+                  <Segmented
+                    options={[
+                      {
+                        label: question.label,
+                        value: question.value,
+                      },
+                    ]}
+                    onChange={handleQuestionSelect}
+                    value={currentQuestion}
+                    className="segmented-options"
+                    style={{ color: Colors.WHITE }}
+                  />
+                </Col>
+              ))}
+            </Row>
           </Card>
-          <div style={{ marginTop: "20px", textAlign: "center" }}>
+          {/* <div style={{ marginTop: "20px", textAlign: "center" }}>
             <MyComponent />
-          </div>
+          </div> */}
           <ConfirmModal
             buttonTitle="Confirm"
             openCloseModal={handleModalOpenClose}
             open={submitQuiz}
-            confirmText="submit the quiz"
-            onConfirmModal={handleModalSubmit}
+            confirmText="submit the exam"
+            onConfirmModal={handleModal}
             icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
           />
         </div>

@@ -19,7 +19,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     setRole(getRole);
   }, [Cookies.get("role")]);
 
-  console.log(router.pathname.startsWith("/student"));
   const getLayout =
     Component.getLayout ??
     ((page: any) => {

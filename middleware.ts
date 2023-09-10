@@ -80,7 +80,7 @@ export default function middleware(req: NextRequest) {
       url.pathname = "/student/auth";
       return verifyOrRedirectRoute(publicRoutes.includes(pageName), url);
     }
-    url.pathname = "/auth/login";
+    url.pathname = "/student/auth";
     return verifyOrRedirectRoute(publicRoutes.includes(pageName), url);
   }
 }

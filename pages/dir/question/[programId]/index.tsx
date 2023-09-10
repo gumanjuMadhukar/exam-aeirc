@@ -202,7 +202,10 @@ const Question = () => {
         limit: filterParams.pageSize,
       };
       if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await questionAPI.getQuestionBasedOnSubject(programId);
+      const response = await questionAPI.getQuestionBasedOnSubject(
+        programId,
+        filterParams
+      );
       return response?.data;
     }
   );
@@ -249,7 +252,7 @@ const Question = () => {
     removeEmployeeDocsMutation.mutate(currentItem, {
       onSuccess: () => {
         queryClient.invalidateQueries(["QuestionList"]);
-        message.success("Removed Question Successfully");
+        message.success("Removed Question Successfull");
         openCloseDeleteLeaveModal();
       },
       onError: (data: any) => {

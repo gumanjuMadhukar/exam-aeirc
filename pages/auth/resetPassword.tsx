@@ -18,8 +18,6 @@ const ResetPassword: NextPage = (props): JSX.Element => {
   const onSubmit = (e: any) => {
     e.preventDefault();
     // validate your userinfo
-
-    console.log("test error");
   };
 
   return (

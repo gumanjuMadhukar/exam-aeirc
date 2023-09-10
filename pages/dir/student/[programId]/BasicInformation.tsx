@@ -16,7 +16,7 @@ import { EmployeeDetails } from "constants/schemas/employee";
 interface Props {
   data: any;
 }
-export const BasicInformation = (props: Props) => {
+const BasicInformation = (props: Props) => {
   const { data } = props;
   const [editBasicInformationModalOpen, setEditBasicInformationModalOpen] =
     useState(false);
@@ -54,3 +54,5 @@ export const BasicInformation = (props: Props) => {
     </>
   );
 };
+
+export default BasicInformation;

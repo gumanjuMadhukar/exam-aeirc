@@ -53,7 +53,6 @@ const ExamWithPagination: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
-      console.log(event);
       if (event) {
         event.preventDefault();
       }
@@ -91,7 +90,7 @@ const ExamWithPagination: React.FC<Props> = (props) => {
         limit: filterParams.pageSize,
       };
 
-      const response = await questionAPI.getPaginatedQuestion(queryParams, 2);
+      const response = await questionAPI.getPaginatedQuestion(queryParams, 5);
 
       return response?.data?.data;
     }
@@ -104,7 +103,6 @@ const ExamWithPagination: React.FC<Props> = (props) => {
     setQuestions(queryList?.data);
   }, [queryList]);
 
-  console.log(questions);
   const Next = () => {
     setFilterParams({
       ...filterParams,
@@ -127,8 +125,6 @@ const ExamWithPagination: React.FC<Props> = (props) => {
     const keys = Object.keys(data);
     setAnswered(answered + Object.keys(data).length);
 
-    console.log(data);
-
     const newData = {
       student_id: 2,
       data: data,
@@ -136,8 +132,6 @@ const ExamWithPagination: React.FC<Props> = (props) => {
 
     const undefinedKeys = keys?.filter((key) => data[key] === undefined);
     setUndefinedQuestions(undefinedKeys);
-
-    console.log(undefinedQuestions.length);
     saveQuestionsAnswer.mutate(newData, {
       onSuccess: () => {
         // queryClient.invalidateQueries(["RandomList"]);
@@ -158,7 +152,6 @@ const ExamWithPagination: React.FC<Props> = (props) => {
 
   const [isQuestionPaginationModalOpen, setIsQuestionPaginationModalOpen] =
     useState(false);
-  const [currentItem, setCurrentItem] = useState<string>("");
 
   const openCloseNextQuestionModal = () => {
     setIsQuestionPaginationModalOpen(!isQuestionPaginationModalOpen);
@@ -187,7 +180,7 @@ const ExamWithPagination: React.FC<Props> = (props) => {
             fontSize: "18px",
           }}
         >
-          <div>{i + 1}</div>
+          <div>{i}</div>
           {question.is_answered && (
             <div
               style={{
@@ -224,9 +217,7 @@ const ExamWithPagination: React.FC<Props> = (props) => {
               fontWeight: "bold",
               fontSize: "25px",
             }}
-          >
-            <Progress percent={percentComplete} />
-          </Col>
+          ></Col>
           <Col
             span={8}
             style={{
@@ -260,7 +251,9 @@ const ExamWithPagination: React.FC<Props> = (props) => {
                   >
                     <Col md={18}>Question {index + 1}</Col>
                     <Col>
-                      <Tag color="#87d068">2 marks</Tag>
+                      <Tag color="#87d068">
+                        {question?.question?.weightage} marks
+                      </Tag>
                     </Col>
                   </Row>
                   <Row
@@ -290,8 +283,8 @@ const ExamWithPagination: React.FC<Props> = (props) => {
                               {question?.options.map(
                                 (option: any, index: any) => (
                                   <Col
-                                    lg={11}
-                                    xs={11}
+                                    lg={24}
+                                    xs={24}
                                     md={11}
                                     style={{ width: "100%", marginTop: "10px" }}
                                   >
@@ -299,7 +292,6 @@ const ExamWithPagination: React.FC<Props> = (props) => {
                                       key={index}
                                       value={option?.id}
                                       style={{
-                                        border: "1px solid #ecf1f6",
                                         borderRadius: "10px",
                                         padding: "10px",
                                         marginRight: "10px",
@@ -331,8 +323,8 @@ const ExamWithPagination: React.FC<Props> = (props) => {
                                 {question?.options.map(
                                   (option: any, index: any) => (
                                     <Col
-                                      lg={11}
-                                      xs={11}
+                                      lg={24}
+                                      xs={24}
                                       md={11}
                                       style={{
                                         width: "100%",
@@ -342,8 +334,6 @@ const ExamWithPagination: React.FC<Props> = (props) => {
                                       <Radio
                                         value={option?.id}
                                         style={{
-                                          border: "1px solid #ecf1f6",
-                                          borderRadius: "10px",
                                           padding: "10px",
                                           marginRight: "10px",
                                           width: "100%",
@@ -373,7 +363,6 @@ const ExamWithPagination: React.FC<Props> = (props) => {
                       style={{ marginTop: "20px" }}
                       type="primary"
                       size="large"
-                      //   onClick={handlePrevButtonClick}
                       onClick={Prev}
                     >
                       Previous
@@ -387,7 +376,7 @@ const ExamWithPagination: React.FC<Props> = (props) => {
                     htmlType="submit"
                     // onClick={handleButtonClick}
                   >
-                    {filterParams.currentPage >= 1 ? "Submit" : "Next"}
+                    {filterParams.currentPage >= 1 ? "Next" : "Submit"}
                   </CustomizedButton>
                 </Space>
               </CustomizedButtonGroup>
@@ -475,8 +464,6 @@ const Container = styled.div`
   padding: 10px;
   height: 100%;
   margin-bottom: 20px !important;
-  margin-top: 80px !important;
-
   margin-left: 10%;
   margin-right: 10%;
   border-radius: 20px;
@@ -501,8 +488,6 @@ const CustomizedButtonGroup = styled.div`
   text-align: center;
   margin-bottom: 20px !important;
   height: 100px;
-  // width: 100vw;
-  // background-color: red;
 `;
 
 const CustomizedButton = styled(Button)`
@@ -513,7 +498,6 @@ const CustomizedButton = styled(Button)`
 `;
 const PageHeaderNaviagtion = styled.div`
   top: 0;
-  position: fixed;
   width: 100%;
   background: #fff;
   padding: 5px;

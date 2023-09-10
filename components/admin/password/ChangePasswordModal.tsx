@@ -39,7 +39,6 @@ export const ChangePasswordModal = (props: Props) => {
       createUser(data, {
         onSuccess: (res: any) => {
           handleCancel();
-          console.log(res);
           message.success(res?.data?.message);
           router.push("auth/login");
         },

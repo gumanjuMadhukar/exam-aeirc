@@ -11,30 +11,28 @@ import CustomLink from "components/CustomLink";
 import http, { setTokenInHeader } from "utils/http";
 import styled from "styled-components";
 import moment from "moment";
+import { useState } from "react";
+import Keyboard from "react-simple-keyboard";
 
 const Login: NextPage = (props): JSX.Element => {
   const loginMutation = useMutation((data: any) => studentLogin(data));
   const router = useRouter();
 
   const onFinish = (data: any) => {
-    console.log(data);
-
     const newData = {
       ...data,
       date_of_birth: moment(data.date_of_birth).format("YYYY-MM-DD"),
     };
 
-    console.log(newData);
     loginMutation.mutate(data, {
       onSuccess: (response) => {
-        console.log(response);
         const token = response.data.token;
         // const role = response.data.user.roles[0].name;
         const user = response.data.user;
-
         Cookies.set("token", token);
         Cookies.set("role", "Student");
         Cookies.set("student_id", user.id);
+        Cookies.set("photo", user.photo);
         setTokenInHeader(http, token);
         router.push("/student/dashboard");
       },
@@ -55,86 +53,92 @@ const Login: NextPage = (props): JSX.Element => {
   };
 
   return (
-    <LoginPage>
+    <LoginPages>
       <PageLogo>
-        {/* <img src="/AEICE.jpeg" alt="logo" width="168px" /> */}
-        <LoginHeading>AEIRC</LoginHeading>
+        <LoginHeading>NHPC</LoginHeading>
       </PageLogo>
       <LoginContainer>
         <AuthBlock>
-          <h2>Login</h2>
-          <Form name="basic" onFinish={onFinish} autoComplete="off">
+          <Form
+            name="basic"
+            onFinish={onFinish}
+            autoComplete="off"
+            layout="vertical"
+          >
             <Form.Item
               name="symbol_number"
+              label="Symbol Number"
               rules={[
-                { required: true, message: "Please input your symbol Number!" },
+                { required: true, message: "Please input your symbol number!" },
               ]}
             >
               <Input
                 name="symbol_number"
                 id="symbol_number"
-                type="text"
                 size="large"
                 placeholder="Symbol Number"
                 suffix={<MailOutlined />}
-                autoComplete="false"
+                autoComplete="off"
               />
             </Form.Item>
             <Form.Item
-              name="date_of_birth"
+              name="confirm_symbol_number"
+              label="Confirm Symbol Number"
+              dependencies={["symbol_number"]}
               rules={[
-                { required: true, message: "Please input your date of birth!" },
+                {
+                  required: true,
+                  message: "Please confirm your symbol number!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("symbol_number") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("The two symbol numbers do not match!")
+                    );
+                  },
+                }),
               ]}
             >
               <Input
-                name="date_of_birth"
-                id="date_of_birth"
+                name="confirm_symbol_number"
+                id="confirm_symbol_number"
                 size="large"
-                placeholder="YYYY-MM-DD"
-                type="date_of_birth"
-                autoComplete="false"
+                placeholder="Confirm Symbol Number"
+                suffix={<MailOutlined />}
+                autoComplete="off"
               />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" block size="large" htmlType="submit">
+              <Button
+                type="primary"
+                block
+                size="large"
+                htmlType="submit"
+                style={{ background: "#93DEFF" }}
+              >
                 Login
               </Button>
             </Form.Item>
           </Form>
-          <TextBlock>
-            {/* <span>
-              <CustomLink
-                text="Forgot your Password?"
-                url={urls.forgotPassword}
-                customStyle={{ color: "#aaa" }}
-              />
-            </span>
-            <br />
-            <span>
-              Don&apos;t have an Account?&nbsp;&nbsp;
-              <CustomLink text="Register" url={urls.register} />
-            </span> */}
-          </TextBlock>
+          <TextBlock></TextBlock>
         </AuthBlock>
       </LoginContainer>
-    </LoginPage>
+    </LoginPages>
   );
 };
 
 export default Login;
 
-export const LoginPage = styled.div`
-  background-color: #f0f2f5;
+export const LoginPages = styled.div`
   display: flex;
   align-items: center;
   justify-items: center;
   flex-direction: column;
   min-height: 100vh;
   padding-top: 5%;
-  background-image: url("/login-background.svg");
-  background-position: center bottom;
-  background-repeat: no-repeat;
-  background-size: contain;
 `;
 
 export const PageLogo = styled.div`

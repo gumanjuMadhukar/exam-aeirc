@@ -42,7 +42,7 @@ import {
 import { Colors } from "utils/colors";
 import ConfirmModal from "components/ConfirmModal";
 import { ImportStudentModal } from "components/admin/student/importStudentModal";
-import { BasicInformation } from "./BasicInformation";
+import BasicInformation from "./BasicInformation";
 
 interface FilterParams {
   currentPage: number;
@@ -162,7 +162,6 @@ const StudentDetails = () => {
     }
   );
 
-  console.log(queryList);
   const programList = queryList?.data;
 
   const studentData = studentQuery?.data;

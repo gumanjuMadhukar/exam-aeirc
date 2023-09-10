@@ -28,7 +28,6 @@ const Login: NextPage = (props): JSX.Element => {
   const onFinish = (data: LoginPayload) => {
     loginMutation.mutate(data, {
       onSuccess: (response) => {
-        console.log(response);
         const token = response.data.token;
         const refresh_token = response.data.refresh_token;
 
@@ -42,7 +41,6 @@ const Login: NextPage = (props): JSX.Element => {
         router.push("/dashboard");
       },
       onError: (data: any) => {
-        // console.log(data);
         const errorMessage = data?.message;
         message.error("Invalid Credentials");
         if (

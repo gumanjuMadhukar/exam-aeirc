@@ -200,7 +200,6 @@ const Question = () => {
     programAPI.destroy(employeeId)
   );
 
-  console.log(currentItem, "CurrentItem");
   const onConfirmDelete = () => {
     removeEmployeeDocsMutation.mutate(currentItem, {
       onSuccess: () => {

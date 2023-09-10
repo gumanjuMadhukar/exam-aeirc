@@ -113,7 +113,6 @@ const StudentDetails = () => {
 
   const details = userQuery?.data;
 
-  console.log(details);
   return (
     <UsersContainer>
       <PageHeader>

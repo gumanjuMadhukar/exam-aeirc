@@ -18,6 +18,7 @@ import urls from "../../../configs/urls";
 import DropdownMenu from "../dropdown-menu";
 import { MenuOutlined, BellOutlined } from "@ant-design/icons";
 import { Colors } from "utils/colors";
+import { LoginHeading } from "styles/authCSS";
 const { Header, Content, Sider } = Layout;
 
 type Props = {
@@ -127,32 +128,7 @@ const SidebarLayout = ({ role, children }: Props) => {
             marginBottom: "10px",
           }}
         >
-          {collapsed ? (
-            <img
-              src="/nextly_icon.png"
-              className="sidebar-logo"
-              alt="logo.png"
-            />
-          ) : (
-            <>
-              <img
-                src="/nextly-white-orange-logo.svg"
-                className="sidebar-logo"
-                alt="logo.png"
-              />
-              <span
-                style={{
-                  fontStyle: "italic",
-                  fontWeight: " 700",
-                  fontSize: "14px",
-                  color: "#FFFFFF",
-                  marginTop: "10px",
-                }}
-              >
-                HrLabs
-              </span>
-            </>
-          )}
+          <LoginHeading style={{ color: "white" }}>AEIRC</LoginHeading>
         </div>
         <Menu
           theme="dark"

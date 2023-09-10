@@ -15,7 +15,6 @@ const withKeyboardDisabled = <P extends object>(
 
     useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
-        console.log(event);
         if (isKeyboardDisabled) {
           event.preventDefault();
           event.stopPropagation();

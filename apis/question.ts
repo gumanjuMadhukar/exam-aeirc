@@ -2,10 +2,11 @@ import Resource from "apis/resource";
 import http from "utils/http";
 
 class QuestionAPI extends Resource {
-  getQuestionBasedOnSubject(subject_id: any) {
+  getQuestionBasedOnSubject(subject_id: any, filterParams: any) {
     return http({
-      url: `/getQuestionBasedOnSubject/${subject_id}`,
+      url: `/getQuestionBasedOnSubject/${subject_id}?page=${filterParams.currentPage}`,
       method: "get",
+      params: filterParams,
     });
   }
 
@@ -34,7 +35,7 @@ class QuestionAPI extends Resource {
 
   getPaginatedQuestion(data: any, id: any) {
     return http({
-      url: `/pulchockWiseData/${id}`,
+      url: `/pulchockWiseData/5`,
       method: "get",
       params: data,
     });
@@ -61,3 +62,18 @@ export function uploadQuestions({ file, subject_id }: any) {
     },
   });
 }
+
+export const allocateRandomQuestion = (data: any) => {
+  return http({
+    url: "/allocateRandomQuestion",
+    method: "post",
+    data,
+  });
+};
+
+export const calculateStudentMarks = (id: any) => {
+  return http({
+    url: `/calculateStudentMarks/${id}`,
+    method: "get",
+  });
+};

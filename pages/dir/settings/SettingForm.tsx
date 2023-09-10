@@ -81,7 +81,6 @@ const SettingForm = (props: Props) => {
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
 
-  console.log(data, "Setting Form");
   useEffect(() => {
     if (data) {
       setActive(data?.active);

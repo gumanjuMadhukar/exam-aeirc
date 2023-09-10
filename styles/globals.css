@@ -415,14 +415,14 @@ input {
 
 .ant-btn-primary {
   box-shadow: none !important;
-  background-color: rgb(255, 112, 0) !important;
+  background-color: #55BAFF !important;
   color: #fff;
 }
 
 .upload-crop .ant-btn-default:active,
 .upload-crop .ant-btn-default:hover {
-  border-color: rgb(255, 112, 0) !important;
-  color: rgb(255, 112, 0) !important;
+  border-color: #55BAFF !important;
+  color: #55BAFF !important;
 }
 
 .button-checkinout .ant-btn-default:hover {
@@ -726,4 +726,45 @@ pt-15 {
 :where(.css-dev-only-do-not-override-1v518l7).ant-radio-wrapper-checked {
   background-color: rgba(245, 247, 255, 255) !important;
   border: 1px solid #85a3fd !important;
+}
+
+.ant-form-vertical .ant-form-item-label>label {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ant-checkbox-group {
+  display: block;
+}
+
+:where(.css-dev-only-do-not-override-my1yey).ant-segmented .ant-segmented-group {
+  display: flex;
+  /* Set the direction to vertical */
+  flex-wrap: wrap;
+  /* Enable wrapping to start a new line */
+  align-items: flex-start;
+  /* Align items horizontally to the start */
+  width: 100%;
+
+}
+
+:where(.css-dev-only-do-not-override-my1yey).ant-segmented .ant-segmented-item {
+  width: 20%;
+  /* Each item takes up 10% width to show 10 items per line */
+}
+
+:where(.css-dev-only-do-not-override-my1yey).ant-segmented .ant-segmented-item-label {
+  min-height: 28px;
+  line-height: 28px;
+  padding: 0 11px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: unset;
+  width: 100px;
+  text-align: left !important;
+}
+
+
+:where(.css-dev-only-do-not-override-my1yey).ant-segmented {
+  background-color: white !important;
 }

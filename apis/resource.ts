@@ -51,7 +51,6 @@ class Resource {
     });
   }
   destroy(id: any) {
-    console.log(id);
     return http({
       url: "/" + this.uri + "/" + id,
       method: "delete",

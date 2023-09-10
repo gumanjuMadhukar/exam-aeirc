@@ -14,7 +14,7 @@ import PageFooter from "../layout/page-footer";
 import PageHeader from "../layout/page-header";
 import { useRef, useState } from "react";
 import { Colors } from "utils/colors";
-import { BasicInformation } from "./BasicInformation";
+import BasicInformation from "./BasicInformation";
 import Cookies from "js-cookie";
 import StudentAPI from "apis/student";
 import { useMutation, useQuery } from "react-query";
@@ -35,8 +35,6 @@ const Student: NextPageWithLayout = () => {
   const saveQuestionsAnswer = useMutation((data: any) =>
     studentAPI.update(data, student_id)
   );
-
-  console.log(studentData);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -95,8 +93,6 @@ const Student: NextPageWithLayout = () => {
     }
   };
   const student = Cookies.get("user");
-
-  console.log(student);
 
   const empData: any[] = [];
   return (

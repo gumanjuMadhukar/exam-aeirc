@@ -88,8 +88,6 @@ const Settings = () => {
 
   const data = attendanceData;
 
-  console.log(attendanceData?.number_of_question_per_student, "This data");
-  console.log(data);
   useEffect(() => {
     if (data) {
       setActive(data?.active);
@@ -97,8 +95,6 @@ const Settings = () => {
   }, [data]);
 
   const storeSetting = useMutation((data: any) => settingAPI.store(data));
-
-  console.log(data?.exam_time, "this is data");
 
   const onChange = (checked: boolean) => {
     // console.log(`switch to ${checked}`);

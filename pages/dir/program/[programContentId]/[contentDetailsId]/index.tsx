@@ -10,6 +10,9 @@ import {
   Col,
   Dropdown,
   message,
+  Tag,
+  Tooltip,
+  Switch,
 } from "antd";
 import Link from "next/link";
 import {
@@ -22,7 +25,7 @@ import {
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
-import ProgramAPI from "apis/program";
+import QuestionAPI from "apis/question";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 
@@ -37,6 +40,9 @@ import {
 import { Colors } from "utils/colors";
 import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
 import ConfirmModal from "components/ConfirmModal";
+import { ImportQuestionModal } from "components/admin/question/importQuestionModal";
+import ProgramAPI from "apis/program";
+import { ImportQuestionCourseContentWise } from "components/admin/program/ImportQuestionCourseContentWise";
 
 interface FilterParams {
   currentPage: number;
@@ -69,14 +75,23 @@ const ViewDropDown = ({
     {
       key: "1",
       label: (
-        <Link href={`question/${id}`}>
+        <div onClick={() => showModalView(id)}>
           <EyeOutlined />
-          {" View"}
-        </Link>
+          {" View Question"}
+        </div>
       ),
     },
     {
       key: "2",
+      label: (
+        <div onClick={() => showModalView(id)}>
+          <EyeOutlined />
+          {" View Students"}
+        </div>
+      ),
+    },
+    {
+      key: "3",
       label: (
         <div onClick={() => openCloseDeleteLeaveModal(id)}>
           <DeleteOutlined />
@@ -93,42 +108,89 @@ const ViewDropDown = ({
   );
 };
 
-const Student = () => {
+const Question = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
+  const { programId } = router.query;
   const programAPI = new ProgramAPI();
+  const questionAPI = new QuestionAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   const [openView, setOpenView] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const { contentDetailsId } = router.query;
+
+  const handleVisible = () => {
+    setIsVisible(!isVisible);
+  };
   const queryClient = useQueryClient();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
   };
   const programListColumns: any = [
     {
-      title: "Name",
-      key: "name",
-      dataIndex: "name",
+      title: "S.N",
+      render: (text: any, record: any, index: number) => {
+        const currentPage = filterParams.currentPage;
+        const pageSize = filterParams.pageSize; // Change this to your actual page size
+        const serialNumber = (currentPage - 1) * pageSize + index + 1;
+        return serialNumber;
+      },
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Display Name",
-      dataIndex: "display_name",
+      title: "Question",
+      key: "question_text",
+      dataIndex: "question_text",
+      render: (text) => <p className={isVisible ? "" : "blur"}>{text}</p>,
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "",
-      dataIndex: "",
+      title: "Weight Count",
+      dataIndex: "weightage",
+      render: (text) => <p className={isVisible ? "" : "blur"}>{text}</p>,
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Options",
       render: (row: any) => (
-        <ViewDropDown
-          showModalView={showModalView}
-          showModalEdit={showModalEdit}
-          openCloseDeleteLeaveModal={openCloseDeleteLeaveModal}
-          id={row.id}
-        />
+        <text className={isVisible ? "" : "blur"}>
+          {row.options.map((option: any) => `${option.option_text} : `)}
+        </text>
       ),
+      responsive: ["sm", "md", "lg"],
     },
+    // {
+    //   title: "Correct Answer",
+    //   render: (row: any) => (
+    //     <text className={isVisible ? "" : "blur"}>
+    //       {row.options.map((option: any) =>
+    //         row.correct_answers.map((correct: any) => {
+    //           if (option.id === correct.option_id)
+    //             // Update here: Use === for comparison
+    //             return (
+    //               <StyledTag color={"success"}>{option.option_text}</StyledTag>
+    //             );
+    //         })
+    //       )}
+    //     </text>
+    //   ),
+    //   responsive: ["sm", "md", "lg"],
+    // },
+    // {
+    //   title: "",
+    //   dataIndex: "",
+    //   render: (row: any) => (
+    //     <ViewDropDown
+    //       showModalView={showModalView}
+    //       showModalEdit={showModalEdit}
+    //       openCloseDeleteLeaveModal={openCloseDeleteLeaveModal}
+    //       id={row.id}
+    //     />
+    //   ),
+    // },
   ];
+
   const [isDeleteLeaveModalOpen, setIsDeleteLeaveModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<string>("");
 
@@ -141,7 +203,7 @@ const Student = () => {
 
   const queryList = useQuery(
     [
-      "ProgramList",
+      "QuestionList",
       {
         status: filterParams.status,
         page: filterParams.currentPage,
@@ -155,15 +217,23 @@ const Student = () => {
         limit: filterParams.pageSize,
       };
       if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await programAPI.list(queryParams);
+      const response = await questionAPI.getQuestionBasedOnCourseContent(
+        contentDetailsId,
+        filterParams
+      );
       return response?.data;
+    },
+    {
+      enabled: !!contentDetailsId,
     }
   );
 
   const programList = queryList?.data?.data;
+
   const metaData = queryList?.data?.meta;
 
   const handleSearch = (e: any) => {
+    const { name, value } = e.target;
     setFilterParams((prevState) => ({
       ...prevState,
       currentPage: INITIAL_CURRENT_PAGE,
@@ -186,15 +256,21 @@ const Student = () => {
     setOpenEdit(true);
   };
 
+  const programListQuery = useQuery("program-list", () =>
+    programAPI.get(programId).then((res: any) => res.data)
+  );
+
+  const program = programListQuery?.data?.data;
+
   const removeEmployeeDocsMutation = useMutation((employeeId: any) =>
-    programAPI.destroy(employeeId)
+    questionAPI.destroy(employeeId)
   );
 
   const onConfirmDelete = () => {
     removeEmployeeDocsMutation.mutate(currentItem, {
       onSuccess: () => {
-        queryClient.invalidateQueries(["ProgramList"]);
-        message.success("Removed Program Successfully");
+        queryClient.invalidateQueries(["QuestionList"]);
+        message.success("Removed Question Successfull");
         openCloseDeleteLeaveModal();
       },
       onError: (data: any) => {
@@ -213,11 +289,16 @@ const Student = () => {
               <Link href="/dashboard">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <span style={{ color: Colors.BLACK }}>Program</span>
+              <Link href="/dir/program">Program</Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              <span style={{ color: Colors.BLACK }}>
+                Question of {program?.name}
+              </span>
             </Breadcrumb.Item>
           </Breadcrumb>
           <TitleContent>
-            <h2>Program</h2>
+            <h2>Question of {program?.name}</h2>
             <Button
               style={{
                 background: Colors.COLOR_PRIMARY_BG,
@@ -228,7 +309,7 @@ const Student = () => {
               icon={<UserAddOutlined />}
               onClick={openCloseModal}
             >
-              Add New Program
+              Import Question
             </Button>
           </TitleContent>
         </PageHeaderNaviagtion>
@@ -288,7 +369,7 @@ const Student = () => {
                 <Button
                   type="primary"
                   style={{ boxShadow: "none", width: "100%" }}
-                  onClick={handleSearch}
+                  // onClick={handleSearch}
                 >
                   Search
                 </Button>
@@ -297,15 +378,22 @@ const Student = () => {
           </SearchBarContent>
         </SearchBar>
       </PageHeader>
+      <div
+        //   className="attendance-legends"
+        style={{ marginLeft: "20px", marginBottom: "10px" }}
+      >
+        <Tooltip
+          placement="bottom"
+          title={isVisible ? "Hide Data" : "Show Data"}
+        >
+          <Switch onChange={handleVisible} size="small" />
+        </Tooltip>
+      </div>
       <TableBodyContainer>
         <Table
           columns={programListColumns}
           dataSource={programList}
           scroll={{ x: 1000 }}
-          style={{ cursor: "pointer" }}
-          onRow={(record) => ({
-            onClick: () => router.push(`/dir/program/${record.id}`),
-          })}
           pagination={
             queryList?.data?.meta?.total > 10 && {
               defaultPageSize: 10,
@@ -335,7 +423,7 @@ const Student = () => {
         onConfirmModal={onConfirmDelete}
         icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
       />
-      <ImportProgramModal
+      <ImportQuestionCourseContentWise
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
       />
@@ -343,7 +431,7 @@ const Student = () => {
   );
 };
 
-export default Student;
+export default Question;
 
 const UsersContainer = styled.div``;
 
@@ -351,4 +439,8 @@ const StyledPagination = styled(Pagination)`
   // position: absolute;
   // bottom: 24px;
   // right: 24px;
+`;
+
+const StyledTag = styled(Tag)`
+  margin-left: 15px;
 `;

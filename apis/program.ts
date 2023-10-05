@@ -22,3 +22,41 @@ export function uploadMyDocs({ file }: any) {
     },
   });
 }
+
+export const programContent = async ({
+  queryKey,
+}: {
+  queryKey: any;
+}): Promise<any> => {
+  const [, data] = queryKey;
+
+  const queryParams: any = {
+    page: data.filterParams.currentPage,
+    limit: data.filterParams.pageSize,
+  };
+
+  if (data.filterParams.date) queryParams.date = data.filterParams.date;
+  if (data.filterParams.search) queryParams.search = data.filterParams.search;
+  if (data.filterParams.status) queryParams.status = data.filterParams.status;
+  if (data.id) queryParams.subject_id = data.id;
+
+  console.log(data.id);
+
+  const response = await http({
+    url: `/course-content`,
+    method: "get",
+    params: queryParams,
+  });
+
+  return response.data;
+};
+
+export const createProgramContent = async (data: any) => {
+  const response = await http({
+    url: `/course-content`,
+    method: "post",
+    data,
+  });
+
+  return response.data.data;
+};

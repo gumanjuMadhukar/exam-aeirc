@@ -728,11 +728,6 @@ pt-15 {
   border: 1px solid #85a3fd !important;
 }
 
-.ant-form-vertical .ant-form-item-label>label {
-  font-size: 18px;
-  font-weight: 600;
-}
-
 .ant-checkbox-group {
   display: block;
 }
@@ -767,4 +762,9 @@ pt-15 {
 
 :where(.css-dev-only-do-not-override-my1yey).ant-segmented {
   background-color: white !important;
+}
+
+.blur {
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
 }

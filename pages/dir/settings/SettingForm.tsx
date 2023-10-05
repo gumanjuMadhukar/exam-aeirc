@@ -138,7 +138,7 @@ const SettingForm = (props: Props) => {
                   },
                 ]}
               >
-                <Input disabled={active} />
+                <Input />
               </Form.Item>
             </Col>
 
@@ -154,7 +154,7 @@ const SettingForm = (props: Props) => {
                   },
                 ]}
               >
-                <Input disabled={active} />
+                <Input />
               </Form.Item>
             </Col>
 
@@ -170,7 +170,7 @@ const SettingForm = (props: Props) => {
                   },
                 ]}
               >
-                <Input disabled={active} />
+                <Input />
               </Form.Item>
             </Col>
 
@@ -186,7 +186,7 @@ const SettingForm = (props: Props) => {
                   },
                 ]}
               >
-                <Input disabled={active} />
+                <Input />
               </Form.Item>
             </Col>
             <Col lg={11} xs={24} md={11}>
@@ -195,7 +195,7 @@ const SettingForm = (props: Props) => {
                 name="is_negative_marking"
                 initialValue={data?.is_negative_marking}
               >
-                <Switch onChange={onChange} disabled={active} />
+                <Switch onChange={onChange} />
               </Form.Item>
             </Col>
 

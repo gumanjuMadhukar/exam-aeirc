@@ -41,6 +41,14 @@ class QuestionAPI extends Resource {
     });
   }
 
+  getQuestionBasedOnCourseContent(subject_id: any, filterParams: any) {
+    return http({
+      url: `/getQuestionBasedOnCourseContent/${subject_id}?page=${filterParams.currentPage}`,
+      method: "get",
+      params: filterParams,
+    });
+  }
+
   constructor() {
     super("questions");
   }
@@ -75,5 +83,23 @@ export const calculateStudentMarks = (id: any) => {
   return http({
     url: `/calculateStudentMarks/${id}`,
     method: "get",
+  });
+};
+
+export const uploadCourseContentQuestions = ({
+  file,
+  course_content_id,
+}: any) => {
+  const formData = new FormData();
+  formData.append("file", file[0]);
+  formData.append("course_content_id", course_content_id);
+
+  return http({
+    url: `/import/course-content-questions`,
+    method: "post",
+    data: formData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
 };

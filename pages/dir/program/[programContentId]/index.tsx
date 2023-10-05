@@ -4,25 +4,24 @@ import {
   Button,
   Input,
   Table,
-  Pagination,
-  MenuProps,
   Row,
   Col,
-  Dropdown,
   message,
+  MenuProps,
+  Dropdown,
 } from "antd";
 import Link from "next/link";
 import {
   UserAddOutlined,
   DeleteOutlined,
-  EditOutlined,
   EyeOutlined,
-  EllipsisOutlined,
   ExclamationOutlined,
+  EllipsisOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
-import ProgramAPI from "apis/program";
+import ProgramAPI, { programContent } from "apis/program";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 
@@ -35,14 +34,16 @@ import {
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
 import ConfirmModal from "components/ConfirmModal";
+import { CreateProgramContentModal } from "components/admin/program/CreateProgramContentModal";
+import { ImportQuestionCourseContentWise } from "components/admin/program/ImportQuestionCourseContentWise";
 
 interface FilterParams {
   currentPage: number;
   pageSize: number;
   status: string;
   search: string;
+  subject_id: string;
 }
 
 const DefaultFilterParams = {
@@ -50,26 +51,28 @@ const DefaultFilterParams = {
   pageSize: DEFAULT_PAGE_SIZE,
   status: "true",
   search: "",
+  subject_id: "",
 };
 
 interface IViewDropDown {
-  showModalView: (id: string) => void;
-  showModalEdit: (id: string) => void;
+  // showModalView: (id: string) => void;
+  openCloseEditModal: (id: string) => void;
   openCloseDeleteLeaveModal: (id?: string | undefined) => void;
   id: string;
+  programContentId: string | string[] | undefined;
 }
 
 const ViewDropDown = ({
-  showModalView,
-  showModalEdit,
+  openCloseEditModal,
   openCloseDeleteLeaveModal,
   id,
+  programContentId,
 }: IViewDropDown) => {
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: (
-        <Link href={`question/${id}`}>
+        <Link href={`/dir/program/${programContentId}/${id}`}>
           <EyeOutlined />
           {" View"}
         </Link>
@@ -77,6 +80,15 @@ const ViewDropDown = ({
     },
     {
       key: "2",
+      label: (
+        <div onClick={() => openCloseEditModal(id)}>
+          <EditOutlined />
+          {" Edit"}
+        </div>
+      ),
+    },
+    {
+      key: "3",
       label: (
         <div onClick={() => openCloseDeleteLeaveModal(id)}>
           <DeleteOutlined />
@@ -93,16 +105,28 @@ const ViewDropDown = ({
   );
 };
 
-const Student = () => {
+const UsersContainer = styled.div``;
+
+const ProgramContent = () => {
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
   const programAPI = new ProgramAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-  const [openView, setOpenView] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [uploadQuestionModalOpen, setUploadQuestionModalOpen] = useState(false);
+  const [isEditModel, setIsEditModal] = useState(false);
   const queryClient = useQueryClient();
+  const { programContentId } = router.query;
+  const id = programContentId;
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
+  };
+
+  const openCloseUploadQuestionModal = () => {
+    setUploadQuestionModalOpen(!uploadQuestionModalOpen);
+  };
+
+  const openCloseEditModal = () => {
+    setIsEditModal(!isEditModel);
   };
   const programListColumns: any = [
     {
@@ -112,8 +136,13 @@ const Student = () => {
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Display Name",
-      dataIndex: "display_name",
+      title: "Question to allocate",
+      dataIndex: "question_count",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Total Question",
+      dataIndex: "question_count",
       responsive: ["sm", "md", "lg"],
     },
     {
@@ -121,10 +150,10 @@ const Student = () => {
       dataIndex: "",
       render: (row: any) => (
         <ViewDropDown
-          showModalView={showModalView}
-          showModalEdit={showModalEdit}
+          openCloseEditModal={openCloseEditModal}
           openCloseDeleteLeaveModal={openCloseDeleteLeaveModal}
           id={row.id}
+          programContentId={programContentId ? programContentId : ""}
         />
       ),
     },
@@ -139,52 +168,13 @@ const Student = () => {
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
 
-  const queryList = useQuery(
-    [
-      "ProgramList",
-      {
-        status: filterParams.status,
-        page: filterParams.currentPage,
-        limit: filterParams.pageSize,
-        search: filterParams.search,
-      },
-    ],
-    async () => {
-      const queryParams: any = {
-        page: filterParams.currentPage,
-        limit: filterParams.pageSize,
-      };
-      if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await programAPI.list(queryParams);
-      return response?.data;
+  const { data: courseContentData } = useQuery(
+    ["CourseContent", { filterParams, id }],
+    programContent,
+    {
+      enabled: !!id,
     }
   );
-
-  const programList = queryList?.data?.data;
-  const metaData = queryList?.data?.meta;
-
-  const handleSearch = (e: any) => {
-    setFilterParams((prevState) => ({
-      ...prevState,
-      currentPage: INITIAL_CURRENT_PAGE,
-      search: searchValue,
-    }));
-  };
-
-  const showModalView = (id: string) => {
-    setCurrentItem(id);
-    setOpenView(true);
-  };
-
-  const hideModalView = () => {
-    setCurrentItem("");
-    setOpenView(false);
-  };
-
-  const showModalEdit = (id: string) => {
-    setCurrentItem(id);
-    setOpenEdit(true);
-  };
 
   const removeEmployeeDocsMutation = useMutation((employeeId: any) =>
     programAPI.destroy(employeeId)
@@ -218,18 +208,20 @@ const Student = () => {
           </Breadcrumb>
           <TitleContent>
             <h2>Program</h2>
-            <Button
-              style={{
-                background: Colors.COLOR_PRIMARY_BG,
-                boxShadow: "none",
-                color: Colors.WHITE,
-              }}
-              // type="primary"
-              icon={<UserAddOutlined />}
-              onClick={openCloseModal}
-            >
-              Add New Program
-            </Button>
+            <div>
+              <Button
+                style={{
+                  background: Colors.COLOR_PRIMARY_BG,
+                  boxShadow: "none",
+                  color: Colors.WHITE,
+                }}
+                // type="primary"
+                icon={<UserAddOutlined />}
+                onClick={openCloseModal}
+              >
+                Add New Course Content
+              </Button>
+            </div>
           </TitleContent>
         </PageHeaderNaviagtion>
         <SearchBar>
@@ -288,7 +280,7 @@ const Student = () => {
                 <Button
                   type="primary"
                   style={{ boxShadow: "none", width: "100%" }}
-                  onClick={handleSearch}
+                  // onClick={handleSearch}
                 >
                   Search
                 </Button>
@@ -300,16 +292,13 @@ const Student = () => {
       <TableBodyContainer>
         <Table
           columns={programListColumns}
-          dataSource={programList}
+          dataSource={courseContentData?.data}
           scroll={{ x: 1000 }}
           style={{ cursor: "pointer" }}
-          onRow={(record) => ({
-            onClick: () => router.push(`/dir/program/${record.id}`),
-          })}
           pagination={
-            queryList?.data?.meta?.total > 10 && {
+            courseContentData?.meta?.total > 10 && {
               defaultPageSize: 10,
-              total: metaData?.total,
+              total: courseContentData?.meta?.total,
               hideOnSinglePage: true,
               showSizeChanger: true,
               showTotal: (total, range) =>
@@ -335,20 +324,17 @@ const Student = () => {
         onConfirmModal={onConfirmDelete}
         icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
       />
-      <ImportProgramModal
+      <CreateProgramContentModal
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
+        subject_id={id ? id : ""}
+      />
+      <ImportQuestionCourseContentWise
+        handleCancel={openCloseUploadQuestionModal}
+        isModalOpen={uploadQuestionModalOpen}
       />
     </UsersContainer>
   );
 };
 
-export default Student;
-
-const UsersContainer = styled.div``;
-
-const StyledPagination = styled(Pagination)`
-  // position: absolute;
-  // bottom: 24px;
-  // right: 24px;
-`;
+export default ProgramContent;

@@ -22,4 +22,5 @@ export const Colors = {
   SUCCESS_BG: "#F6FFED",
   GREEN: "#389E0D",
   GREY8: "#595959",
+  GREYABALONE: "#D6CFC7",
 };

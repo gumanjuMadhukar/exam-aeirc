@@ -4,7 +4,6 @@ import {
   Button,
   Input,
   Table,
-  Pagination,
   MenuProps,
   Row,
   Col,
@@ -15,12 +14,11 @@ import Link from "next/link";
 import {
   UserAddOutlined,
   DeleteOutlined,
-  EditOutlined,
   EyeOutlined,
   EllipsisOutlined,
   ExclamationOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import ProgramAPI from "apis/program";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -59,12 +57,7 @@ interface IViewDropDown {
   id: string;
 }
 
-const ViewDropDown = ({
-  showModalView,
-  showModalEdit,
-  openCloseDeleteLeaveModal,
-  id,
-}: IViewDropDown) => {
+const ViewDropDown = ({ openCloseDeleteLeaveModal, id }: IViewDropDown) => {
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -98,8 +91,8 @@ const Student = () => {
   const router = useRouter();
   const programAPI = new ProgramAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-  const [openView, setOpenView] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [_openView, setOpenView] = useState(false);
+  const [_openEdit, setOpenEdit] = useState(false);
   const queryClient = useQueryClient();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
@@ -163,7 +156,7 @@ const Student = () => {
   const programList = queryList?.data?.data;
   const metaData = queryList?.data?.meta;
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (_e: any) => {
     setFilterParams((prevState) => ({
       ...prevState,
       currentPage: INITIAL_CURRENT_PAGE,
@@ -176,10 +169,10 @@ const Student = () => {
     setOpenView(true);
   };
 
-  const hideModalView = () => {
-    setCurrentItem("");
-    setOpenView(false);
-  };
+  // const hideModalView = () => {
+  //   setCurrentItem("");
+  //   setOpenView(false);
+  // };
 
   const showModalEdit = (id: string) => {
     setCurrentItem(id);
@@ -347,8 +340,8 @@ export default Student;
 
 const UsersContainer = styled.div``;
 
-const StyledPagination = styled(Pagination)`
-  // position: absolute;
-  // bottom: 24px;
-  // right: 24px;
-`;
+// const StyledPagination = styled(Pagination)`
+//   // position: absolute;
+//   // bottom: 24px;
+//   // right: 24px;
+// `;

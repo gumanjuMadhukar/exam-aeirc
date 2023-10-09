@@ -113,7 +113,8 @@ const Student: NextPageWithLayout = () => {
 export default Student;
 
 const DashboardContainer = styled.div`
-  background-color: #f0f2f5;
+  background-color: ${Colors.GREYABALONE};
+  height: 100vh;
 `;
 const ProfileWrapper = styled(Row)`
   padding: 25px;

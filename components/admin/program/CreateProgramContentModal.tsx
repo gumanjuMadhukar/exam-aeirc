@@ -2,7 +2,7 @@ import { Button, Col, Form, Input, message, Modal, Row } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { Colors } from "utils/colors";
 import styled from "styled-components";
-import { createProgramContent, uploadMyDocs } from "apis/program";
+import { createProgramContent } from "apis/program";
 interface Props {
   handleCancel: () => void;
   isModalOpen: boolean;

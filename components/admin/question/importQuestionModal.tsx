@@ -1,16 +1,5 @@
-import {
-  Button,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Modal,
-  Radio,
-  Row,
-  Select,
-} from "antd";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Button, Col, Form, message, Modal, Row } from "antd";
+import { useMutation, useQueryClient } from "react-query";
 import { Colors } from "utils/colors";
 import styled from "styled-components";
 import { InboxOutlined } from "@ant-design/icons";
@@ -18,7 +7,6 @@ import type { UploadProps } from "antd";
 import { Upload } from "antd";
 import { RcFile } from "antd/es/upload";
 import { useState } from "react";
-import { uploadMyDocs } from "apis/program";
 import { uploadQuestions } from "apis/question";
 import { useRouter } from "next/router";
 interface Props {

@@ -1,16 +1,5 @@
-import {
-  Button,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Modal,
-  Radio,
-  Row,
-  Select,
-} from "antd";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Button, Col, Form, message, Modal, Row } from "antd";
+import { useMutation, useQueryClient } from "react-query";
 import { Colors } from "utils/colors";
 import styled from "styled-components";
 import { InboxOutlined } from "@ant-design/icons";
@@ -18,7 +7,6 @@ import type { UploadProps } from "antd";
 import { Upload } from "antd";
 import { RcFile } from "antd/es/upload";
 import { useState } from "react";
-import { useRouter } from "next/router";
 import { uploadStudent } from "apis/student";
 interface Props {
   handleCancel: () => void;
@@ -30,8 +18,6 @@ const { Dragger } = Upload;
 export const ImportStudentModal = (props: Props) => {
   const { isModalOpen, handleCancel } = props;
   const queryClient = useQueryClient();
-  const router = useRouter();
-  const { programId } = router.query;
   const [toBeUploadedDocs, setToBeUploadedDocs] = useState<
     (RcFile | undefined)[]
   >([]);

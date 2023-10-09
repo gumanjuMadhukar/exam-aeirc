@@ -193,7 +193,7 @@ body {
   font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, Segoe UI,
     Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
     sans-serif;
-  background-color: #f0f2f6;
+  background-color: #D6CFC7;
 }
 
 a {
@@ -755,7 +755,7 @@ pt-15 {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: unset;
-  width: 100px;
+  width: 80px;
   text-align: left !important;
 }
 
@@ -767,4 +767,12 @@ pt-15 {
 .blur {
   filter: blur(3px);
   -webkit-filter: blur(3px);
+}
+
+.ant-radio-inner {
+  border: 1px solid #000 !important;
+}
+
+.ant-checkbox-inner {
+  border: 3px solid #55baff;
 }

@@ -4,7 +4,6 @@ import {
   Button,
   Input,
   Table,
-  Pagination,
   MenuProps,
   Row,
   Col,
@@ -16,12 +15,11 @@ import Link from "next/link";
 import {
   UserAddOutlined,
   DeleteOutlined,
-  EditOutlined,
   EyeOutlined,
   EllipsisOutlined,
   ExclamationOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import QuestionAPI from "apis/question";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -36,7 +34,6 @@ import {
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
 import ConfirmModal from "components/ConfirmModal";
 import { ImportQuestionModal } from "components/admin/question/importQuestionModal";
 import ProgramAPI from "apis/program";
@@ -81,7 +78,7 @@ const ViewDropDown = ({
     {
       key: "2",
       label: (
-        <div onClick={() => showModalView(id)}>
+        <div onClick={() => showModalEdit(id)}>
           <EyeOutlined />
           {" View Students"}
         </div>
@@ -112,8 +109,8 @@ const Question = () => {
   const programAPI = new ProgramAPI();
   const questionAPI = new QuestionAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-  const [openView, setOpenView] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [_openView, setOpenView] = useState(false);
+  const [_openEdit, setOpenEdit] = useState(false);
   const queryClient = useQueryClient();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
@@ -121,7 +118,7 @@ const Question = () => {
   const programListColumns: any = [
     {
       title: "S.N",
-      render: (text: any, record: any, index: number) => index + 1,
+      render: (_text: any, _record: any, index: number) => index + 1,
       responsive: ["sm", "md", "lg"],
     },
     {
@@ -156,6 +153,7 @@ const Question = () => {
                 return (
                   <StyledTag color={"success"}>{option.option_text}</StyledTag>
                 );
+              return;
             })
           )}
         </text>
@@ -214,23 +212,9 @@ const Question = () => {
 
   const metaData = queryList?.data?.meta;
 
-  const handleSearch = (e: any) => {
-    const { name, value } = e.target;
-    setFilterParams((prevState) => ({
-      ...prevState,
-      currentPage: INITIAL_CURRENT_PAGE,
-      search: searchValue,
-    }));
-  };
-
   const showModalView = (id: string) => {
     setCurrentItem(id);
     setOpenView(true);
-  };
-
-  const hideModalView = () => {
-    setCurrentItem("");
-    setOpenView(false);
   };
 
   const showModalEdit = (id: string) => {
@@ -403,11 +387,11 @@ export default Question;
 
 const UsersContainer = styled.div``;
 
-const StyledPagination = styled(Pagination)`
-  // position: absolute;
-  // bottom: 24px;
-  // right: 24px;
-`;
+// const StyledPagination = styled(Pagination)`
+//   // position: absolute;
+//   // bottom: 24px;
+//   // right: 24px;
+// `;
 
 const StyledTag = styled(Tag)`
   margin-left: 15px;

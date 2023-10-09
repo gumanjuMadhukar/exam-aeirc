@@ -1,63 +1,19 @@
 import styled from "styled-components";
 import {
-  Breadcrumb,
   Button,
   Input,
-  Table,
-  Pagination,
-  MenuProps,
   Row,
   Col,
-  Dropdown,
   message,
   Form,
   Card,
-  Radio,
   Switch,
   Spin,
 } from "antd";
-import Link from "next/link";
-import {
-  UserAddOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  EllipsisOutlined,
-  ExclamationOutlined,
-} from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
-import ProgramAPI from "apis/program";
 import SettingAPI from "apis/setting";
-
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useRouter } from "next/router";
-
-import {
-  PageHeader,
-  PageHeaderNaviagtion,
-  SearchBar,
-  SearchBarContent,
-  TableBodyContainer,
-  TitleContent,
-} from "styles/styled/PageHeader";
+import { useMutation, useQueryClient } from "react-query";
 import { Colors } from "utils/colors";
-import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
-import ConfirmModal from "components/ConfirmModal";
-
-interface FilterParams {
-  currentPage: number;
-  pageSize: number;
-  status: string;
-  search: string;
-}
-
-const DefaultFilterParams = {
-  currentPage: INITIAL_CURRENT_PAGE,
-  pageSize: DEFAULT_PAGE_SIZE,
-  status: "true",
-  search: "",
-};
 
 interface Props {
   data: any;
@@ -75,11 +31,6 @@ const SettingForm = (props: Props) => {
 
   const settingAPI = new SettingAPI();
   const queryClient = useQueryClient();
-
-  const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-
-  const [filterParams, setFilterParams] =
-    useState<FilterParams>(DefaultFilterParams);
 
   useEffect(() => {
     if (data) {
@@ -109,9 +60,9 @@ const SettingForm = (props: Props) => {
         queryClient.invalidateQueries(["SettingData"]);
         message.success("Setting has been added successfully");
       },
-      onError: (data: any) => {
-        const errorMessageWithNetworkIssue = data?.message;
-        const errorMessage = data?.response?.data?.message;
+      onError: (_data: any) => {
+        // const errorMessageWithNetworkIssue = data?.message;
+        // const errorMessage = data?.response?.data?.message;
       },
     });
   };
@@ -251,14 +202,6 @@ const SettingForm = (props: Props) => {
 };
 
 export default SettingForm;
-
-const UsersContainer = styled.div``;
-
-const StyledPagination = styled(Pagination)`
-  // position: absolute;
-  // bottom: 24px;
-  // right: 24px;
-`;
 
 const CustomizedButtonGroup = styled.div`
   float: right;

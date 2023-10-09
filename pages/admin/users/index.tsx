@@ -1,18 +1,8 @@
 import styled from "styled-components";
-import {
-  Breadcrumb,
-  Button,
-  Input,
-  Menu,
-  Table,
-  Pagination,
-  Image,
-  Row,
-  Col,
-} from "antd";
+import { Breadcrumb, Button, Input, Table, Row, Col } from "antd";
 import Link from "next/link";
 import { UserAddOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import UserAPI from "apis/user";
 import { useQuery } from "react-query";
@@ -102,16 +92,16 @@ const User = () => {
   );
 
   const userList = queryList?.data;
-  const metaData = queryList?.data?.meta_data;
+  // const metaData = queryList?.data?.meta_data;
 
-  const handleSearch = (e: any) => {
-    const { name, value } = e.target;
-    setFilterParams((prevState) => ({
-      ...prevState,
-      currentPage: INITIAL_CURRENT_PAGE,
-      search: searchValue,
-    }));
-  };
+  // const handleSearch = (e: any) => {
+  //   const { name, value } = e.target;
+  //   setFilterParams((prevState) => ({
+  //     ...prevState,
+  //     currentPage: INITIAL_CURRENT_PAGE,
+  //     search: searchValue,
+  //   }));
+  // };
 
   return (
     <UsersContainer>
@@ -247,8 +237,8 @@ export default User;
 
 const UsersContainer = styled.div``;
 
-const StyledPagination = styled(Pagination)`
-  // position: absolute;
-  // bottom: 24px;
-  // right: 24px;
-`;
+// const StyledPagination = styled(Pagination)`
+//   // position: absolute;
+//   // bottom: 24px;
+//   // right: 24px;
+// `;

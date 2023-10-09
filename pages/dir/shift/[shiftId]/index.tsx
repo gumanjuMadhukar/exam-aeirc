@@ -9,6 +9,7 @@ import {
   Col,
   Dropdown,
   message,
+  Tag,
 } from "antd";
 import Link from "next/link";
 import {
@@ -20,8 +21,10 @@ import {
 } from "@ant-design/icons";
 import { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
-import ProgramAPI from "apis/program";
+import QuestionAPI from "apis/question";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useRouter } from "next/router";
+
 import {
   PageHeader,
   PageHeaderNaviagtion,
@@ -31,8 +34,10 @@ import {
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
+
 import ConfirmModal from "components/ConfirmModal";
+import { ImportQuestionModal } from "components/admin/question/importQuestionModal";
+import ProgramAPI from "apis/program";
 
 interface FilterParams {
   currentPage: number;
@@ -100,7 +105,10 @@ const ViewDropDown = ({
 
 const Question = () => {
   const [searchValue, setSearchValue] = useState("");
+  const router = useRouter();
+  const { programId } = router.query;
   const programAPI = new ProgramAPI();
+  const questionAPI = new QuestionAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   const [_openView, setOpenView] = useState(false);
   const [_openEdit, setOpenEdit] = useState(false);
@@ -110,14 +118,47 @@ const Question = () => {
   };
   const programListColumns: any = [
     {
-      title: "Name",
-      key: "name",
-      dataIndex: "name",
+      title: "S.N",
+      render: (_text: any, _record: any, index: number) => index + 1,
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Display Name",
-      dataIndex: "display_name",
+      title: "Question",
+      key: "question_text",
+      dataIndex: "question_text",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Question Type",
+      dataIndex: "question_type",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Options",
+      render: (row: any) => (
+        <text>
+          {row.options.map((option: any) => `${option.option_text} : `)}
+        </text>
+      ),
+      responsive: ["sm", "md", "lg"],
+    },
+    ,
+    {
+      title: "Correct Answer",
+      render: (row: any) => (
+        <text>
+          {row.options.map((option: any) =>
+            row.correct_answers.map((correct: any) => {
+              if (option.id === correct.option_id)
+                return (
+                  <StyledTag color={"success"}>{option.option_text}</StyledTag>
+                );
+
+              return;
+            })
+          )}
+        </text>
+      ),
       responsive: ["sm", "md", "lg"],
     },
     {
@@ -133,6 +174,7 @@ const Question = () => {
       ),
     },
   ];
+
   const [isDeleteLeaveModalOpen, setIsDeleteLeaveModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<string>("");
 
@@ -145,7 +187,7 @@ const Question = () => {
 
   const queryList = useQuery(
     [
-      "ProgramList",
+      "QuestionList",
       {
         status: filterParams.status,
         page: filterParams.currentPage,
@@ -159,47 +201,43 @@ const Question = () => {
         limit: filterParams.pageSize,
       };
       if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await programAPI.list(queryParams);
+      const response = await questionAPI.getQuestionBasedOnSubject(
+        programId,
+        filterParams
+      );
       return response?.data;
     }
   );
 
   const programList = queryList?.data?.data;
-  const metaData = queryList?.data?.meta;
 
-  // const handleSearch = (e: any) => {
-  //   const { name, value } = e.target;
-  //   setFilterParams((prevState) => ({
-  //     ...prevState,
-  //     currentPage: INITIAL_CURRENT_PAGE,
-  //     search: searchValue,
-  //   }));
-  // };
+  const metaData = queryList?.data?.meta;
 
   const showModalView = (id: string) => {
     setCurrentItem(id);
     setOpenView(true);
   };
 
-  // const hideModalView = () => {
-  //   setCurrentItem("");
-  //   setOpenView(false);
-  // };
-
   const showModalEdit = (id: string) => {
     setCurrentItem(id);
     setOpenEdit(true);
   };
 
+  const programListQuery = useQuery("program-list", () =>
+    programAPI.get(programId).then((res: any) => res.data)
+  );
+
+  const program = programListQuery?.data?.data;
+
   const removeEmployeeDocsMutation = useMutation((employeeId: any) =>
-    programAPI.destroy(employeeId)
+    questionAPI.destroy(employeeId)
   );
 
   const onConfirmDelete = () => {
     removeEmployeeDocsMutation.mutate(currentItem, {
       onSuccess: () => {
-        queryClient.invalidateQueries(["ProgramList"]);
-        message.success("Removed Program Successfully");
+        queryClient.invalidateQueries(["QuestionList"]);
+        message.success("Removed Question Successfull");
         openCloseDeleteLeaveModal();
       },
       onError: (data: any) => {
@@ -218,11 +256,13 @@ const Question = () => {
               <Link href="/dashboard">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <span style={{ color: Colors.BLACK }}>Program</span>
+              <span style={{ color: Colors.BLACK }}>
+                Question of {program?.name}
+              </span>
             </Breadcrumb.Item>
           </Breadcrumb>
           <TitleContent>
-            <h2>Program</h2>
+            <h2>Question of {program?.name}</h2>
             <Button
               style={{
                 background: Colors.COLOR_PRIMARY_BG,
@@ -233,7 +273,7 @@ const Question = () => {
               icon={<UserAddOutlined />}
               onClick={openCloseModal}
             >
-              Add New Program
+              Import Question
             </Button>
           </TitleContent>
         </PageHeaderNaviagtion>
@@ -336,7 +376,7 @@ const Question = () => {
         onConfirmModal={onConfirmDelete}
         icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
       />
-      <ImportProgramModal
+      <ImportQuestionModal
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
       />
@@ -348,8 +388,6 @@ export default Question;
 
 const UsersContainer = styled.div``;
 
-// const StyledPagination = styled(Pagination)`
-//   // position: absolute;
-//   // bottom: 24px;
-//   // right: 24px;
-// `;
+const StyledTag = styled(Tag)`
+  margin-left: 15px;
+`;

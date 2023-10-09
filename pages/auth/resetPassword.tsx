@@ -12,9 +12,7 @@ import {
 } from "../../styles/authCSS";
 import { Colors } from "utils/colors";
 
-interface Props {}
-
-const ResetPassword: NextPage = (props): JSX.Element => {
+const ResetPassword: NextPage = (_props): JSX.Element => {
   const onSubmit = (e: any) => {
     e.preventDefault();
     // validate your userinfo

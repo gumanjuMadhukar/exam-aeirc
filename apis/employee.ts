@@ -16,10 +16,10 @@ class EmployeeAPI extends Resource {
     return http({
       url: "/" + this.uri,
       method: "get",
-      // params: query,
-      // cancelToken: new CancelToken(function executor(c) {
-      //   cancel = c;
-      // }),
+      params: query,
+      cancelToken: new CancelToken(function executor(c) {
+        cancel = c;
+      }),
     });
   }
 }

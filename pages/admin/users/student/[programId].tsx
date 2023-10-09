@@ -4,7 +4,6 @@ import {
   Button,
   Input,
   Table,
-  Pagination,
   MenuProps,
   Row,
   Col,
@@ -15,17 +14,14 @@ import Link from "next/link";
 import {
   UserAddOutlined,
   DeleteOutlined,
-  EditOutlined,
   EyeOutlined,
   EllipsisOutlined,
   ExclamationOutlined,
 } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import StudentAPI from "apis/student";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useRouter } from "next/router";
-
 import {
   PageHeader,
   PageHeaderNaviagtion,
@@ -35,7 +31,6 @@ import {
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
 import ConfirmModal from "components/ConfirmModal";
 import { ImportStudentModal } from "components/admin/student/importStudentModal";
 
@@ -79,7 +74,7 @@ const ViewDropDown = ({
     {
       key: "2",
       label: (
-        <div onClick={() => showModalView(id)}>
+        <div onClick={() => showModalEdit(id)}>
           <EyeOutlined />
           {" View Students"}
         </div>
@@ -105,11 +100,11 @@ const ViewDropDown = ({
 
 const Student = () => {
   const [searchValue, setSearchValue] = useState("");
-  const router = useRouter();
+
   const studentAPI = new StudentAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-  const [openView, setOpenView] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [_openView, setOpenView] = useState(false);
+  const [_openEdit, setOpenEdit] = useState(false);
   const queryClient = useQueryClient();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
@@ -198,24 +193,24 @@ const Student = () => {
   const programList = queryList?.data?.data;
   const metaData = queryList?.data?.meta;
 
-  const handleSearch = (e: any) => {
-    const { name, value } = e.target;
-    setFilterParams((prevState) => ({
-      ...prevState,
-      currentPage: INITIAL_CURRENT_PAGE,
-      search: searchValue,
-    }));
-  };
+  // const handleSearch = (e: any) => {
+  //   const { name, value } = e.target;
+  //   setFilterParams((prevState) => ({
+  //     ...prevState,
+  //     currentPage: INITIAL_CURRENT_PAGE,
+  //     search: searchValue,
+  //   }));
+  // };
 
   const showModalView = (id: string) => {
     setCurrentItem(id);
     setOpenView(true);
   };
 
-  const hideModalView = () => {
-    setCurrentItem("");
-    setOpenView(false);
-  };
+  // const hideModalView = () => {
+  //   setCurrentItem("");
+  //   setOpenView(false);
+  // };
 
   const showModalEdit = (id: string) => {
     setCurrentItem(id);
@@ -378,9 +373,3 @@ const Student = () => {
 export default Student;
 
 const UsersContainer = styled.div``;
-
-const StyledPagination = styled(Pagination)`
-  // position: absolute;
-  // bottom: 24px;
-  // right: 24px;
-`;

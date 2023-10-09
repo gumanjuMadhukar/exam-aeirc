@@ -1,23 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
-import { Affix, Avatar, Badge, Drawer, Layout, Menu, Space, theme } from "antd";
-import moment from "moment";
+import { Affix, Layout, Menu, theme } from "antd";
 import { NextRouter, useRouter } from "next/router";
-import { it } from "node:test";
-import React, {
-  createElement,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
-import styled from "styled-components";
+import React, { createElement, ReactElement, useState } from "react";
 import { Roles } from "utils/enums";
 import { getDefaultOpenKeys } from "utils/helpers";
 import urls from "../../../configs/urls";
 import DropdownMenu from "../dropdown-menu";
-import { MenuOutlined, BellOutlined } from "@ant-design/icons";
-import { Colors } from "utils/colors";
+import { MenuOutlined } from "@ant-design/icons";
 import { LoginHeading } from "styles/authCSS";
 const { Header, Content, Sider } = Layout;
 
@@ -48,7 +37,7 @@ const items: (
   navItems: routeItemProp[],
   isChild?: boolean
 ) => MenuItem[] = (router, navItems, isChild = false) =>
-  navItems.map((ni, idx) => {
+  navItems.map((ni, _idx) => {
     const key = ni.title;
     const isSelected = ni.path === router.pathname;
     const hasChildren = !!ni?.children;
@@ -78,7 +67,7 @@ const items: (
 const SidebarLayout = ({ role, children }: Props) => {
   const [collapsed, setCollapsed] = useState(false);
   const {
-    token: { colorBgContainer, colorPrimaryBg },
+    token: { colorBgContainer },
   } = theme.useToken();
 
   const router = useRouter();

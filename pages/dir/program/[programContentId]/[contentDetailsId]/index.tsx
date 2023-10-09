@@ -4,26 +4,15 @@ import {
   Button,
   Input,
   Table,
-  Pagination,
-  MenuProps,
   Row,
   Col,
-  Dropdown,
   message,
-  Tag,
   Tooltip,
   Switch,
 } from "antd";
 import Link from "next/link";
-import {
-  UserAddOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  EllipsisOutlined,
-  ExclamationOutlined,
-} from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { UserAddOutlined, ExclamationOutlined } from "@ant-design/icons";
+import { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import QuestionAPI from "apis/question";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -38,9 +27,7 @@ import {
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
 import ConfirmModal from "components/ConfirmModal";
-import { ImportQuestionModal } from "components/admin/question/importQuestionModal";
 import ProgramAPI from "apis/program";
 import { ImportQuestionCourseContentWise } from "components/admin/program/ImportQuestionCourseContentWise";
 
@@ -58,55 +45,55 @@ const DefaultFilterParams = {
   search: "",
 };
 
-interface IViewDropDown {
-  showModalView: (id: string) => void;
-  showModalEdit: (id: string) => void;
-  openCloseDeleteLeaveModal: (id?: string | undefined) => void;
-  id: string;
-}
+// interface IViewDropDown {
+//   showModalView: (id: string) => void;
+//   showModalEdit: (id: string) => void;
+//   openCloseDeleteLeaveModal: (id?: string | undefined) => void;
+//   id: string;
+// }
 
-const ViewDropDown = ({
-  showModalView,
-  showModalEdit,
-  openCloseDeleteLeaveModal,
-  id,
-}: IViewDropDown) => {
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <div onClick={() => showModalView(id)}>
-          <EyeOutlined />
-          {" View Question"}
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <div onClick={() => showModalView(id)}>
-          <EyeOutlined />
-          {" View Students"}
-        </div>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <div onClick={() => openCloseDeleteLeaveModal(id)}>
-          <DeleteOutlined />
-          {" Delete"}
-        </div>
-      ),
-    },
-  ];
+// const ViewDropDown = ({
+//   showModalView,
+//   showModalEdit,
+//   openCloseDeleteLeaveModal,
+//   id,
+// }: IViewDropDown) => {
+//   const items: MenuProps["items"] = [
+//     {
+//       key: "1",
+//       label: (
+//         <div onClick={() => showModalView(id)}>
+//           <EyeOutlined />
+//           {" View Question"}
+//         </div>
+//       ),
+//     },
+//     {
+//       key: "2",
+//       label: (
+//         <div onClick={() => showModalEdit(id)}>
+//           <EyeOutlined />
+//           {" View Students"}
+//         </div>
+//       ),
+//     },
+//     {
+//       key: "3",
+//       label: (
+//         <div onClick={() => openCloseDeleteLeaveModal(id)}>
+//           <DeleteOutlined />
+//           {" Delete"}
+//         </div>
+//       ),
+//     },
+//   ];
 
-  return (
-    <Dropdown menu={{ items }} placement="bottom" arrow>
-      <EllipsisOutlined className="rotate-90" />
-    </Dropdown>
-  );
-};
+//   return (
+//     <Dropdown menu={{ items }} placement="bottom" arrow>
+//       <EllipsisOutlined className="rotate-90" />
+//     </Dropdown>
+//   );
+// };
 
 const Question = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -115,8 +102,8 @@ const Question = () => {
   const programAPI = new ProgramAPI();
   const questionAPI = new QuestionAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
-  const [openView, setOpenView] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [_openView, _setOpenView] = useState(false);
+  const [_openEdit, _setOpenEdit] = useState(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const { contentDetailsId } = router.query;
 
@@ -130,7 +117,7 @@ const Question = () => {
   const programListColumns: any = [
     {
       title: "S.N",
-      render: (text: any, record: any, index: number) => {
+      render: (_text: any, _record: any, index: number) => {
         const currentPage = filterParams.currentPage;
         const pageSize = filterParams.pageSize; // Change this to your actual page size
         const serialNumber = (currentPage - 1) * pageSize + index + 1;
@@ -142,13 +129,13 @@ const Question = () => {
       title: "Question",
       key: "question_text",
       dataIndex: "question_text",
-      render: (text) => <p className={isVisible ? "" : "blur"}>{text}</p>,
+      render: (text: any) => <p className={isVisible ? "" : "blur"}>{text}</p>,
       responsive: ["sm", "md", "lg"],
     },
     {
       title: "Weight Count",
       dataIndex: "weightage",
-      render: (text) => <p className={isVisible ? "" : "blur"}>{text}</p>,
+      render: (text: any) => <p className={isVisible ? "" : "blur"}>{text}</p>,
       responsive: ["sm", "md", "lg"],
     },
     {
@@ -232,29 +219,29 @@ const Question = () => {
 
   const metaData = queryList?.data?.meta;
 
-  const handleSearch = (e: any) => {
-    const { name, value } = e.target;
-    setFilterParams((prevState) => ({
-      ...prevState,
-      currentPage: INITIAL_CURRENT_PAGE,
-      search: searchValue,
-    }));
-  };
+  // const handleSearch = (e: any) => {
+  //   const { name, value } = e.target;
+  //   setFilterParams((prevState) => ({
+  //     ...prevState,
+  //     currentPage: INITIAL_CURRENT_PAGE,
+  //     search: searchValue,
+  //   }));
+  // };
 
-  const showModalView = (id: string) => {
-    setCurrentItem(id);
-    setOpenView(true);
-  };
+  // const _showModalView = (id: string) => {
+  //   setCurrentItem(id);
+  //   setOpenView(true);
+  // };
 
-  const hideModalView = () => {
-    setCurrentItem("");
-    setOpenView(false);
-  };
+  // const _hideModalView = () => {
+  //   setCurrentItem("");
+  //   setOpenView(false);
+  // };
 
-  const showModalEdit = (id: string) => {
-    setCurrentItem(id);
-    setOpenEdit(true);
-  };
+  // const _showModalEdit = (id: string) => {
+  //   setCurrentItem(id);
+  //   setOpenEdit(true);
+  // };
 
   const programListQuery = useQuery("program-list", () =>
     programAPI.get(programId).then((res: any) => res.data)
@@ -435,12 +422,12 @@ export default Question;
 
 const UsersContainer = styled.div``;
 
-const StyledPagination = styled(Pagination)`
-  // position: absolute;
-  // bottom: 24px;
-  // right: 24px;
-`;
+// const StyledPagination = styled(Pagination)`
+//   // position: absolute;
+//   // bottom: 24px;
+//   // right: 24px;
+// `;
 
-const StyledTag = styled(Tag)`
-  margin-left: 15px;
-`;
+// const StyledTag = styled(Tag)`
+//   margin-left: 15px;
+// `;

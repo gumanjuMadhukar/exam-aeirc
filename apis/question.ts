@@ -33,7 +33,7 @@ class QuestionAPI extends Resource {
     });
   }
 
-  getPaginatedQuestion(data: any, id: any) {
+  getPaginatedQuestion(data: any, _id: any) {
     return http({
       url: `/pulchockWiseData/5`,
       method: "get",

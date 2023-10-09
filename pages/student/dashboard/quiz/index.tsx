@@ -7,6 +7,7 @@ import {
   Checkbox,
   Col,
   Divider,
+  Image,
   Radio,
   Row,
   Segmented,
@@ -31,6 +32,7 @@ import {
 import MyComponent from "../component";
 import { dataURItoBlob } from "utils/helpers";
 import { uploadMyDocs } from "apis/media";
+import { color } from "html2canvas/dist/types/css/types/color";
 
 const Quiz = () => {
   const [questions, setQuestions] = useState<any>([]); // Store the fetched questions
@@ -148,9 +150,15 @@ const Quiz = () => {
         <div
           style={{
             // padding: 3,
-            color: question.is_answered ? Colors.GREEN : Colors.GREY8,
+            color: question.is_answered ? Colors.WHITE : Colors.BLACK,
             fontWeight: question.is_answered && 800,
             fontSize: "18px",
+            background: question.is_answered
+              ? Colors.GREEN
+              : Colors.GREYABALONE,
+            padding: "10px 0px",
+            textAlign: "center",
+            borderRadius: "50%",
           }}
         >
           <div>{i + 1}</div>
@@ -205,16 +213,16 @@ const Quiz = () => {
       const question = questions[currentQuestion];
 
       return (
-        <div>
+        <Container>
           {" "}
           <PageHeaderNaviagtion>
             <Row justify="space-between" gutter={[16, 24]}>
               <Col span={8}>
-                <img
+                <Image
                   src={`http://103.175.192.52/storage/documents/${photo}`}
                   style={{ border: "1px solid black" }}
                   width="50px"
-                ></img>
+                ></Image>
               </Col>
               <Col
                 span={8}
@@ -299,9 +307,17 @@ const Quiz = () => {
                         style={{
                           width: "65vw",
                           padding: "15px",
+                          boxShadow: "0 0 3px rgba(0,0,0,0.2)",
                         }}
                       >
-                        <Radio value={option?.id} style={{ fontSize: "18px" }}>
+                        <Radio
+                          value={option?.id}
+                          style={{
+                            fontSize: "18px",
+                            color: "#000",
+                            fontWeight: "600",
+                          }}
+                        >
                           {option?.option_text}
                         </Radio>
                         <br />
@@ -349,8 +365,40 @@ const Quiz = () => {
               top: 0,
               background: "#fff",
               zIndex: 1,
+              borderBottom: `1px solid ${Colors.GREYABALONE}`,
             }}
-            title="Number of Question"
+            title={[
+              <Row>
+                <div style={{ fontSize: "20px", width: "100%" }}>
+                  {" "}
+                  No of Question
+                </div>
+                {/* <div style={{ width: "100%" }}>
+                  <div
+                    style={{
+                      fontSize: "20px",
+                      background: Colors.GREEN,
+                      padding: "20px",
+                      borderRadius: "50%",
+                      width: "50px",
+                    }}
+                  />
+                  <span> Answered </span>
+                </div>
+                <div style={{ width: "100%" }}>
+                  <div
+                    style={{
+                      fontSize: "20px",
+                      background: Colors.GREYABALONE,
+                      padding: "20px",
+                      borderRadius: "50%",
+                      width: "50px",
+                    }}
+                  />
+                  <span> Un-Answered </span>
+                </div> */}
+              </Row>,
+            ]}
           >
             <Row gutter={[16, 16]}>
               {options.map((question: any) => (
@@ -386,13 +434,17 @@ const Quiz = () => {
             onConfirmModal={handleModal}
             icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
           />
-        </div>
+        </Container>
       );
     }
   }
 };
 
 export default Quiz;
+
+const Container = styled.div`
+  background: red !important;
+`;
 
 const QuizContainer = styled.div`
   background: white;
@@ -403,13 +455,6 @@ const QuizContainer = styled.div`
   min-height: 500px;
   margin-right: 40px;
   margin-left: 40px;
-
-  // display: flex;
-  // justify-content: center;
-  // flex-direction: column;
-  // align-items: center;
-  // height: 100vh;
-  // width: 100vw;
 `;
 
 const StyleTag = styled(Tag)`

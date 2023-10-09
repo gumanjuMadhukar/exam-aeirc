@@ -1,4 +1,4 @@
-import { Form, Input, Button, Alert, message, Modal } from "antd";
+import { Form, Input, Button, Alert, Modal } from "antd";
 import { ReactElement, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
@@ -7,8 +7,6 @@ import AuthLayout from "components/layout/auth-layout";
 import Head from "next/head";
 import { Colors } from "utils/colors";
 import styled from "styled-components";
-
-interface Props {}
 
 const Verification: NextPageWithLayout = () => {
   const [errorMessageText, setErrorMessageText] = useState(null);
@@ -44,7 +42,7 @@ const Verification: NextPageWithLayout = () => {
 
     const data = { otp, userId };
     otpVerificationMutation.mutate(data, {
-      onSuccess: (data: any) => {
+      onSuccess: (_data: any) => {
         setErrorMessageText(null);
         setIsModalOpen(true);
       },
@@ -60,14 +58,14 @@ const Verification: NextPageWithLayout = () => {
   const handleResendOtp = () => {
     const userId = Number(verification);
     resendOtpVerificationMutation.mutate(userId, {
-      onSuccess: (data: any) => {
+      onSuccess: (_data: any) => {
         setExpired(false);
         setSeconds(180);
       },
     });
   };
 
-  const validateOtpLength = (rule: any, value: any) => {
+  const validateOtpLength = (_rule: any, value: any) => {
     if (value.length !== 4) {
       return Promise.reject("The input value must be exactly 4 characters");
     }

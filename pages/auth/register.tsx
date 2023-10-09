@@ -5,14 +5,12 @@ import { useMutation } from "react-query";
 import { register } from "apis/auth";
 import { useRouter } from "next/router";
 import { TextBlock } from "../../styles/authCSS";
-import { officeEmailValidation } from "utils";
 import AuthLayout from "components/layout/auth-layout";
 import Head from "next/head";
 import urls from "configs/urls";
 import CustomLink from "components/CustomLink";
 import { Colors } from "utils/colors";
 
-interface Props {}
 interface RegisterPayload {
   username: string;
   email: string;
@@ -111,7 +109,7 @@ const Register: NextPageWithLayout = () => {
               message: "Please confirm your password!",
             },
             ({ getFieldValue }) => ({
-              validator(rule, value) {
+              validator(_rule, value) {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }

@@ -1,16 +1,5 @@
-import {
-  Button,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Modal,
-  Radio,
-  Row,
-  Select,
-} from "antd";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Button, Col, Form, message, Modal, Row } from "antd";
+import { useMutation, useQueryClient } from "react-query";
 import { Colors } from "utils/colors";
 import styled from "styled-components";
 import { InboxOutlined } from "@ant-design/icons";
@@ -26,26 +15,26 @@ interface Props {
 export const acceptedDocType = ".xlsx, .xml";
 const { Dragger } = Upload;
 
-const props: UploadProps = {
-  name: "file",
-  multiple: true,
-  action: "/api/noop",
-  accept: acceptedDocType,
-  onChange(info: any) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e: any) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
+// const props: UploadProps = {
+//   name: "file",
+//   multiple: true,
+//   action: "/api/noop",
+//   accept: acceptedDocType,
+//   onChange(info: any) {
+//     const { status } = info.file;
+//     if (status !== "uploading") {
+//       console.log(info.file, info.fileList);
+//     }
+//     if (status === "done") {
+//       message.success(`${info.file.name} file uploaded successfully.`);
+//     } else if (status === "error") {
+//       message.error(`${info.file.name} file upload failed.`);
+//     }
+//   },
+//   onDrop(e: any) {
+//     console.log("Dropped files", e.dataTransfer.files);
+//   },
+// };
 
 export const ImportProgramModal = (props: Props) => {
   const { isModalOpen, handleCancel } = props;

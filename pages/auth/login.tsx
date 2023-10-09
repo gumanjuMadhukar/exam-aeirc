@@ -5,8 +5,6 @@ import { useMutation } from "react-query";
 import { login } from "apis/auth";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import jwt_decode from "jwt-decode";
-
 import {
   LoginPage,
   PageLogo,
@@ -17,11 +15,10 @@ import {
   LoginImageBlock,
   LoginHeading,
 } from "../../styles/authCSS";
-import urls from "configs/urls";
 import CustomLink from "components/CustomLink";
 import http, { setTokenInHeader } from "utils/http";
 
-const Login: NextPage = (props): JSX.Element => {
+const Login: NextPage = (_props): JSX.Element => {
   const loginMutation = useMutation((data: LoginPayload) => login(data));
   const router = useRouter();
 
@@ -41,7 +38,6 @@ const Login: NextPage = (props): JSX.Element => {
         router.push("/dashboard");
       },
       onError: (data: any) => {
-        const errorMessage = data?.message;
         message.error("Invalid Credentials");
         if (
           data?.response?.data?.error_code &&

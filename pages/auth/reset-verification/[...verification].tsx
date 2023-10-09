@@ -2,16 +2,10 @@ import { Form, Input, Button, Alert } from "antd";
 import { ReactElement, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
-import {
-  forgotPasswordOtpVerify,
-  getEmailForForgotPassword,
-  resendOtpVerify,
-} from "apis/auth";
+import { forgotPasswordOtpVerify, getEmailForForgotPassword } from "apis/auth";
 import AuthLayout from "components/layout/auth-layout";
 import Head from "next/head";
 import { Colors } from "utils/colors";
-
-interface Props {}
 
 const ResetVerification: NextPageWithLayout = () => {
   const [errorMessageText, setErrorMessageText] = useState(null);
@@ -23,9 +17,7 @@ const ResetVerification: NextPageWithLayout = () => {
   const forgotPasswordVerification = useMutation((data: any) =>
     forgotPasswordOtpVerify(data)
   );
-  const resendOtpVerificationMutation = useMutation((data: any) =>
-    resendOtpVerify(data)
-  );
+
   const forgotPasswordMutation = useMutation((data: ForgotPasswordPayload) =>
     getEmailForForgotPassword(data)
   );
@@ -51,7 +43,7 @@ const ResetVerification: NextPageWithLayout = () => {
 
     const data = { otp, userId };
     forgotPasswordVerification.mutate(data, {
-      onSuccess: (data: any) => {
+      onSuccess: (_data: any) => {
         setErrorMessageText(null);
         localStorage.removeItem("resetEmail");
         router.push(`/auth/reset-password/${userId}`);
@@ -80,7 +72,7 @@ const ResetVerification: NextPageWithLayout = () => {
     });
   };
 
-  const validateOtpLength = (rule: any, value: any) => {
+  const validateOtpLength = (_rule: any, value: any) => {
     if (value.length !== 4) {
       return Promise.reject("The input value must be exactly 4 characters");
     }

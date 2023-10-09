@@ -7,7 +7,7 @@ import type { UploadProps } from "antd";
 import { Upload } from "antd";
 import { RcFile } from "antd/es/upload";
 import { useState } from "react";
-import { uploadCourseContentQuestions, uploadQuestions } from "apis/question";
+import { uploadCourseContentQuestions } from "apis/question";
 import { useRouter } from "next/router";
 interface Props {
   handleCancel: () => void;

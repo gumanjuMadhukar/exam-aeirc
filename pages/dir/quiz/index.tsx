@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import QuestionAPI from "apis/question";
 import {
@@ -14,9 +14,7 @@ import {
   Tag,
 } from "antd";
 import styled from "styled-components";
-
 import { Colors } from "utils/colors";
-import html2canvas from "html2canvas";
 import { ExclamationOutlined } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ConfirmModal from "components/ConfirmModal";
@@ -40,25 +38,25 @@ const Quiz = () => {
     questionAPI.postQuestionsAnswer(data)
   );
 
-  const FullScreenPage = () => {
-    useEffect(() => {
-      const enterFullScreen = () => {
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-        }
-      };
+  // const FullScreenPage = () => {
+  //   useEffect(() => {
+  //     const enterFullScreen = () => {
+  //       const elem = document.documentElement;
+  //       if (elem.requestFullscreen) {
+  //         elem.requestFullscreen();
+  //       }
+  //     };
 
-      enterFullScreen();
+  //     enterFullScreen();
 
-      // Clean up the full-screen mode when the component unmounts
-      return () => {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      };
-    }, []);
-  };
+  //     // Clean up the full-screen mode when the component unmounts
+  //     return () => {
+  //       if (document.exitFullscreen) {
+  //         document.exitFullscreen();
+  //       }
+  //     };
+  //   }, []);
+  // };
 
   useEffect(() => {
     setQuestions(queryList?.data);
@@ -66,7 +64,7 @@ const Quiz = () => {
   // Handle answer submission
   const handleAnswerSubmit = (answer: any) => {
     // Store the answer in the answers object
-    const question = questions[currentQuestion];
+    // const question = questions[currentQuestion];
     setAnswers((prevAnswers: any) => ({
       ...prevAnswers,
       option_ids: answer,
@@ -96,9 +94,9 @@ const Quiz = () => {
           : setCurrentQuestion((prevQuestion) => prevQuestion + 1);
         setAnswers({});
       },
-      onError: (data: any) => {
-        const errorMessageWithNetworkIssue = data?.message;
-        const errorMessage = data?.response?.data?.message;
+      onError: (_data: any) => {
+        // const errorMessageWithNetworkIssue = data?.message;
+        // const errorMessage = data?.response?.data?.message;
       },
     });
   };
@@ -207,9 +205,15 @@ const Quiz = () => {
                     style={{ paddingLeft: "18px" }}
                     value={checkedList[0]}
                   >
-                    {question?.options.map((option: any, index: any) => (
+                    {question?.options.map((option: any, _index: any) => (
                       <OptionText>
-                        <Radio value={option?.id} style={{ fontSize: "18px" }}>
+                        <Radio
+                          value={option?.id}
+                          style={{
+                            fontSize: "18px",
+                            border: "1px solid #000 !important",
+                          }}
+                        >
                           {option?.option_text}
                         </Radio>
                         <br />
@@ -283,6 +287,7 @@ const Quiz = () => {
         </div>
       );
     }
+    return;
   }
 };
 

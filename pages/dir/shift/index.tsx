@@ -8,7 +8,6 @@ import {
   Row,
   Col,
   Dropdown,
-  message,
 } from "antd";
 import Link from "next/link";
 import {
@@ -16,12 +15,10 @@ import {
   DeleteOutlined,
   EyeOutlined,
   EllipsisOutlined,
-  ExclamationOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
-import ProgramAPI from "apis/program";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import {
   PageHeader,
   PageHeaderNaviagtion,
@@ -31,8 +28,9 @@ import {
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import { ImportProgramModal } from "components/admin/program/ImportProgramModal";
-import ConfirmModal from "components/ConfirmModal";
+
+import { getShift } from "apis/shift";
+import { CreateShiftModal } from "components/admin/shift/CreateShiftModal";
 
 interface FilterParams {
   currentPage: number;
@@ -55,33 +53,19 @@ interface IViewDropDown {
   id: string;
 }
 
-const ViewDropDown = ({
-  showModalView,
-  showModalEdit,
-  openCloseDeleteLeaveModal,
-  id,
-}: IViewDropDown) => {
+const ViewDropDown = ({ openCloseDeleteLeaveModal, id }: IViewDropDown) => {
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: (
-        <div onClick={() => showModalView(id)}>
+        <Link href={`question/${id}`}>
           <EyeOutlined />
-          {" View Question"}
-        </div>
+          {" View"}
+        </Link>
       ),
     },
     {
       key: "2",
-      label: (
-        <div onClick={() => showModalEdit(id)}>
-          <EyeOutlined />
-          {" View Students"}
-        </div>
-      ),
-    },
-    {
-      key: "3",
       label: (
         <div onClick={() => openCloseDeleteLeaveModal(id)}>
           <DeleteOutlined />
@@ -98,13 +82,13 @@ const ViewDropDown = ({
   );
 };
 
-const Question = () => {
+const Shift = () => {
   const [searchValue, setSearchValue] = useState("");
-  const programAPI = new ProgramAPI();
+
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   const [_openView, setOpenView] = useState(false);
   const [_openEdit, setOpenEdit] = useState(false);
-  const queryClient = useQueryClient();
+
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
   };
@@ -116,8 +100,33 @@ const Question = () => {
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Display Name",
-      dataIndex: "display_name",
+      title: "Date",
+      dataIndex: "date",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Start Date ",
+      dataIndex: "start_time",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Total Capacity",
+      dataIndex: "total_students",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Tolerance Time",
+      dataIndex: "tolerance_time",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      responsive: ["sm", "md", "lg"],
+    },
+    {
+      title: "Shift End Time",
+      dataIndex: "end_time",
       responsive: ["sm", "md", "lg"],
     },
     {
@@ -134,7 +143,7 @@ const Question = () => {
     },
   ];
   const [isDeleteLeaveModalOpen, setIsDeleteLeaveModalOpen] = useState(false);
-  const [currentItem, setCurrentItem] = useState<string>("");
+  const [_currentItem, setCurrentItem] = useState<string>("");
 
   const openCloseDeleteLeaveModal = (id?: string) => {
     id ? setCurrentItem(id) : setCurrentItem("");
@@ -143,70 +152,27 @@ const Question = () => {
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
 
-  const queryList = useQuery(
-    [
-      "ProgramList",
-      {
-        status: filterParams.status,
-        page: filterParams.currentPage,
-        limit: filterParams.pageSize,
-        search: filterParams.search,
-      },
-    ],
-    async () => {
-      const queryParams: any = {
-        page: filterParams.currentPage,
-        limit: filterParams.pageSize,
-      };
-      if (filterParams.search) queryParams.search = filterParams.search;
-      const response = await programAPI.list(queryParams);
-      return response?.data;
-    }
-  );
+  const { data: Shift } = useQuery(["Shift", { filterParams }], getShift);
 
-  const programList = queryList?.data?.data;
-  const metaData = queryList?.data?.meta;
+  const shifList = Shift?.data?.data;
+  const metaData = Shift?.data?.meta;
 
-  // const handleSearch = (e: any) => {
-  //   const { name, value } = e.target;
-  //   setFilterParams((prevState) => ({
-  //     ...prevState,
-  //     currentPage: INITIAL_CURRENT_PAGE,
-  //     search: searchValue,
-  //   }));
-  // };
+  const handleSearch = (e: any) => {
+    setFilterParams((prevState) => ({
+      ...prevState,
+      currentPage: INITIAL_CURRENT_PAGE,
+      search: searchValue,
+    }));
+  };
 
   const showModalView = (id: string) => {
     setCurrentItem(id);
     setOpenView(true);
   };
 
-  // const hideModalView = () => {
-  //   setCurrentItem("");
-  //   setOpenView(false);
-  // };
-
   const showModalEdit = (id: string) => {
     setCurrentItem(id);
     setOpenEdit(true);
-  };
-
-  const removeEmployeeDocsMutation = useMutation((employeeId: any) =>
-    programAPI.destroy(employeeId)
-  );
-
-  const onConfirmDelete = () => {
-    removeEmployeeDocsMutation.mutate(currentItem, {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["ProgramList"]);
-        message.success("Removed Program Successfully");
-        openCloseDeleteLeaveModal();
-      },
-      onError: (data: any) => {
-        const errorMessage = data?.response?.data?.message;
-        message.error(errorMessage);
-      },
-    });
   };
 
   return (
@@ -218,11 +184,11 @@ const Question = () => {
               <Link href="/dashboard">Home</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <span style={{ color: Colors.BLACK }}>Program</span>
+              <span style={{ color: Colors.BLACK }}>Shift</span>
             </Breadcrumb.Item>
           </Breadcrumb>
           <TitleContent>
-            <h2>Program</h2>
+            <h2>Shift</h2>
             <Button
               style={{
                 background: Colors.COLOR_PRIMARY_BG,
@@ -233,7 +199,7 @@ const Question = () => {
               icon={<UserAddOutlined />}
               onClick={openCloseModal}
             >
-              Add New Program
+              Add Shift
             </Button>
           </TitleContent>
         </PageHeaderNaviagtion>
@@ -293,7 +259,7 @@ const Question = () => {
                 <Button
                   type="primary"
                   style={{ boxShadow: "none", width: "100%" }}
-                  // onClick={handleSearch}
+                  onClick={handleSearch}
                 >
                   Search
                 </Button>
@@ -305,38 +271,13 @@ const Question = () => {
       <TableBodyContainer>
         <Table
           columns={programListColumns}
-          dataSource={programList}
+          dataSource={shifList}
           scroll={{ x: 1000 }}
-          pagination={
-            queryList?.data?.meta?.total > 10 && {
-              defaultPageSize: 10,
-              total: metaData?.total,
-              hideOnSinglePage: true,
-              showSizeChanger: true,
-              showTotal: (total, range) =>
-                `${range[0]}-${range[1]} of ${total} items`,
-              onChange: (page, pageSize) => {
-                setFilterParams({
-                  ...filterParams,
-                  currentPage: page,
-                  pageSize,
-                });
-              },
-              className: "bg-white-halfrem",
-              responsive: true,
-            }
-          }
+          style={{ cursor: "pointer" }}
         />
       </TableBodyContainer>
-      <ConfirmModal
-        buttonTitle="Confirm"
-        openCloseModal={openCloseDeleteLeaveModal}
-        open={isDeleteLeaveModalOpen}
-        confirmText="remove the document"
-        onConfirmModal={onConfirmDelete}
-        icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
-      />
-      <ImportProgramModal
+
+      <CreateShiftModal
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
       />
@@ -344,12 +285,6 @@ const Question = () => {
   );
 };
 
-export default Question;
+export default Shift;
 
 const UsersContainer = styled.div``;
-
-// const StyledPagination = styled(Pagination)`
-//   // position: absolute;
-//   // bottom: 24px;
-//   // right: 24px;
-// `;

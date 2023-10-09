@@ -1,18 +1,16 @@
 import { ReactElement, useState } from "react";
-import { UserOutlined, MailOutlined } from "@ant-design/icons";
+
 import { Form, Input, Button, Alert } from "antd";
 import { useMutation } from "react-query";
 import { useRouter } from "next/router";
 import { TextBlock } from "../../../styles/authCSS";
-import { officeEmailValidation } from "utils";
+
 import AuthLayout from "components/layout/auth-layout";
 import Head from "next/head";
 import { resetPassword } from "apis/auth";
 import CustomLink from "components/CustomLink";
 import urls from "configs/urls";
 import { Colors } from "utils/colors";
-
-interface Props {}
 
 const ResetPassword: NextPageWithLayout = () => {
   const [errorMessageText, setErrorMessageText] = useState(null);
@@ -28,7 +26,7 @@ const ResetPassword: NextPageWithLayout = () => {
     const data = { ...formValues, userId };
 
     resetPasswordMutation.mutate(data, {
-      onSuccess: (data: any) => {
+      onSuccess: (_data: any) => {
         setErrorMessageText(null);
         router.push(`/auth/login`);
       },
@@ -68,7 +66,7 @@ const ResetPassword: NextPageWithLayout = () => {
               message: "Please confirm your password!",
             },
             ({ getFieldValue }) => ({
-              validator(rule, value) {
+              validator(_rule, value) {
                 if (!value || getFieldValue("newPassword") === value) {
                   return Promise.resolve();
                 }

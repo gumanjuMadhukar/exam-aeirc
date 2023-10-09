@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { DownOutlined, ManOutlined, PoweroffOutlined } from "@ant-design/icons";
-import { Dropdown, Space, Divider, Button, theme, Avatar } from "antd";
+import { Dropdown, Space, theme, Avatar } from "antd";
 import type { MenuProps } from "antd";
 import * as authService from "services/auth";
-import styled from "styled-components";
 import { getInitials } from "utils/helpers";
-import { FontWeight } from "assets/fonts";
-import Cookies from "js-cookie";
 import Link from "next/link";
 import { ChangePasswordModal } from "components/admin/password/ChangePasswordModal";
 

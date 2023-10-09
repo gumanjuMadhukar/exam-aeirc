@@ -4,9 +4,9 @@ import {
   CalendarOutlined,
   LogoutOutlined,
   ManOutlined,
-  ReadOutlined,
   SettingOutlined,
   BookOutlined,
+  HistoryOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -91,6 +91,11 @@ const urls = {
       title: "Student",
       path: "/dir/student",
       icon: UserOutlined,
+    },
+    {
+      title: "Shift",
+      path: "/dir/shift",
+      icon: HistoryOutlined,
     },
     {
       title: "Settings",

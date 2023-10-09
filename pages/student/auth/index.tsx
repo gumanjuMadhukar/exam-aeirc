@@ -55,7 +55,7 @@ const Login: NextPage = (props): JSX.Element => {
   return (
     <LoginPages>
       <PageLogo>
-        <LoginHeading>NHPC</LoginHeading>
+        <LoginHeading>Ayurveda</LoginHeading>
       </PageLogo>
       <LoginContainer>
         <AuthBlock>
@@ -139,17 +139,21 @@ export const LoginPages = styled.div`
   flex-direction: column;
   min-height: 100vh;
   padding-top: 5%;
+  background: #d6cfc7;
 `;
 
 export const PageLogo = styled.div`
   margin-top: 50px;
   margin-bottom: 20px;
+  // color: white;
 `;
 
 export const LoginContainer = styled.div`
   display: flex;
   background-color: #fff;
   border-radius: 2px;
+  // border: 1px solid #000;
+
   @media (min-width: 768px) {
     display: flex;
     width: 720px;
@@ -219,4 +223,5 @@ export const LoginHeading = styled.div`
   font-size: 44px;
   font-weight: 800;
   letter-spacing: 2px;
+  // color: white;
 `;

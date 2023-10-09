@@ -1,22 +1,8 @@
-import {
-  Button,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  message,
-  Modal,
-  Radio,
-  Row,
-  Select,
-  Spin,
-} from "antd";
-import { useMutation, useQueryClient } from "react-query";
+import { Button, Col, Form, Input, message, Modal, Row, Spin } from "antd";
+import { useMutation } from "react-query";
 import { Colors } from "utils/colors";
 import styled from "styled-components";
 import UserAPI from "apis/user";
-import * as authService from "services/auth";
-import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
 
 interface Props {
@@ -26,7 +12,6 @@ interface Props {
 
 export const ChangePasswordModal = (props: Props) => {
   const { isModalOpen, handleCancel } = props;
-  const queryClient = useQueryClient();
   const userAPI = new UserAPI();
   const router = useRouter();
   const changePasswordMutation = useMutation((data: any) =>

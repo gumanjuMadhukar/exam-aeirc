@@ -31,7 +31,7 @@ const validateMessages = {
   },
 };
 
-const ChangePassword: NextPage = (props): JSX.Element => {
+const ChangePassword: NextPage = (_props): JSX.Element => {
   const [errorMessageText, setErrorMessageText] = useState(null);
   const changePasswordMutation = useMutation((data: ChangePassword) =>
     changePassword(data)
@@ -39,7 +39,7 @@ const ChangePassword: NextPage = (props): JSX.Element => {
   const router = useRouter();
   const onFinish = (data: ChangePassword) => {
     changePasswordMutation.mutate(data, {
-      onSuccess: (data) => {
+      onSuccess: (_data) => {
         setErrorMessageText(null);
         Cookies.remove("token");
         router.push("login");
@@ -99,7 +99,7 @@ const ChangePassword: NextPage = (props): JSX.Element => {
               rules={[
                 { required: true, message: "Please confirm password!" },
                 ({ getFieldValue }) => ({
-                  validator(rule, value) {
+                  validator(_rule, value) {
                     if (!value || getFieldValue("newPassword") === value) {
                       return Promise.resolve();
                     }

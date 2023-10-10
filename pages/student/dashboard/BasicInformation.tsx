@@ -1,6 +1,4 @@
 import { Colors } from "utils/colors";
-import { EditOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
 import {
   DetailWrapper,
   DetailTitleWrapper,
@@ -9,18 +7,14 @@ import {
   DetailTitle,
   DetailValue,
 } from "styles/profileInformation";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import StudentAPI from "apis/student";
-import MediaAPI, { uploadMyDocs } from "apis/media";
 import styled from "styled-components";
 import { Button, Checkbox, Col, Form, Image, Row } from "antd";
-
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { useMutation, useQueryClient } from "react-query";
 import moment from "moment";
-import MyComponent from "./component";
-import { dataURItoBlob } from "utils/helpers";
 import { allocateRandomQuestion } from "apis/question";
 
 interface Props {
@@ -30,25 +24,25 @@ const BasicInformation = (props: Props) => {
   const { data } = props;
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [editBasicInformationModalOpen, setEditBasicInformationModalOpen] =
-    useState(false);
+  // const [editBasicInformationModalOpen, setEditBasicInformationModalOpen] =
+  //   useState(false);
 
-  const openCloseModal = () => {
-    setEditBasicInformationModalOpen(!editBasicInformationModalOpen);
-  };
+  // const openCloseModal = () => {
+  //   setEditBasicInformationModalOpen(!editBasicInformationModalOpen);
+  // };
 
-  const [isChecked, setIsChecked] = useState(false);
+  const [_isChecked, _setIsChecked] = useState(false);
   const [form] = Form.useForm();
 
   const studentAPI = new StudentAPI();
-  const mediaAPI = new MediaAPI();
+  // const mediaAPI = new MediaAPI();
   const student_id = Cookies.get("student_id");
 
   const updateStudentData = useMutation((data: any) =>
     studentAPI.update(student_id, data)
   );
 
-  const addMediaData = useMutation((data: any) => uploadMyDocs(data));
+  // const addMediaData = useMutation((data: any) => uploadMyDocs(data));
 
   const allocateQuestion = useMutation(allocateRandomQuestion, {
     onSuccess: () => {
@@ -58,15 +52,15 @@ const BasicInformation = (props: Props) => {
       // router.push("/student/dashboard/quiz/ExamWithPagination");
       router.push("/student/dashboard/quiz");
     },
-    onError: (data: any) => {
-      const errorMessageWithNetworkIssue = data?.message;
-      const errorMessage = data?.response?.data?.message;
+    onError: (_data: any) => {
+      // const errorMessageWithNetworkIssue = data?.message;
+      // const errorMessage = data?.response?.data?.message;
     },
   });
 
-  const handleCheckboxChange = (e: any) => {
-    setIsChecked(e.target.checked);
-  };
+  // const handleCheckboxChange = (e: any) => {
+  //   setIsChecked(e.target.checked);
+  // };
 
   const enterFullScreen = () => {
     const elem = document.documentElement;
@@ -93,14 +87,14 @@ const BasicInformation = (props: Props) => {
       onSuccess: () => {
         allocateQuestion.mutate(allocateData);
       },
-      onError: (data: any) => {
-        const errorMessageWithNetworkIssue = data?.message;
-        const errorMessage = data?.response?.data?.message;
+      onError: (_data: any) => {
+        // const errorMessageWithNetworkIssue = data?.message;
+        // const errorMessage = data?.response?.data?.message;
       },
     });
   };
 
-  const validateCheckbox = (rule: any, value: any) => {
+  const validateCheckbox = (_rule: any, value: any) => {
     if (!value) {
       return Promise.reject("Checkbox is required");
     }
@@ -292,18 +286,18 @@ const ProfileImage = styled.div`
   }
 `;
 
-const ProfileButton = styled.div`
-  text-align: center;
-  margin-top: 15px;
-  cursor: pointer;
-`;
+// const ProfileButton = styled.div`
+//   text-align: center;
+//   margin-top: 15px;
+//   cursor: pointer;
+// `;
 
-const ProfileText = styled.span`
-  border: 1px dotted ${Colors.BORDER_COLOR};
-  color: ${Colors.BORDER_COLOR};
-  font-size: 14px;
-  padding: 0 5px;
-`;
+// const ProfileText = styled.span`
+//   border: 1px dotted ${Colors.BORDER_COLOR};
+//   color: ${Colors.BORDER_COLOR};
+//   font-size: 14px;
+//   padding: 0 5px;
+// `;
 
 const ImageWrapper = styled.div`
   display: flex;

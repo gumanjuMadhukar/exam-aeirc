@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import QuestionAPI, { calculateStudentMarks } from "apis/question";
 import {
@@ -16,28 +16,17 @@ import {
 } from "antd";
 import styled from "styled-components";
 import { Colors } from "utils/colors";
-import html2canvas from "html2canvas";
 import { ExclamationOutlined } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ConfirmModal from "components/ConfirmModal";
-import PageHeader from "pages/student/layout/page-header";
 import Clock from "utils/clock";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import {
-  CheckCircleOutlined,
-  CheckOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
-import MyComponent from "../component";
-import { dataURItoBlob } from "utils/helpers";
-import { uploadMyDocs } from "apis/media";
-import { color } from "html2canvas/dist/types/css/types/color";
 
 const Quiz = () => {
   const [questions, setQuestions] = useState<any>([]); // Store the fetched questions
   const [currentQuestion, setCurrentQuestion] = useState(0); // Keep track of the current question index
-  const [answers, setAnswers] = useState<any>({}); // Store the answers
+  const [_answers, setAnswers] = useState<any>({}); // Store the answers
   const questionAPI = new QuestionAPI();
   const queryClient = useQueryClient();
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
@@ -75,25 +64,6 @@ const Quiz = () => {
       document.removeEventListener("keydown", handleKeyDown); // Clean up event listener
     };
   }, []);
-  const FullScreenPage = () => {
-    useEffect(() => {
-      const enterFullScreen = () => {
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen();
-        }
-      };
-
-      enterFullScreen();
-
-      // Clean up the full-screen mode when the component unmounts
-      return () => {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      };
-    }, []);
-  };
 
   useEffect(() => {
     setQuestions(queryList?.data);
@@ -103,7 +73,6 @@ const Quiz = () => {
   // console.log(queryList?.data?.question);
   const handleAnswerSubmit = (answer: any) => {
     // Store the answer in the answers object
-    const question = questions[currentQuestion];
     setAnswers((prevAnswers: any) => ({
       ...prevAnswers,
       option_ids: answer,
@@ -119,9 +88,9 @@ const Quiz = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(["RandomList"]);
       },
-      onError: (data: any) => {
-        const errorMessageWithNetworkIssue = data?.message;
-        const errorMessage = data?.response?.data?.message;
+      onError: (_data: any) => {
+        // const errorMessageWithNetworkIssue = data?.message;
+        // const errorMessage = data?.response?.data?.message;
       },
     });
 
@@ -185,9 +154,9 @@ const Quiz = () => {
         Cookies.remove("student_id");
         router.push("/student/auth/finish");
       },
-      onError: (data: any) => {
-        const errorMessageWithNetworkIssue = data?.message;
-        const errorMessage = data?.response?.data?.message;
+      onError: (_data: any) => {
+        // const errorMessageWithNetworkIssue = data?.message;
+        // const errorMessage = data?.response?.data?.message;
       },
     });
   };
@@ -302,7 +271,7 @@ const Quiz = () => {
                     style={{ paddingLeft: "18px" }}
                     value={checkedList[0]}
                   >
-                    {question?.options.map((option: any, index: any) => (
+                    {question?.options.map((option: any, _index: any) => (
                       <OptionText
                         style={{
                           width: "65vw",
@@ -438,6 +407,7 @@ const Quiz = () => {
       );
     }
   }
+  return;
 };
 
 export default Quiz;

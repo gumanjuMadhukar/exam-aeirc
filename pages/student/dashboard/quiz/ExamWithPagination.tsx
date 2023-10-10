@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import React, { useState, useEffect } from "react";
+import { useMutation, useQuery } from "react-query";
 import QuestionAPI from "apis/question";
 import {
   Button,
   Card,
   Checkbox,
   Col,
-  Divider,
   Form,
-  Progress,
   Radio,
   Row,
   Segmented,
@@ -17,16 +15,10 @@ import {
 } from "antd";
 import styled from "styled-components";
 import { Colors } from "utils/colors";
-import html2canvas from "html2canvas";
 import { ExclamationOutlined, CheckOutlined } from "@ant-design/icons";
-import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ConfirmModal from "components/ConfirmModal";
-import PageHeader from "pages/student/layout/page-header";
 import Clock from "utils/clock";
-import Cookies from "js-cookie";
-import { useRouter } from "next/router";
-import withKeyboardDisabled from "./WithKeyboardDisabled";
-import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
+import { INITIAL_CURRENT_PAGE } from "constants/common";
 
 interface FilterParams {
   currentPage: number;
@@ -43,7 +35,7 @@ const DefaultFilterParams = {
 };
 
 type Props = {};
-const ExamWithPagination: React.FC<Props> = (props) => {
+const ExamWithPagination: React.FC<Props> = (_props) => {
   const enterFullScreen = () => {
     const elem = document.documentElement;
     if (elem.requestFullscreen) {
@@ -66,13 +58,10 @@ const ExamWithPagination: React.FC<Props> = (props) => {
   }, []);
 
   const questionAPI = new QuestionAPI();
-  const queryClient = useQueryClient();
-  const router = useRouter();
-  const student_id = Cookies.get("student_id");
+
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
-  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
-  const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
+
   const [answered, setAnswered] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -97,18 +86,18 @@ const ExamWithPagination: React.FC<Props> = (props) => {
   );
 
   const [questions, setQuestions] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [undefinedQuestions, setUndefinedQuestions] = useState<string[]>([]);
   useEffect(() => {
     setQuestions(queryList?.data);
   }, [queryList]);
 
-  const Next = () => {
-    setFilterParams({
-      ...filterParams,
-      currentPage: filterParams.currentPage + 1,
-    });
-  };
+  // const Next = () => {
+  //   setFilterParams({
+  //     ...filterParams,
+  //     currentPage: filterParams.currentPage + 1,
+  //   });
+  // };
   const Prev = () => {
     setFilterParams({
       ...filterParams,
@@ -120,7 +109,7 @@ const ExamWithPagination: React.FC<Props> = (props) => {
     questionAPI.storeMultipleQuestionAnswer(data)
   );
 
-  const [percentComplete, setPercentComplete] = useState(0);
+  const [_percentComplete, setPercentComplete] = useState(0);
   const onFinish = (data: any) => {
     const keys = Object.keys(data);
     setAnswered(answered + Object.keys(data).length);
@@ -137,10 +126,7 @@ const ExamWithPagination: React.FC<Props> = (props) => {
         // queryClient.invalidateQueries(["RandomList"]);
         openCloseNextQuestionModal();
       },
-      onError: (data: any) => {
-        const errorMessageWithNetworkIssue = data?.message;
-        const errorMessage = data?.response?.data?.message;
-      },
+      onError: (_data: any) => {},
     });
 
     const numQuestions = 100;
@@ -321,7 +307,7 @@ const ExamWithPagination: React.FC<Props> = (props) => {
                                 }}
                               >
                                 {question?.options.map(
-                                  (option: any, index: any) => (
+                                  (option: any, _index: any) => (
                                     <Col
                                       lg={24}
                                       xs={24}

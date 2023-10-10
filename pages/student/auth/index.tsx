@@ -2,27 +2,21 @@ import { NextPage } from "next";
 import { MailOutlined } from "@ant-design/icons";
 import { Form, Input, Button, message } from "antd";
 import { useMutation } from "react-query";
-import { login, studentLogin } from "apis/auth";
+import { studentLogin } from "apis/auth";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import jwt_decode from "jwt-decode";
-import urls from "configs/urls";
-import CustomLink from "components/CustomLink";
 import http, { setTokenInHeader } from "utils/http";
 import styled from "styled-components";
-import moment from "moment";
-import { useState } from "react";
-import Keyboard from "react-simple-keyboard";
 
-const Login: NextPage = (props): JSX.Element => {
+const Login: NextPage = (_props): JSX.Element => {
   const loginMutation = useMutation((data: any) => studentLogin(data));
   const router = useRouter();
 
   const onFinish = (data: any) => {
-    const newData = {
-      ...data,
-      date_of_birth: moment(data.date_of_birth).format("YYYY-MM-DD"),
-    };
+    // const newData = {
+    //   ...data,
+    //   date_of_birth: moment(data.date_of_birth).format("YYYY-MM-DD"),
+    // };
 
     loginMutation.mutate(data, {
       onSuccess: (response) => {
@@ -38,7 +32,7 @@ const Login: NextPage = (props): JSX.Element => {
       },
       onError: (data: any) => {
         // console.log(data);
-        const errorMessage = data?.message;
+        // const _errorMessage = data?.message;
         message.error("Invalid Credentials");
         if (
           data?.response?.data?.error_code &&

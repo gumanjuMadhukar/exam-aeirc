@@ -1,14 +1,5 @@
 import styled from "styled-components";
-import {
-  Row,
-  Col,
-  Button,
-  Radio,
-  Space,
-  RadioChangeEvent,
-  Input,
-  Card,
-} from "antd";
+import { Row, Col, Button, Radio, Space, RadioChangeEvent, Card } from "antd";
 import PageFooter from "./layout/page-footer";
 import PageHeader from "./layout/page-header";
 import { useState } from "react";
@@ -131,9 +122,6 @@ export default Student;
 const DashboardContainer = styled.div`
   background-color: #f0f2f5;
   margin-top: 150px;
-`;
-const CardsContainer = styled.div`
-  padding: 20px;
 `;
 
 const QuestionContainer = styled.div``;

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 
 type Props = {};
 
@@ -6,32 +6,32 @@ const MyComponent: React.FC<Props> = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-  const handleCapturePhoto = () => {
-    const videoElement = videoRef.current;
-    const canvasElement = canvasRef.current;
-    const imageElement = imageRef.current;
+  // const handleCapturePhoto = () => {
+  //   const videoElement = videoRef.current;
+  //   const canvasElement = canvasRef.current;
+  //   const imageElement = imageRef.current;
 
-    if (videoElement && canvasElement && imageElement) {
-      // Get the video element dimensions
-      const videoWidth = videoElement.videoWidth;
-      const videoHeight = videoElement.videoHeight;
+  //   if (videoElement && canvasElement && imageElement) {
+  //     // Get the video element dimensions
+  //     const videoWidth = videoElement.videoWidth;
+  //     const videoHeight = videoElement.videoHeight;
 
-      // Set the canvas element dimensions to match the video element
-      canvasElement.width = videoWidth;
-      canvasElement.height = videoHeight;
+  //     // Set the canvas element dimensions to match the video element
+  //     canvasElement.width = videoWidth;
+  //     canvasElement.height = videoHeight;
 
-      // Draw the current video frame onto the canvas
-      const canvasContext = canvasElement.getContext("2d");
-      if (canvasContext) {
-        canvasContext.drawImage(videoElement, 0, 0, videoWidth, videoHeight);
-        const imageDataUrl = canvasElement.toDataURL("image/jpeg"); // Get the data URL of the captured photo
+  //     // Draw the current video frame onto the canvas
+  //     const canvasContext = canvasElement.getContext("2d");
+  //     if (canvasContext) {
+  //       canvasContext.drawImage(videoElement, 0, 0, videoWidth, videoHeight);
+  //       const imageDataUrl = canvasElement.toDataURL("image/jpeg"); // Get the data URL of the captured photo
 
-        // Update the image element source with the captured photo
-        imageElement.src = imageDataUrl;
-        imageElement.style.display = "block"; // Show the image element
-      }
-    }
-  };
+  //       // Update the image element source with the captured photo
+  //       imageElement.src = imageDataUrl;
+  //       imageElement.style.display = "block"; // Show the image element
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     handleStartCamera();
@@ -52,16 +52,16 @@ const MyComponent: React.FC<Props> = () => {
     }
   };
 
-  const handleStopCamera = () => {
-    const videoElement = videoRef.current;
+  // const _handleStopCamera = () => {
+  //   const videoElement = videoRef.current;
 
-    if (videoElement) {
-      // Stop the video stream and clear the video source
-      const mediaStream = videoElement.srcObject as MediaStream;
-      mediaStream.getTracks().forEach((track) => track.stop());
-      videoElement.srcObject = null;
-    }
-  };
+  //   if (videoElement) {
+  //     // Stop the video stream and clear the video source
+  //     const mediaStream = videoElement.srcObject as MediaStream;
+  //     mediaStream.getTracks().forEach((track) => track.stop());
+  //     videoElement.srcObject = null;
+  //   }
+  // };
 
   return (
     <div>

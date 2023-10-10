@@ -1,76 +1,46 @@
 import styled from "styled-components";
-import {
-  Breadcrumb,
-  Button,
-  Input,
-  Table,
-  Pagination,
-  MenuProps,
-  Row,
-  Col,
-  Dropdown,
-  message,
-  Image,
-  Tag,
-} from "antd";
+import { Breadcrumb, Table, Row, Col, Image, Tag } from "antd";
 import Link from "next/link";
-import {
-  UserAddOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  EllipsisOutlined,
-  ExclamationOutlined,
-} from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
+import { useState } from "react";
 import StudentAPI from "apis/student";
-import ProgramAPI from "apis/program";
 import QuestionAPI from "apis/question";
-
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { useRouter } from "next/router";
-
 import {
   PageHeader,
   PageHeaderNaviagtion,
-  SearchBar,
-  SearchBarContent,
   TableBodyContainer,
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
-import ConfirmModal from "components/ConfirmModal";
-import { ImportStudentModal } from "components/admin/student/importStudentModal";
 import BasicInformation from "./BasicInformation";
 
-interface FilterParams {
-  currentPage: number;
-  pageSize: number;
-  status: string;
-  search: string;
-}
+// interface FilterParams {
+//   currentPage: number;
+//   pageSize: number;
+//   status: string;
+//   search: string;
+// }
 
-const DefaultFilterParams = {
-  currentPage: INITIAL_CURRENT_PAGE,
-  pageSize: DEFAULT_PAGE_SIZE,
-  status: "true",
-  search: "",
-};
+// const DefaultFilterParams = {
+//   currentPage: INITIAL_CURRENT_PAGE,
+//   pageSize: DEFAULT_PAGE_SIZE,
+//   status: "true",
+//   search: "",
+// };
 
 const StudentDetails = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const [_searchValue, _setSearchValue] = useState("");
   const router = useRouter();
   const { programId } = router.query;
   const id = programId;
   const studentAPI = new StudentAPI();
   const questionAPI = new QuestionAPI();
-  const queryClient = useQueryClient();
 
   const programListColumns: any = [
     {
       title: "S.N",
-      render: (text: any, record: any, index: number) => index + 1,
+      render: (_text: any, _record: any, index: number) => index + 1,
       responsive: ["sm", "md", "lg"],
     },
     {
@@ -126,17 +96,8 @@ const StudentDetails = () => {
     },
   ];
 
-  const [filterParams, setFilterParams] =
-    useState<FilterParams>(DefaultFilterParams);
-
-  const handleSearch = (e: any) => {
-    const { name, value } = e.target;
-    setFilterParams((prevState) => ({
-      ...prevState,
-      currentPage: INITIAL_CURRENT_PAGE,
-      search: searchValue,
-    }));
-  };
+  // const [_filterParams, _setFilterParams] =
+  //   useState<FilterParams>(DefaultFilterParams);
 
   const studentQuery = useQuery(
     ["StudentData"],
@@ -230,12 +191,6 @@ const StudentDetails = () => {
 export default StudentDetails;
 
 const UsersContainer = styled.div``;
-
-const StyledPagination = styled(Pagination)`
-  // position: absolute;
-  // bottom: 24px;
-  // right: 24px;
-`;
 
 const ProfileWrapper = styled(Row)`
   padding: 25px;

@@ -1,7 +1,6 @@
-import axios, { AxiosInstance, AxiosStatic } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
-import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 /**
  * Http Utility.
@@ -19,7 +18,7 @@ const http = axios.create({
 });
 
 // Create axios interceptor
-createAuthRefreshInterceptor(http, (failedRequest) => {
+createAuthRefreshInterceptor(http, (_failedRequest) => {
   // check if the token is expired
   const token: any = getCookie("token");
   const decodedJwt: any = jwt_decode(token);
@@ -54,6 +53,7 @@ http.interceptors.response.use(
     } else {
       return Promise.reject(error);
     }
+    return;
   }
 );
 

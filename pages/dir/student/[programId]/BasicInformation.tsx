@@ -1,6 +1,4 @@
 import { Colors } from "utils/colors";
-import { EditOutlined } from "@ant-design/icons";
-import dayjs from "dayjs";
 import {
   DetailWrapper,
   DetailTitleWrapper,
@@ -9,21 +7,19 @@ import {
   DetailTitle,
   DetailValue,
 } from "styles/profileInformation";
-import { useState } from "react";
-
-import { EmployeeDetails } from "constants/schemas/employee";
+// import { useState } from "react";
 
 interface Props {
   data: any;
 }
 const BasicInformation = (props: Props) => {
   const { data } = props;
-  const [editBasicInformationModalOpen, setEditBasicInformationModalOpen] =
-    useState(false);
+  // const [editBasicInformationModalOpen, setEditBasicInformationModalOpen] =
+  //   useState(false);
 
-  const openCloseModal = () => {
-    setEditBasicInformationModalOpen(!editBasicInformationModalOpen);
-  };
+  // const openCloseModal = () => {
+  //   setEditBasicInformationModalOpen(!editBasicInformationModalOpen);
+  // };
 
   const empData = data;
   return (

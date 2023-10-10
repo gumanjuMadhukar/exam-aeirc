@@ -154,10 +154,9 @@ const Shift = () => {
 
   const { data: Shift } = useQuery(["Shift", { filterParams }], getShift);
 
-  const shifList = Shift?.data?.data;
-  const metaData = Shift?.data?.meta;
+  const shifList = Shift;
 
-  const handleSearch = (e: any) => {
+  const handleSearch = (_e: any) => {
     setFilterParams((prevState) => ({
       ...prevState,
       currentPage: INITIAL_CURRENT_PAGE,

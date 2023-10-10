@@ -2,7 +2,7 @@ import { Button, Col, Form, message, Modal, Row } from "antd";
 import { useMutation, useQueryClient } from "react-query";
 import { Colors } from "utils/colors";
 import styled from "styled-components";
-import { InboxOutlined } from "@ant-design/icons";
+// import { InboxOutlined } from "@ant-design/icons";
 import type { UploadProps } from "antd";
 import { Upload } from "antd";
 import { RcFile } from "antd/es/upload";
@@ -111,9 +111,7 @@ export const ImportProgramModal = (props: Props) => {
         <Row style={{ justifyContent: "space-between" }}>
           <Col lg={24} xs={24} md={24}>
             <Dragger {...uploadProps()}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
+              <p className="ant-upload-drag-icon">{/* <InboxOutlined /> */}</p>
               <p className="ant-upload-text">
                 Click or drag file to this area to upload
               </p>

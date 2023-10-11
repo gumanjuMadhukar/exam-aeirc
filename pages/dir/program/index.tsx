@@ -254,7 +254,6 @@ const Student = () => {
                 className="search-col-margin"
               >
                 <Button
-                  type="ghost"
                   ghost
                   style={{
                     boxShadow: "none",

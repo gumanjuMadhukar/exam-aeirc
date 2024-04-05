@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { MailOutlined } from "@ant-design/icons";
+import { MailOutlined, KeyOutlined } from "@ant-design/icons";
 import { Form, Input, Button, message } from "antd";
 import { useMutation } from "react-query";
 import { studentLogin } from "apis/auth";
@@ -17,8 +17,7 @@ const Login: NextPage = (_props): JSX.Element => {
     //   ...data,
     //   date_of_birth: moment(data.date_of_birth).format("YYYY-MM-DD"),
     // };
-
-    loginMutation.mutate(data, {
+    loginMutation.mutate(data, { 
       onSuccess: (response) => {
         const token = response.data.token;
         // const role = response.data.user.roles[0].name;
@@ -75,7 +74,7 @@ const Login: NextPage = (_props): JSX.Element => {
                 autoComplete="off"
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               name="confirm_symbol_number"
               label="Confirm Symbol Number"
               dependencies={["symbol_number"]}
@@ -102,6 +101,23 @@ const Login: NextPage = (_props): JSX.Element => {
                 size="large"
                 placeholder="Confirm Symbol Number"
                 suffix={<MailOutlined />}
+                autoComplete="off"
+              />
+            </Form.Item> */}
+            <Form.Item
+              name="password"
+              label="Password"
+              rules={[
+                { required: true, message: "Please enter your password!" },
+              ]}
+            >
+              <Input
+                name="password" 
+                id="password"
+                size="large"
+                placeholder="Password"
+                suffix={<KeyOutlined />}
+                type="password"
                 autoComplete="off"
               />
             </Form.Item>

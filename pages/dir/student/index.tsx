@@ -18,8 +18,9 @@ import {
   EllipsisOutlined,
   ExclamationOutlined,
   ExportOutlined,
+  PrinterOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import StudentAPI from "apis/student";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -37,6 +38,9 @@ import { Colors } from "utils/colors";
 import ConfirmModal from "components/ConfirmModal";
 import { ImportStudentModal } from "components/admin/student/importStudentModal";
 import { getStudentDataWithPassFail } from "apis/export";
+import PrintLoginDetail from "components/print/LoginDetail";
+import { useReactToPrint } from "react-to-print";
+import StudentDataPrintModal from "components/Modal/StudentDataPrintModal";
 
 interface FilterParams {
   currentPage: number;
@@ -103,16 +107,23 @@ const ViewDropDown = ({
 };
 
 const Student = () => {
+  const studentListRef = React.useRef<HTMLDivElement | null>(null);
+  const seatPlanRef = React.useRef<HTMLDivElement | null>(null);
+  const [printData, setPrintData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
   const studentAPI = new StudentAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
+  const [studentPrintModal, setStudentPrintModal] = useState(false);
   const [_openView, setOpenView] = useState(false);
   const [_openEdit, setOpenEdit] = useState(false);
   const queryClient = useQueryClient();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
   };
+  const openCLoseStudentModal = () => {
+    setStudentPrintModal(!studentPrintModal)
+  }
   const programListColumns: any = [
     {
       title: "Name",
@@ -261,7 +272,38 @@ const Student = () => {
         console.error("Failed to export to Excel:", error);
       });
   };
-
+  const handlePrint =(data:any, printOption:string) => {
+    console.log(printOption);
+    setPrintData(data);
+    if(printOption == 'login_detail'){
+      handleStudentListPrint();
+    }else if(printOption == 'seat_plan'){
+      handleSeatPlanPrint();
+    }
+  }
+  
+  const handleStudentListPrint = useReactToPrint({
+    content: () => studentListRef.current,
+    documentTitle: "LoginDetail",
+    pageStyle: `
+    @page {
+      size: portrait;
+    }
+  `,
+  });
+  const handleSeatPlanPrint = useReactToPrint({
+    content: () => seatPlanRef.current,
+    documentTitle: "SeatPlan",
+    pageStyle: `
+    @page {
+      size: portrait;
+    }
+  `,
+  });
+  useEffect(() => {
+    console.log(printData, 'sds')
+  }, [printData])
+  
   return (
     <UsersContainer>
       <PageHeader>
@@ -284,7 +326,7 @@ const Student = () => {
                   boxShadow: "none",
                   color: Colors.WHITE,
                 }}
-                // type="primary"
+                type="primary"
                 icon={<UserAddOutlined />}
                 onClick={openCloseModal}
               >
@@ -302,6 +344,19 @@ const Student = () => {
                 onClick={handleDataExport}
               >
                 Export Student Data
+              </Button>
+              <Button
+                style={{
+                  background: Colors.COLOR_PRIMARY_BG,
+                  boxShadow: "none",
+                  color: Colors.WHITE,
+                  marginLeft: "10px",
+                }}
+                type="primary"
+                icon={<PrinterOutlined />}
+                onClick={openCLoseStudentModal}
+              >
+                Print Student Data
               </Button>
             </CustomizedButtonGroup>
           </TitleContent>
@@ -404,13 +459,15 @@ const Student = () => {
         openCloseModal={openCloseDeleteLeaveModal}
         open={isDeleteLeaveModalOpen}
         confirmText="remove the document"
-        onConfirmModal={onConfirmDelete}
+        onConfirmModal={onConfirmDelete}   
         icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
       />
       <ImportStudentModal
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
       />
+      <PrintLoginDetail ref={studentListRef} data={printData} />
+      <StudentDataPrintModal isModalOpen={studentPrintModal} handlePrint={handlePrint} handleCancel={openCLoseStudentModal}/>
     </UsersContainer>
   );
 };

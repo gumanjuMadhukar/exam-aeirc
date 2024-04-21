@@ -1,1 +1,0 @@
-(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[6931],{70694:function(n,_,u){(window.__NEXT_P=window.__NEXT_P||[]).push(["/student/dashboard/BasicInformation",function(){return u(70402)}])}},function(n){n.O(0,[4885,2808,8613,1481,9774,2888,179],function(){return n(n.s=70694)}),_N_E=n.O()}]);

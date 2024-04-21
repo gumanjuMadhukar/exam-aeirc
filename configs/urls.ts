@@ -12,6 +12,7 @@ import {
 
 const urls = {
   login: "/auth/login",
+  comitteLogin: "/auth/committee-login",
   forgotPassword: "/auth/forgot-pw",
   register: "/auth/register",
   changePassword: "auth/change-password",

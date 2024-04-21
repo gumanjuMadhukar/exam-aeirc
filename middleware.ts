@@ -19,6 +19,7 @@ export const config = {
 export const publicRoutes = [
   "/auth/register",
   "/auth/login",
+  "/auth/committee-login",
   "/auth/forgot-pw",
   "/auth/register-verification",
   "/auth/reset-password",

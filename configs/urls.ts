@@ -8,7 +8,6 @@ import {
   BookOutlined,
   HistoryOutlined,
   UserOutlined,
-  FileProtectOutlined
 } from "@ant-design/icons";
 
 const urls = {

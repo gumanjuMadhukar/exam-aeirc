@@ -19,9 +19,9 @@ import {
   ExclamationOutlined,
   ExportOutlined,
   PrinterOutlined,
-  ClusterOutlined
+  ClusterOutlined,
 } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
 import StudentAPI from "apis/student";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -38,12 +38,12 @@ import {
 import { Colors } from "utils/colors";
 import ConfirmModal from "components/ConfirmModal";
 import { ImportStudentModal } from "components/admin/student/importStudentModal";
-import { getEncodedStudentDataWithPassFail, getStudentDataWithPassFail } from "apis/export"; 
-import { useReactToPrint } from "react-to-print";
+import {
+  getEncodedStudentDataWithPassFail,
+  getStudentDataWithPassFail,
+} from "apis/export";
 import StudentDataPrintModal from "components/Modal/StudentDataPrintModal";
 import SeatPlanModal from "components/Modal/SeatPlanModal";
-import PrintLoginDetail from "components/print/login-detail";
-import PrintSeatPlan from "components/print/seat-plan";
 
 interface FilterParams {
   currentPage: number;
@@ -110,10 +110,6 @@ const ViewDropDown = ({
 };
 
 const Student = () => {
-  const studentListRef = React.useRef<HTMLDivElement | null>(null);
-  const seatPlanRef = React.useRef<HTMLDivElement | null>(null);
-  const [printData, setPrintData] = useState<any>();
-  const [printOption, setPrintOption] = useState<string>('');
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
   const studentAPI = new StudentAPI();
@@ -212,28 +208,6 @@ const Student = () => {
       return response?.data;
     }
   );
-  const exampleData: ExampleData[] = [
-    {
-      name: "John Doe",
-      rollNo: "A001",
-      startTime: "08:00 AM",
-      lab: "Lab1 ",
-    },
-    {
-      name: "Jane Smith",
-      rollNo: "A002",
-      startTime: "09:30 AM",
-      lab: "Lab2",
-    },
-    {
-      name: "Alice Johnson",
-      rollNo: "A003",
-      startTime: "10:45 AM",
-      lab: "Lab3",
-    },
-    // Add more data objects as needed
-  ];
-
   const programList = queryList?.data?.data;
   const metaData = queryList?.data?.meta;
 
@@ -323,51 +297,47 @@ const Student = () => {
         console.error("Failed to export to Excel:", error);
       });
   };
-  const handlePrint = (data: any) => {
-    console.log(data,"console");
+  // const handlePrint = (data: any) => {
+  //   const { printOption } = data;
+  //   // const {starting_symbol_no,ending_symbol_no, exam_date, exam_time} = data;
+  //   const pdata = {
+  //     starting_symbol_no: data.starting_symbol_no,
+  //     ending_symbol_no: data.ending_symbol_no,
+  //     exam_date: data.exam_date,
+  //     exam_time: data.exam_time,
+  //     exampleData: exampleData,
+  //   };
+  //   setPrintData(pdata);
+  //   setPrintOption(printOption);
+  // };
+  // useEffect(() => {
+  //   printOption === "login_detail"
+  //     ? handleStudentListPrint()
+  //     : printOption === "seat_plan"
+  //     ? handleSeatPlanPrint()
+  //     : null;
 
-    const {printOption} = data;
-    // const {starting_symbol_no,ending_symbol_no, exam_date, exam_time} = data;
-    const pdata = {
-      starting_symbol_no: data.starting_symbol_no,
-      ending_symbol_no: data.ending_symbol_no,
-      exam_date: data.exam_date,
-      exam_time: data.exam_time,
-      exampleData: exampleData,
-    };
-    setPrintData(pdata);
-    setPrintOption(printOption);
-  };
-  useEffect(()=>{
-    if (printOption == "login_detail") {
-      handleStudentListPrint();
-    } else if (printOption == "seat_plan") {
-      handleSeatPlanPrint();
-    }
-  },[printData,printOption])
+  //   // printOption === 'login_detail' ? handleStudentListPrint : printOption ==='seat_plan' ? handleSeatPlanPrint: '';
+  // }, [printOption]);
 
-  const handleStudentListPrint = useReactToPrint({
-    content: () => studentListRef.current,
-    documentTitle: "LoginDetail",
-    pageStyle: `
-    @page {
-      size: portrait;
-    }
-  `,
-  });
-  const handleSeatPlanPrint = useReactToPrint({
-    content: () => seatPlanRef.current,
-    documentTitle: "SeatPlan",
-    pageStyle: `
-    @page {
-      size: portrait;
-    }
-  `,
-  });
-  useEffect(() => {
-    console.log(printData, "sds");
-  }, [printData]);
-
+  // const handleStudentListPrint = useReactToPrint({
+  //   content: () => studentListRef.current,
+  //   documentTitle: "LoginDetail",
+  //   pageStyle: `
+  //   @page {
+  //     size: portrait;
+  //   }
+  // `,
+  // });
+  // const handleSeatPlanPrint = useReactToPrint({
+  //   content: () => seatPlanRef.current,
+  //   documentTitle: "SeatPlan",
+  //   pageStyle: `
+  //   @page {
+  //     size: portrait;
+  //   }
+  // `,
+  // });
   return (
     <UsersContainer>
       <PageHeader>
@@ -561,13 +531,12 @@ const Student = () => {
         isModalOpen={seatPlanModal}
       />
       <StudentDataPrintModal
-        isModalOpen={studentPrintModal}
-        handlePrint={handlePrint}
+        isModalOpen={studentPrintModal}     
         handleCancel={openCLoseStudentPrintModal}
-      />
+      />    
 
-      <PrintLoginDetail ref={studentListRef} data={printData} />
-      <PrintSeatPlan ref={seatPlanRef} data={printData} />
+      {/* <PrintLoginDetail ref={studentListRef} data={printData} />
+      <PrintSeatPlan ref={seatPlanRef} data={printData} /> */}
     </UsersContainer>
   );
 };

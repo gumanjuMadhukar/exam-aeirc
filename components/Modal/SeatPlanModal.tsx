@@ -1,27 +1,12 @@
 import { Button, Col, Form, Input, Modal, Row, Select, message } from "antd";
 import { postSeatPlan } from "apis/seat-plan";
-import { getShift } from "apis/shift";
-import React, { useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import React from "react";
+import { useMutation } from "react-query";
 import styled from "styled-components";
 
 const SeatPlanModalFormLayout = styled.div``;
-interface FilterParams {
-  currentPage: number;
-  pageSize: number;
-}
-
-const DefaultFilterParams = {
-  currentPage: 1,
-  pageSize: 10,
-};
-
 const SeatPlanModal = ({ isModalOpen, handleCancel }: ModalProps) => {
   const [form] = Form.useForm();
-
-  // const [filterParams, setFilterParams] = useState<FilterParams>(DefaultFilterParams)
-  // const {data : Shift} = useQuery(["Shift", {filterParams}], getShift)
-  // console.log(Shift, "Getshift")
   const postSeatPlanContent = useMutation((data: any) => postSeatPlan(data), {
     onSuccess: () => {
       form.resetFields();
@@ -33,7 +18,6 @@ const SeatPlanModal = ({ isModalOpen, handleCancel }: ModalProps) => {
     },
   });
   const handleSubmit = (data: any) => {
-    console.log(data, "form-data");
     var formData={
         shift_id:data.Shift,
         hall:{

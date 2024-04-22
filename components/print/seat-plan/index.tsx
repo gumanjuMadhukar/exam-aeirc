@@ -7,11 +7,6 @@ type Props = {
 
 const PrintSeatPlan = forwardRef<HTMLDivElement, Props>((props: Props, ref) => {
   const { data } = props;
-  console.log(data, "shgdh");
-  const examDate = data?.exam_date;
-  console.log(examDate, "edate");
-
-
   return (
     <div style={{ display: "none" }} className="print-document">
       <div ref={ref}>
@@ -26,15 +21,13 @@ const PrintSeatPlan = forwardRef<HTMLDivElement, Props>((props: Props, ref) => {
               <tr>
                 <th>Name</th>
                 <th>Roll No.</th>
-                <th>Shift Start Time</th>
-                <th>Lab</th>
+                <th>Computer No (Seat No)</th>
               </tr>
-              {data?.exampleData?.map((wdata:any) => (
-              <tr>
-                <th>{wdata?.lab}</th>
-                <th>{wdata?.name}</th>
-                <th>{wdata?.Roll}</th>
-                <th>{wdata?.start_time}</th>
+              {data?.map((datas:any) => (
+              <tr style={{textAlign:'center'}}>
+                <td>{datas?.name}</td>
+                <td>{datas?.symbol_number}</td>
+                <td>{datas?.seat_number}</td>
               </tr>
               ))}
             </tbody>

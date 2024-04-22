@@ -31,7 +31,6 @@ import { Colors } from "utils/colors";
 
 import { getShift} from "apis/shift";
 import { CreateShiftModal } from "components/admin/shift/CreateShiftModal";
-import ShiftAPI from "apis/shift";
 
 interface FilterParams {
   currentPage: number;
@@ -53,7 +52,6 @@ interface IViewDropDown {
   openCloseDeleteLeaveModal: (id?: string | undefined) => void;
   id: string;
 }
-
 const ViewDropDown = ({ openCloseDeleteLeaveModal, id }: IViewDropDown) => {
   const items: MenuProps["items"] = [
     {
@@ -89,7 +87,6 @@ const Shift = () => {
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   const [_openView, setOpenView] = useState(false);
   const [_openEdit, setOpenEdit] = useState(false);
-  const shiftAPI = new ShiftAPI();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
   };
@@ -153,9 +150,11 @@ const Shift = () => {
   const [filterParams, setFilterParams] =
     useState<FilterParams>(DefaultFilterParams);
 
-  const { data: Shift } = useQuery(["Shift", { filterParams }], getShift);
-
+  const { data: Shift } = useQuery<any>(["Shift", { filterParams }], getShift);
+  console.log(typeof(Shift), "type")
   const shifList = Shift?.data;
+
+
   // const queryList = useQuery(
   //   [
   //     "ShiftDetail",

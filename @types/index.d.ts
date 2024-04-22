@@ -158,14 +158,15 @@ interface ExampleData {
 }
 
 interface ShiftData {
-  id: string;
-  name: string;
-  date: string;
-  start_time: string;
+  id?: string;
+  name?: string;
+  date?: string;
+  start_time?: string;
   total_students: number;
   tolerance_time: string;
   status: string;
   end_time: string;
+  data?:[];
   // Add more properties as needed
 }
 

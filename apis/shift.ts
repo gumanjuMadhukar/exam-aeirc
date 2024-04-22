@@ -1,4 +1,5 @@
 import http from "utils/http";
+import Resource from "./resource";
 
 export interface Shift {
   name: string;
@@ -9,13 +10,24 @@ export interface Shift {
   end_datetime: Date;
 }
 
+class ShiftAPI extends Resource {
+  getRandomQuestion(subject_id: any) {
+    return http({
+      url: `/shift/${subject_id}`,
+      method: "get",
+    });
+  }
+  constructor() {     
+    super("shift");
+  }
+}
+export { ShiftAPI as default };
 export const getShift = async ({
   queryKey,
 }: {
   queryKey: any;
 }): Promise<any[]> => {
   const [, data] = queryKey;
-
   const queryParams: any = {
     page: data.filterParams.currentPage,
     limit: data.filterParams.pageSize,

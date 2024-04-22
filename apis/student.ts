@@ -29,3 +29,17 @@ export function uploadStudent({ file, subject_id }: any) {
     },
   });
 }
+
+export const getLoginDetail = async ({ queryKey }: { queryKey: any }): Promise<any> => {
+  const [, data] = queryKey;
+  console.log(data,"getloginDetail")
+  const queryParams: any = {
+    shift_id:data?.filterParams.shift_id,
+  };
+  const response = await http({
+    url: `/student/printLoginDetail`,
+    method:"get",
+    params:queryParams
+  });
+  return response?.data;
+};

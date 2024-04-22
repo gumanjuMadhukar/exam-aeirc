@@ -29,8 +29,9 @@ import {
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
 
-import { getShift } from "apis/shift";
+import { getShift} from "apis/shift";
 import { CreateShiftModal } from "components/admin/shift/CreateShiftModal";
+import ShiftAPI from "apis/shift";
 
 interface FilterParams {
   currentPage: number;
@@ -88,11 +89,11 @@ const Shift = () => {
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   const [_openView, setOpenView] = useState(false);
   const [_openEdit, setOpenEdit] = useState(false);
-
+  const shiftAPI = new ShiftAPI();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
   };
-  const programListColumns: any = [
+  const shiftListColumns: any = [
     {
       title: "Name",
       key: "name",
@@ -154,8 +155,27 @@ const Shift = () => {
 
   const { data: Shift } = useQuery(["Shift", { filterParams }], getShift);
 
-  const shifList = Shift;
-
+  const shifList = Shift?.data;
+  // const queryList = useQuery(
+  //   [
+  //     "ShiftDetail",
+  //     {
+  //       status: filterParams.status,
+  //       page: filterParams.currentPage,
+  //       limit: filterParams.pageSize,
+  //       search: filterParams.search,
+  //     },
+  //   ],
+  //   async () => {
+  //     const queryParams: any = {
+  //       page: filterParams.currentPage,
+  //       limit: filterParams.pageSize,
+  //     };
+  //     if (filterParams.search) queryParams.search = filterParams.search;
+  //     const response = await shiftAPI.list(queryParams);
+  //     return response?.data;
+  //   }
+  // )
   const handleSearch = (_e: any) => {
     setFilterParams((prevState) => ({
       ...prevState,
@@ -268,7 +288,7 @@ const Shift = () => {
       </PageHeader>
       <TableBodyContainer>
         <Table
-          columns={programListColumns}
+          columns={shiftListColumns}
           dataSource={shifList}
           scroll={{ x: 1000 }}
           style={{ cursor: "pointer" }}

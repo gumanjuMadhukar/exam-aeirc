@@ -149,3 +149,28 @@ interface PayrollSummaryListDataType {
   empId: string;
   withheld: boolean;
 }
+
+interface ExampleData {
+  name:string;
+  rollNo:string;
+  startTime:string;
+  lab:string;
+}
+
+interface ShiftData {
+  id: string;
+  name: string;
+  date: string;
+  start_time: string;
+  total_students: number;
+  tolerance_time: string;
+  status: string;
+  end_time: string;
+  // Add more properties as needed
+}
+
+interface ModalProps {
+  isModalOpen: boolean;
+  handleCancel?:() => void;
+  handlePrint ?:string;
+}

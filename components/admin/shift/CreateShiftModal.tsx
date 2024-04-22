@@ -25,10 +25,11 @@ export const CreateShiftModal = (props: Props) => {
 
   const postShiftContent = useMutation((data: any) => postShift(data), {
     onSuccess: () => {
-      queryClient.invalidateQueries(["rebateList"]);
+      // queryClient.invalidateQueries(["rebateList"]);
+      queryClient.invalidateQueries(["ShiftDetail"]);
       handleCancel();
       form.resetFields();
-      message.success("Rebate have been created successfully");
+      message.success("ShiftList have been created successfully");
     },
     onError: (data: any) => {
       const errorMessage = data?.response?.data?.message;

@@ -19,6 +19,7 @@ import {
   ExclamationOutlined,
   ExportOutlined,
   PrinterOutlined,
+  ClusterOutlined
 } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { DEFAULT_PAGE_SIZE, INITIAL_CURRENT_PAGE } from "constants/common";
@@ -37,10 +38,12 @@ import {
 import { Colors } from "utils/colors";
 import ConfirmModal from "components/ConfirmModal";
 import { ImportStudentModal } from "components/admin/student/importStudentModal";
-import { getStudentDataWithPassFail } from "apis/export";
-import PrintLoginDetail from "components/print/LoginDetail";
+import { getEncodedStudentDataWithPassFail, getStudentDataWithPassFail } from "apis/export"; 
 import { useReactToPrint } from "react-to-print";
 import StudentDataPrintModal from "components/Modal/StudentDataPrintModal";
+import SeatPlanModal from "components/Modal/SeatPlanModal";
+import PrintLoginDetail from "components/print/login-detail";
+import PrintSeatPlan from "components/print/seat-plan";
 
 interface FilterParams {
   currentPage: number;
@@ -109,21 +112,26 @@ const ViewDropDown = ({
 const Student = () => {
   const studentListRef = React.useRef<HTMLDivElement | null>(null);
   const seatPlanRef = React.useRef<HTMLDivElement | null>(null);
-  const [printData, setPrintData] = useState([]);
+  const [printData, setPrintData] = useState<any>();
+  const [printOption, setPrintOption] = useState<string>('');
   const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
   const studentAPI = new StudentAPI();
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   const [studentPrintModal, setStudentPrintModal] = useState(false);
+  const [seatPlanModal, setSeatPlanModal] = useState(false);
   const [_openView, setOpenView] = useState(false);
   const [_openEdit, setOpenEdit] = useState(false);
   const queryClient = useQueryClient();
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
   };
-  const openCLoseStudentModal = () => {
-    setStudentPrintModal(!studentPrintModal)
-  }
+  const openCLoseStudentPrintModal = () => {
+    setStudentPrintModal(!studentPrintModal);
+  };
+  const openCloseSeatPlanModal = () => {
+    setSeatPlanModal(!seatPlanModal);
+  };
   const programListColumns: any = [
     {
       title: "Name",
@@ -204,6 +212,27 @@ const Student = () => {
       return response?.data;
     }
   );
+  const exampleData: ExampleData[] = [
+    {
+      name: "John Doe",
+      rollNo: "A001",
+      startTime: "08:00 AM",
+      lab: "Lab1 ",
+    },
+    {
+      name: "Jane Smith",
+      rollNo: "A002",
+      startTime: "09:30 AM",
+      lab: "Lab2",
+    },
+    {
+      name: "Alice Johnson",
+      rollNo: "A003",
+      startTime: "10:45 AM",
+      lab: "Lab3",
+    },
+    // Add more data objects as needed
+  ];
 
   const programList = queryList?.data?.data;
   const metaData = queryList?.data?.meta;
@@ -272,16 +301,51 @@ const Student = () => {
         console.error("Failed to export to Excel:", error);
       });
   };
-  const handlePrint =(data:any, printOption:string) => {
-    console.log(printOption);
-    setPrintData(data);
-    if(printOption == 'login_detail'){
+  const handleEncodedDataExport = async () => {
+    await getEncodedStudentDataWithPassFail()
+      .then((response) => {
+        // Create a Blob from the response data
+        const blob = new Blob([response.data], {
+          type: "application/vnd.ms-excel",
+        });
+
+        // Create a download link element
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = "students.xlsx"; // Set desired file name
+
+        // Append download link to DOM and click it to trigger download
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+      })
+      .catch((error) => {
+        console.error("Failed to export to Excel:", error);
+      });
+  };
+  const handlePrint = (data: any) => {
+    console.log(data,"console");
+
+    const {printOption} = data;
+    // const {starting_symbol_no,ending_symbol_no, exam_date, exam_time} = data;
+    const pdata = {
+      starting_symbol_no: data.starting_symbol_no,
+      ending_symbol_no: data.ending_symbol_no,
+      exam_date: data.exam_date,
+      exam_time: data.exam_time,
+      exampleData: exampleData,
+    };
+    setPrintData(pdata);
+    setPrintOption(printOption);
+  };
+  useEffect(()=>{
+    if (printOption == "login_detail") {
       handleStudentListPrint();
-    }else if(printOption == 'seat_plan'){
+    } else if (printOption == "seat_plan") {
       handleSeatPlanPrint();
     }
-  }
-  
+  },[printData,printOption])
+
   const handleStudentListPrint = useReactToPrint({
     content: () => studentListRef.current,
     documentTitle: "LoginDetail",
@@ -301,9 +365,9 @@ const Student = () => {
   `,
   });
   useEffect(() => {
-    console.log(printData, 'sds')
-  }, [printData])
-  
+    console.log(printData, "sds");
+  }, [printData]);
+
   return (
     <UsersContainer>
       <PageHeader>
@@ -341,9 +405,22 @@ const Student = () => {
                 }}
                 type="primary"
                 icon={<ExportOutlined />}
+                onClick={handleEncodedDataExport}
+              >
+                Export Encoded Data
+              </Button>
+              <Button
+                style={{
+                  background: Colors.COLOR_PRIMARY_BG,
+                  boxShadow: "none",
+                  color: Colors.WHITE,
+                  marginLeft: "10px",
+                }}
+                type="primary"
+                icon={<ExportOutlined />}
                 onClick={handleDataExport}
               >
-                Export Student Data
+                Export Decoded Data
               </Button>
               <Button
                 style={{
@@ -354,9 +431,22 @@ const Student = () => {
                 }}
                 type="primary"
                 icon={<PrinterOutlined />}
-                onClick={openCLoseStudentModal}
+                onClick={openCLoseStudentPrintModal}
               >
-                Print Student Data
+                Print
+              </Button>
+              <Button
+                style={{
+                  background: Colors.COLOR_PRIMARY_BG,
+                  boxShadow: "none",
+                  color: Colors.WHITE,
+                  marginLeft: "10px",
+                }}
+                type="primary"
+                icon={<ClusterOutlined />}
+                onClick={openCloseSeatPlanModal}
+              >
+                Seat Plan
               </Button>
             </CustomizedButtonGroup>
           </TitleContent>
@@ -459,15 +549,25 @@ const Student = () => {
         openCloseModal={openCloseDeleteLeaveModal}
         open={isDeleteLeaveModalOpen}
         confirmText="remove the document"
-        onConfirmModal={onConfirmDelete}   
+        onConfirmModal={onConfirmDelete}
         icon={<ExclamationOutlined style={{ color: Colors.DANGER }} />}
       />
       <ImportStudentModal
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
       />
+      <SeatPlanModal
+        handleCancel={openCloseSeatPlanModal}
+        isModalOpen={seatPlanModal}
+      />
+      <StudentDataPrintModal
+        isModalOpen={studentPrintModal}
+        handlePrint={handlePrint}
+        handleCancel={openCLoseStudentPrintModal}
+      />
+
       <PrintLoginDetail ref={studentListRef} data={printData} />
-      <StudentDataPrintModal isModalOpen={studentPrintModal} handlePrint={handlePrint} handleCancel={openCLoseStudentModal}/>
+      <PrintSeatPlan ref={seatPlanRef} data={printData} />
     </UsersContainer>
   );
 };

@@ -6,8 +6,7 @@ type Props = {
 const PrintLoginDetail = forwardRef<HTMLDivElement, Props>(
   (props: Props, ref) => {
     const { data } = props;
-    console.log(data, "hello");
-    const DisplayData = data?.map((item:any) => (
+    const DisplayData = data?.data?.map((item:any) => (
       <>
         <div className="header" style={{ pageBreakBefore: "always" }}>
           <span>

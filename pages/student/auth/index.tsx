@@ -17,7 +17,7 @@ const Login: NextPage = (_props): JSX.Element => {
     //   ...data,
     //   date_of_birth: moment(data.date_of_birth).format("YYYY-MM-DD"),
     // };
-    loginMutation.mutate(data, { 
+    loginMutation.mutate(data, {
       onSuccess: (response) => {
         const token = response.data.token;
         // const role = response.data.user.roles[0].name;
@@ -48,7 +48,19 @@ const Login: NextPage = (_props): JSX.Element => {
   return (
     <LoginPages>
       <PageLogo>
-        <LoginHeading>Ayurveda</LoginHeading>
+        {/* <LoginHeading>Ayurveda</LoginHeading> */}
+        <div className="image">
+          <img
+            src="/swasthya_bima_logo/swasthya_bima_logo.png"
+            alt=""
+            width="130px"
+          />
+        </div>
+        <div className="text">
+          <span>नेपाल सरकार </span>
+          <br />
+          <span>स्वास्थ्य बीमा बाेर्ड</span>
+        </div>
       </PageLogo>
       <LoginContainer>
         <AuthBlock>
@@ -112,7 +124,7 @@ const Login: NextPage = (_props): JSX.Element => {
               ]}
             >
               <Input
-                name="password" 
+                name="password"
                 id="password"
                 size="large"
                 placeholder="Password"
@@ -156,6 +168,15 @@ export const PageLogo = styled.div`
   margin-top: 50px;
   margin-bottom: 20px;
   // color: white;
+  display:flex;
+  align-items:center;
+  .text{
+    padding-left:10px;
+    span{
+      font-size:22px;
+      font-weight:600;
+    }
+  }
 `;
 
 export const LoginContainer = styled.div`

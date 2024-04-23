@@ -32,7 +32,7 @@ import {
   PageHeaderNaviagtion,
   SearchBar,
   SearchBarContent,
-  TableBodyContainer,
+  TableBodyContainer,       
   TitleContent,
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
@@ -297,47 +297,6 @@ const Student = () => {
         console.error("Failed to export to Excel:", error);
       });
   };
-  // const handlePrint = (data: any) => {
-  //   const { printOption } = data;
-  //   // const {starting_symbol_no,ending_symbol_no, exam_date, exam_time} = data;
-  //   const pdata = {
-  //     starting_symbol_no: data.starting_symbol_no,
-  //     ending_symbol_no: data.ending_symbol_no,
-  //     exam_date: data.exam_date,
-  //     exam_time: data.exam_time,
-  //     exampleData: exampleData,
-  //   };
-  //   setPrintData(pdata);
-  //   setPrintOption(printOption);
-  // };
-  // useEffect(() => {
-  //   printOption === "login_detail"
-  //     ? handleStudentListPrint()
-  //     : printOption === "seat_plan"
-  //     ? handleSeatPlanPrint()
-  //     : null;
-
-  //   // printOption === 'login_detail' ? handleStudentListPrint : printOption ==='seat_plan' ? handleSeatPlanPrint: '';
-  // }, [printOption]);
-
-  // const handleStudentListPrint = useReactToPrint({
-  //   content: () => studentListRef.current,
-  //   documentTitle: "LoginDetail",
-  //   pageStyle: `
-  //   @page {
-  //     size: portrait;
-  //   }
-  // `,
-  // });
-  // const handleSeatPlanPrint = useReactToPrint({
-  //   content: () => seatPlanRef.current,
-  //   documentTitle: "SeatPlan",
-  //   pageStyle: `
-  //   @page {
-  //     size: portrait;
-  //   }
-  // `,
-  // });
   return (
     <UsersContainer>
       <PageHeader>

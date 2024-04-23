@@ -151,30 +151,7 @@ const Shift = () => {
     useState<FilterParams>(DefaultFilterParams);
 
   const { data: Shift } = useQuery<any>(["Shift", { filterParams }], getShift);
-  console.log(typeof(Shift), "type")
   const shifList = Shift?.data;
-
-
-  // const queryList = useQuery(
-  //   [
-  //     "ShiftDetail",
-  //     {
-  //       status: filterParams.status,
-  //       page: filterParams.currentPage,
-  //       limit: filterParams.pageSize,
-  //       search: filterParams.search,
-  //     },
-  //   ],
-  //   async () => {
-  //     const queryParams: any = {
-  //       page: filterParams.currentPage,
-  //       limit: filterParams.pageSize,
-  //     };
-  //     if (filterParams.search) queryParams.search = filterParams.search;
-  //     const response = await shiftAPI.list(queryParams);
-  //     return response?.data;
-  //   }
-  // )
   const handleSearch = (_e: any) => {
     setFilterParams((prevState) => ({
       ...prevState,

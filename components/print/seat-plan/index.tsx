@@ -13,7 +13,7 @@ const PrintSeatPlan = forwardRef<HTMLDivElement, Props>((props: Props, ref) => {
         <PrintTableLayout>
           <div className="header">
             <span>
-              Date: {data?.shift_date} || Time: {data?.shift_time}
+              Date: {data?.data?.shift_date} || Time: {data?.data?.shift_time}
             </span>
           </div>
           <table>
@@ -23,7 +23,7 @@ const PrintSeatPlan = forwardRef<HTMLDivElement, Props>((props: Props, ref) => {
                 <th>Roll No.</th>
                 <th>Computer No (Seat No)</th>
               </tr>
-              {data?.map((datas:any) => (
+              {data?.data.map((datas:any) => (
               <tr style={{textAlign:'center'}}>
                 <td>{datas?.name}</td>
                 <td>{datas?.symbol_number}</td>

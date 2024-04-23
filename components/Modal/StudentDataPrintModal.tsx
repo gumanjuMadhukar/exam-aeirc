@@ -34,11 +34,12 @@ const StudentDataPrintModal = ({ isModalOpen, handleCancel }: Props) => {
     setShiftId(value);
   };
   const [filterParams, setFilterParams] = useState<FilterParams>(DefaultFilterParams);
-  const { data: _LoginDetail } = useQuery(
+  const { data: LoginDetail } = useQuery(
     ["LoginDetail", { filterParams }],
-    getLoginDetail,{enabled:loginData}
+    getLoginDetail
+    // ,{enabled:loginData}
   );
- 
+ console.log(LoginDetail, "det")
   const loginDataExample = [
     {
       id: 1,
@@ -102,9 +103,9 @@ const StudentDataPrintModal = ({ isModalOpen, handleCancel }: Props) => {
   // };
 
   const handlePrint = (printOption: any) => {
-    console.log(printOption, "printData");
     // const {starting_symbol_no,ending_symbol_no, exam_date, exam_time} = data;
-    const pdata = loginDataExample
+    const pdata = LoginDetail?.data
+    console.log(pdata);
     setPrintData(pdata);
     if (shiftId !== "") {
       printOption == "login_detail"

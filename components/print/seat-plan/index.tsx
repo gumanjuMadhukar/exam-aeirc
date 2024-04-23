@@ -13,7 +13,7 @@ const PrintSeatPlan = forwardRef<HTMLDivElement, Props>((props: Props, ref) => {
         <PrintTableLayout>
           <div className="header">
             <span>
-              Date: {data?.exam_date} || Time: {data?.exam_time}
+              Date: {data?.shift_date} || Time: {data?.shift_time}
             </span>
           </div>
           <table>

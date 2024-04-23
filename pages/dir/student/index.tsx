@@ -159,7 +159,7 @@ const Student = () => {
       render: (row: any) => <text>{row.subject.name}</text>,
       responsive: ["sm", "md", "lg"],
     },
-    {
+  {
       title: "Date of Birth",
       key: "date_of_birth",
       dataIndex: "date_of_birth",

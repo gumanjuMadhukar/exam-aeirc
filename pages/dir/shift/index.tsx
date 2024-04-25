@@ -11,6 +11,7 @@ import {
 } from "antd";
 import Link from "next/link";
 import {
+  CheckCircleOutlined,
   UserAddOutlined,
   DeleteOutlined,
   EyeOutlined,
@@ -31,6 +32,7 @@ import { Colors } from "utils/colors";
 
 import { getShift} from "apis/shift";
 import { CreateShiftModal } from "components/admin/shift/CreateShiftModal";
+import ConfirmShiftStartModal from "components/admin/shift/ConfirmShiftStartModal";
 
 interface FilterParams {
   currentPage: number;
@@ -49,10 +51,11 @@ const DefaultFilterParams = {
 interface IViewDropDown {
   showModalView: (id: string) => void;
   showModalEdit: (id: string) => void;
-  openCloseDeleteLeaveModal: (id?: string | undefined) => void;
+  openCloseDeleteLeaveModal: (id: string) => void;
+  showShiftConfirmModal: (id: string) => void;
   id: string;
 }
-const ViewDropDown = ({ openCloseDeleteLeaveModal, id }: IViewDropDown) => {
+const ViewDropDown = ({ openCloseDeleteLeaveModal,showShiftConfirmModal, id }: IViewDropDown) => {
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -72,6 +75,15 @@ const ViewDropDown = ({ openCloseDeleteLeaveModal, id }: IViewDropDown) => {
         </div>
       ),
     },
+    {
+      key: "3",
+      label: (
+        <div onClick={() => showShiftConfirmModal(id)}>
+          <CheckCircleOutlined />
+          {"Start"}
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -87,8 +99,12 @@ const Shift = () => {
   const [createUserModalOpen, setCreateUserModalOpen] = useState(false);
   const [_openView, setOpenView] = useState(false);
   const [_openEdit, setOpenEdit] = useState(false);
+  const [openShiftConfirm, setOpenShiftConfirm] = useState(false);
   const openCloseModal = () => {
     setCreateUserModalOpen(!createUserModalOpen);
+  };
+  const openCloseShiftConfirmModal = () => {
+    setOpenShiftConfirm(!openShiftConfirm);
   };
   const shiftListColumns: any = [
     {
@@ -103,7 +119,7 @@ const Shift = () => {
       responsive: ["sm", "md", "lg"],
     },
     {
-      title: "Start Date ",
+      title: "Start Time ",
       dataIndex: "start_time",
       responsive: ["sm", "md", "lg"],
     },
@@ -134,6 +150,7 @@ const Shift = () => {
         <ViewDropDown
           showModalView={showModalView}
           showModalEdit={showModalEdit}
+          showShiftConfirmModal={showShiftConfirmModal}
           openCloseDeleteLeaveModal={openCloseDeleteLeaveModal}
           id={row.id}
         />
@@ -141,7 +158,7 @@ const Shift = () => {
     },
   ];
   const [isDeleteLeaveModalOpen, setIsDeleteLeaveModalOpen] = useState(false);
-  const [_currentItem, setCurrentItem] = useState<string>("");
+  const [currentItem, setCurrentItem] = useState<string>("");
 
   const openCloseDeleteLeaveModal = (id?: string) => {
     id ? setCurrentItem(id) : setCurrentItem("");
@@ -168,6 +185,10 @@ const Shift = () => {
   const showModalEdit = (id: string) => {
     setCurrentItem(id);
     setOpenEdit(true);
+  };
+  const showShiftConfirmModal = (id: string) => {
+    setCurrentItem(id);
+    setOpenShiftConfirm(true);
   };
 
   return (
@@ -275,6 +296,7 @@ const Shift = () => {
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
       />
+      <ConfirmShiftStartModal handleCancel={openCloseShiftConfirmModal} isModalOpen={openShiftConfirm} id={currentItem}/>
     </UsersContainer>
   );
 };

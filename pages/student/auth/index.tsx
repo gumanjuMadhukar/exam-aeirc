@@ -161,7 +161,7 @@ export const LoginPages = styled.div`
   flex-direction: column;
   min-height: 100vh;
   padding-top: 5%;
-  background: #d6cfc7;
+  background: #fff;
 `;
 
 export const PageLogo = styled.div`

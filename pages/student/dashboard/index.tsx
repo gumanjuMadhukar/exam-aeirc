@@ -91,7 +91,6 @@ const Student: NextPageWithLayout = () => {
             <BasicInformation data={studentData} />
           </Col>
         </ProfileWrapper>
-
         <PageFooter />
       </DashboardContainer>
     </>

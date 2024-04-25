@@ -10,12 +10,13 @@ import {
 import { useState } from "react";
 import StudentAPI from "apis/student";
 import styled from "styled-components";
-import { Button, Checkbox, Col, Form, Image, Row } from "antd";
+import { Button, Checkbox, Col, Form, Image, Row, message } from "antd";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import moment from "moment";
-import { allocateRandomQuestion } from "apis/question";
+import QuestionAPI, { allocateRandomQuestion } from "apis/question";
+import ShiftAPI from "apis/shift";
 
 interface Props {
   data: any;
@@ -24,6 +25,7 @@ const BasicInformation = (props: Props) => {
   const { data } = props;
   const router = useRouter();
   const queryClient = useQueryClient();
+  const questionAPI = new QuestionAPI();
   // const [editBasicInformationModalOpen, setEditBasicInformationModalOpen] =
   //   useState(false);
 
@@ -35,6 +37,7 @@ const BasicInformation = (props: Props) => {
   const [form] = Form.useForm();
 
   const studentAPI = new StudentAPI();
+  const shiftAPI = new ShiftAPI();
   // const mediaAPI = new MediaAPI();
   const student_id = Cookies.get("student_id");
 
@@ -50,7 +53,12 @@ const BasicInformation = (props: Props) => {
 
       enterFullScreen();
       // router.push("/student/dashboard/quiz/ExamWithPagination");
-      router.push("/student/dashboard/quiz");
+      if(shiftStatus){
+        router.push("/student/dashboard/quiz");
+      }
+      else{
+        message.loading('please Wait')
+      }
     },
     onError: (_data: any) => {
       // const errorMessageWithNetworkIssue = data?.message;
@@ -71,6 +79,28 @@ const BasicInformation = (props: Props) => {
 
   // enterFullScreen();
 
+  // const shiftStatus  = useQuery<any>(
+  //   ["shift"],
+  //   async () =>
+  //     await ShiftAPI.getShiftDetail(id)
+  //       .then((res) => res.data.data)
+  //       .catch((err) => err),
+  //   {
+  //     enabled: !!id,
+  //   }
+  // );
+  const shiftStatus = useQuery(
+    ["shift"],
+    async () =>
+      await shiftAPI
+        .getShiftDetail(data)
+        .then((res) => res.data.data)
+        .catch((err) => err),
+    {
+      enabled: !!data,
+    }
+  );
+  console.log(shiftStatus)
   const handleSubmit = (data: any) => {
     // Handle form submission logic here
     // handleCapturePhoto();

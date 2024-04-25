@@ -2,5 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/dir/student": "pages/dir/student.js"
+  "/student/auth/finish": "pages/student/auth/finish.js",
+  "/dir/shift": "pages/dir/shift.js",
+  "/student/auth": "pages/student/auth.js"
 }

@@ -22,6 +22,7 @@ import ConfirmModal from "components/ConfirmModal";
 import Clock from "utils/clock";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+import { getLoginDetail } from "apis/student";
 
 const Quiz = () => {
   const [questions, setQuestions] = useState<any>([]); // Store the fetched questions
@@ -30,15 +31,50 @@ const Quiz = () => {
   const questionAPI = new QuestionAPI();
   const queryClient = useQueryClient();
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
-  const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
   const router = useRouter();
+  const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
   const student_id = Cookies.get("student_id");
+  const [timeRemaining, setTimeRemaining] = useState(60 * 1);// 30 minutes in seconds
   const photo = Cookies.get("photo");
   const queryList = useQuery(["RandomList"], async () => {
     const response = await questionAPI.getRandomQuestion(student_id);
-
     return response?.data?.data;
   });
+
+  const formatTime = (time:any) => {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
+  const { data: loginDetail } = useQuery(["loginDetail", { shift_id: 1 }], getLoginDetail);
+  //timer
+  console.log(loginDetail, "abskd")
+
+ 
+  // Start timer when component mounts
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeRemaining((prevTime) => {
+        if (prevTime <= 0) {
+          clearInterval(timer); // Stop the timer when time reaches 0
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    // Clean up timer on component unmount
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (timeRemaining <= 0) {
+      handleModal();             
+    }
+  }, [timeRemaining]);
 
   const saveQuestionsAnswer = useMutation((data: any) =>
     questionAPI.postQuestionsAnswer(data)
@@ -186,12 +222,15 @@ const Quiz = () => {
           {" "}
           <PageHeaderNaviagtion>
             <Row justify="space-between" gutter={[16, 24]}>
-              <Col span={8}>
+              <Col span={1}>
                 <Image
                   src={`http://103.175.192.52/storage/documents/${photo}`}
                   style={{ border: "1px solid black" }}
                   width="50px"
                 ></Image>
+              </Col>
+              <Col span={7}>
+                  <h3>Time Remaining: {formatTime(timeRemaining)}</h3>
               </Col>
               <Col
                 span={8}

@@ -65,9 +65,9 @@ export const postShift = async (data: any) => {
 export const updateShift = async (data: any) => {
   console.log(data,"id--")
   const response = await http({
-    url: `/shift/${data}`,
-    method: "patch",
-    params:data?.id
+    url: `/start-shift`,
+    method: "post",
+    data:data,
   });
 
   return response;

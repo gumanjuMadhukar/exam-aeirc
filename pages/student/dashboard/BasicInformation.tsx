@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import moment from "moment";
-import QuestionAPI, { allocateRandomQuestion } from "apis/question";
+import { allocateRandomQuestion } from "apis/question";
 import ShiftAPI from "apis/shift";
 
 interface Props {
@@ -25,7 +25,6 @@ const BasicInformation = (props: Props) => {
   const { data } = props;
   const router = useRouter();
   const queryClient = useQueryClient();
-  const questionAPI = new QuestionAPI();
   // const [editBasicInformationModalOpen, setEditBasicInformationModalOpen] =
   //   useState(false);
 

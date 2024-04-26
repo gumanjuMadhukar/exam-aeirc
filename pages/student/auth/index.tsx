@@ -19,6 +19,7 @@ const Login: NextPage = (_props): JSX.Element => {
     // };
     loginMutation.mutate(data, {
       onSuccess: (response) => {
+        console.log(response,"success response");
         const token = response.data.token;
         // const role = response.data.user.roles[0].name;
         const user = response.data.user;
@@ -29,10 +30,10 @@ const Login: NextPage = (_props): JSX.Element => {
         setTokenInHeader(http, token);
         router.push("/student/dashboard");
       },
-      onError: (data: any) => {
-        // console.log(data);
-        // const _errorMessage = data?.message;
-        message.error("Invalid Credentials");
+      onError: (response:any) => {
+        // console.log(response,"error-response");
+        const errorMessage = response?.message;
+        message.error(errorMessage);
         if (
           data?.response?.data?.error_code &&
           data?.response?.data?.error_code === "USER_NOT_VERIFIED"

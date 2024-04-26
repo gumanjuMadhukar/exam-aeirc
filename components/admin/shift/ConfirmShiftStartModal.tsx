@@ -23,7 +23,7 @@ const ConfirmShiftStartModal = ({ handleCancel, isModalOpen, id }: Props) => {
     
     const handleUpdate= () => {
         var data={
-            shift_id:id,
+            id:id,
         }
         updateShiftStatus.mutate(data);
     }

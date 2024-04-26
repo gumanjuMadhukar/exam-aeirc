@@ -25,15 +25,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/dir/settings": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/dir/settings.js"
-    ],
     "/dir/student": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/dir/student.js"
+    ],
+    "/student/auth": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/student/auth.js"
     ]
   },
   "ampFirstPages": []

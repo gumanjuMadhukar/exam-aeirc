@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/dir/settings": "pages/dir/settings.js",
-  "/dir/student": "pages/dir/student.js"
+  "/dir/student": "pages/dir/student.js",
+  "/student/auth": "pages/student/auth.js"
 }

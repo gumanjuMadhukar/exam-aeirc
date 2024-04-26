@@ -80,7 +80,7 @@ const ViewDropDown = ({ openCloseDeleteLeaveModal,showShiftConfirmModal, id }: I
       label: (
         <div onClick={() => showShiftConfirmModal(id)}>
           <CheckCircleOutlined />
-          {"Start"}
+          {" Start"}
         </div>
       ),
     },

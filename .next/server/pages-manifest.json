@@ -2,7 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/auth/login": "pages/auth/login.js",
-  "/dir/shift": "pages/dir/shift.js",
-  "/dashboard": "pages/dashboard.js"
+  "/dir/settings": "pages/dir/settings.js",
+  "/dir/student": "pages/dir/student.js"
 }

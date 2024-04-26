@@ -49,17 +49,22 @@ const Login: NextPage = (_props): JSX.Element => {
     <LoginPages>
       <PageLogo>
         {/* <LoginHeading>Ayurveda</LoginHeading> */}
-        <div className="image">
+        <div className="image1 img-container">
           <img
-            src="/swasthya_bima_logo/swasthya_bima_logo.png"
+            src="/swasthya_bima_logo/nepal_sarkar_logo.png"
             alt=""
-            width="130px"
           />
         </div>
         <div className="text">
           <span>नेपाल सरकार </span>
           <br />
           <span>स्वास्थ्य बीमा बाेर्ड</span>
+        </div>
+        <div className="image2 img-container">
+          <img
+            src="/swasthya_bima_logo/swasthya_bima_logo.png"
+            alt=""
+          />
         </div>
       </PageLogo>
       <LoginContainer>
@@ -170,8 +175,22 @@ export const PageLogo = styled.div`
   // color: white;
   display:flex;
   align-items:center;
+  .img-container{
+    &.image1{
+      width:120px;
+    }
+    &.image2{
+      width:120px;
+    }
+    img{
+      width:100%;
+      object-fit:contain;
+      object-position:center;
+    }
+  }
   .text{
-    padding-left:10px;
+    padding:10px;
+    padding-right:13px;
     span{
       font-size:22px;
       font-weight:600;

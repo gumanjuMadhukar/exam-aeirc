@@ -34,14 +34,14 @@ const Quiz = () => {
   const router = useRouter();
   const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
   const student_id = Cookies.get("student_id");
-  const [timeRemaining, setTimeRemaining] = useState(60 * 10);// 30 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(60 * 10); // 30 minutes in seconds
   const photo = Cookies.get("photo");
   const queryList = useQuery(["RandomList"], async () => {
     const response = await questionAPI.getRandomQuestion(student_id);
     return response?.data?.data;
   });
 
-  const formatTime = (time:any) => {
+  const formatTime = (time: any) => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
     const seconds = time % 60;
@@ -49,22 +49,40 @@ const Quiz = () => {
       .toString()
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
-  const { data: loginDetail } = useQuery(["loginDetail", { shift_id: 1 }], getLoginDetail);
+  const { data: loginDetail } = useQuery(
+    ["loginDetail", { shift_id: 1 }],
+    getLoginDetail
+  );
   //timer
-  console.log(loginDetail, "abskd")
+  console.log(loginDetail, "abskd");
 
- 
   // Start timer when component mounts
   useEffect(() => {
+    // Check if there is previously stored time data
+    const storedTime = localStorage.getItem("timeRemaining");
+    const initialTime = storedTime ? parseInt(storedTime, 10) : 60 * 10; // Default: 10 minutes
+
+    setTimeRemaining(initialTime);
     const timer = setInterval(() => {
-      setTimeRemaining((prevTime) => {
+      setTimeRemaining(prevTime => {
         if (prevTime <= 0) {
           clearInterval(timer); // Stop the timer when time reaches 0
           return 0;
         }
-        return prevTime - 1;
+        const newTime = prevTime - 1;
+        localStorage.setItem('timeRemaining', newTime.toString()); // Update local storage with new time
+        return newTime;
       });
     }, 1000);
+    // const timer = setInterval(() => {
+    //   setTimeRemaining((prevTime) => {
+    //     if (prevTime <= 0) {
+    //       clearInterval(timer); // Stop the timer when time reaches 0
+    //       return 0;
+    //     }
+    //     return prevTime - 1;
+    //   });
+    // }, 1000);
 
     // Clean up timer on component unmount
     return () => clearInterval(timer);
@@ -72,7 +90,7 @@ const Quiz = () => {
 
   useEffect(() => {
     if (timeRemaining <= 0) {
-      handleModal();             
+      handleModal();
     }
   }, [timeRemaining]);
 
@@ -230,7 +248,7 @@ const Quiz = () => {
                 ></Image>
               </Col>
               <Col span={7}>
-                  <h3>Time Remaining: {formatTime(timeRemaining)}</h3>
+                <h3>Time Remaining: {formatTime(timeRemaining)}</h3>
               </Col>
               <Col
                 span={8}
@@ -455,9 +473,9 @@ export default Quiz;
 const Container = styled.div`
   background: red !important;
 
-  .answer-container{
-      @media(max-width:1024px){
-      width:30%!important;
+  .answer-container {
+    @media (max-width: 1024px) {
+      width: 30% !important;
     }
   }
 `;
@@ -471,10 +489,10 @@ const QuizContainer = styled.div`
   min-height: 500px;
   margin-right: 40px;
   margin-left: 40px;
-  @media(max-width:1024px){
-    width:60%;
-    margin-left:25px;
-    margin-right:25px;
+  @media (max-width: 1024px) {
+    width: 60%;
+    margin-left: 25px;
+    margin-right: 25px;
   }
 `;
 

@@ -7,6 +7,8 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import http, { setTokenInHeader } from "utils/http";
 import styled from "styled-components";
+import { useEffect } from "react";
+import { disableKeyboardPress, enterFullScreen } from "utils/helpers";
 
 const Login: NextPage = (_props): JSX.Element => {
   const loginMutation = useMutation((data: any) => studentLogin(data));
@@ -19,7 +21,7 @@ const Login: NextPage = (_props): JSX.Element => {
     // };
     loginMutation.mutate(data, {
       onSuccess: (response) => {
-        console.log(response,"success response");
+        console.log(response, "success response");
         const token = response.data.token;
         // const role = response.data.user.roles[0].name;
         const user = response.data.user;
@@ -30,7 +32,7 @@ const Login: NextPage = (_props): JSX.Element => {
         setTokenInHeader(http, token);
         router.push("/student/dashboard");
       },
-      onError: (response:any) => {
+      onError: (response: any) => {
         // console.log(response,"error-response");
         const errorMessage = response?.message;
         message.error(errorMessage);
@@ -45,27 +47,51 @@ const Login: NextPage = (_props): JSX.Element => {
       },
     });
   };
+  // useEffect(() => {
+  //   // Add event listener to disable keyboard presses
+  //   document.body.addEventListener("keydown", disableKeyboardPress);
+
+  //   // Clean up the event listener when component unmounts
+  //   return () => {
+  //     document.body.removeEventListener("keydown", disableKeyboardPress);
+  //   };
+  // }, []);
+  useEffect(() => {
+    // Add event listener to disable keyboard presses
+    document.body.addEventListener('keydown', disableKeyboardPress);
+
+    const handleFirstInteraction = () => {
+      // Remove the listener
+      document.removeEventListener('click', handleFirstInteraction);
+      // Enter fullscreen mode
+      enterFullScreen();
+    };
+
+    // Add event listener to trigger fullscreen on first interaction
+    document.addEventListener('click', handleFirstInteraction);
+    
+    // Clean up the event listener when component unmounts
+    return () => {
+      document.body.removeEventListener('keydown', disableKeyboardPress);
+      document.removeEventListener('click', handleFirstInteraction);
+    };
+  }, []);
+
 
   return (
     <LoginPages>
       <PageLogo>
         {/* <LoginHeading>Ayurveda</LoginHeading> */}
         <div className="image1 img-container">
-          <img
-            src="/swasthya_bima_logo/nepal_sarkar_logo.png"
-            alt=""
-          />
+          <img src="/swasthya_bima_logo/nepal_sarkar_logo.png" alt="" />
         </div>
         <div className="text">
           <span>नेपाल सरकार </span>
           <br />
-          <span>स्वास्थ्य बीमा बाेर्ड</span>
+          <span>स्वास्थ्य बीमा बाेर्ड</span>     
         </div>
         <div className="image2 img-container">
-          <img
-            src="/swasthya_bima_logo/swasthya_bima_logo.png"
-            alt=""
-          />
+          <img src="/swasthya_bima_logo/swasthya_bima_logo.png" alt="" />
         </div>
       </PageLogo>
       <LoginContainer>
@@ -174,27 +200,27 @@ export const PageLogo = styled.div`
   margin-top: 50px;
   margin-bottom: 20px;
   // color: white;
-  display:flex;
-  align-items:center;
-  .img-container{
-    &.image1{
-      width:120px;
+  display: flex;
+  align-items: center;
+  .img-container {
+    &.image1 {
+      width: 120px;
     }
-    &.image2{
-      width:120px;
+    &.image2 {
+      width: 90px;
     }
-    img{
-      width:100%;
-      object-fit:contain;
-      object-position:center;
+    img {
+      width: 100%;
+      object-fit: contain;
+      object-position: center;
     }
   }
-  .text{
-    padding:10px;
-    padding-right:13px;
-    span{
-      font-size:22px;
-      font-weight:600;
+  .text {
+    padding: 10px;
+    padding-right: 13px;
+    span {
+      font-size: 22px;
+      font-weight: 600;
     }
   }
 `;

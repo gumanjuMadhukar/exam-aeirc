@@ -34,7 +34,7 @@ const Quiz = () => {
   const router = useRouter();
   const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
   const student_id = Cookies.get("student_id");
-  const [timeRemaining, setTimeRemaining] = useState(60 * 1);// 30 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(60 * 10);// 30 minutes in seconds
   const photo = Cookies.get("photo");
   const queryList = useQuery(["RandomList"], async () => {
     const response = await questionAPI.getRandomQuestion(student_id);
@@ -360,6 +360,7 @@ const Quiz = () => {
             </CustomizedButtonGroup>
           </QuizContainer>
           <Card
+            className="answer-container"
             style={{
               width: "24%",
               float: "left",
@@ -453,6 +454,12 @@ export default Quiz;
 
 const Container = styled.div`
   background: red !important;
+
+  .answer-container{
+      @media(max-width:1024px){
+      width:30%!important;
+    }
+  }
 `;
 
 const QuizContainer = styled.div`
@@ -464,6 +471,11 @@ const QuizContainer = styled.div`
   min-height: 500px;
   margin-right: 40px;
   margin-left: 40px;
+  @media(max-width:1024px){
+    width:60%;
+    margin-left:25px;
+    margin-right:25px;
+  }
 `;
 
 const StyleTag = styled(Tag)`

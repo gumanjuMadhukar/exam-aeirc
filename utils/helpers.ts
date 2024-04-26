@@ -62,3 +62,31 @@ export function dataURItoBlob(dataURI: string) {
   }
   return new Blob([ab], { type: mimeString });
 }
+
+export const enterFullScreen = () => {
+  // Check if fullscreen mode is supported
+  if (document.documentElement.requestFullscreen) {
+    // Request fullscreen
+    document.documentElement.requestFullscreen();
+  }
+};
+
+export const disableKeyboardPress = (event: any) => {
+  // List of keys you want to disable
+  const disabledKeys = [
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "Space",
+    "Enter",          
+    "F11",    
+    "Escape"
+  ];
+
+  // Check if the pressed key is in the disabledKeys array
+  if (disabledKeys.includes(event.key)) {
+    // Prevent the default behavior of the key
+    event.preventDefault();
+  }
+};

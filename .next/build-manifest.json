@@ -25,10 +25,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/dir/student": [
+    "/dir/shift": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/dir/student.js"
+      "static/chunks/pages/dir/shift.js"
     ],
     "/student/auth": [
       "static/chunks/webpack.js",

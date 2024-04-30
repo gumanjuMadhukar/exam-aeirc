@@ -2,8 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/dashboard": "pages/dashboard.js",
-  "/student/dashboard": "pages/student/dashboard.js",
-  "/student/auth": "pages/student/auth.js",
-  "/student/dashboard/quiz": "pages/student/dashboard/quiz.js"
+  "/student/auth/finish": "pages/student/auth/finish.js",
+  "/student/auth": "pages/student/auth.js"
 }

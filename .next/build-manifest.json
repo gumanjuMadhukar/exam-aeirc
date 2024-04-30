@@ -25,25 +25,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/dashboard": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/dashboard.js"
-    ],
     "/student/auth": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/student/auth.js"
     ],
-    "/student/dashboard": [
+    "/student/auth/finish": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/student/dashboard.js"
-    ],
-    "/student/dashboard/quiz": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/student/dashboard/quiz.js"
+      "static/chunks/pages/student/auth/finish.js"
     ]
   },
   "ampFirstPages": []

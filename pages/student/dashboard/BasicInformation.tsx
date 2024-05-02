@@ -11,17 +11,19 @@ import { useState } from "react";
 import StudentAPI from "apis/student";
 import styled from "styled-components";
 import { Button, Checkbox, Col, Form, Image, Row, message } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import moment from "moment";
 import { allocateRandomQuestion } from "apis/question";
-import ShiftAPI from "apis/shift";
+import ShiftAPI, { checkShift } from "apis/shift";
 
 interface Props {
   data: any;
 }
 const BasicInformation = (props: Props) => {
+  const [isChecked, setIsChecked] = useState(false);
   const { data } = props;
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -32,7 +34,7 @@ const BasicInformation = (props: Props) => {
   //   setEditBasicInformationModalOpen(!editBasicInformationModalOpen);
   // };
 
-  const [_isChecked, _setIsChecked] = useState(false);
+  // const [_isChecked, _setIsChecked] = useState(false);
   const [form] = Form.useForm();
 
   const studentAPI = new StudentAPI();
@@ -52,11 +54,10 @@ const BasicInformation = (props: Props) => {
 
       enterFullScreen();
       // router.push("/student/dashboard/quiz/ExamWithPagination");
-      if(shiftStatus){
+      if (shiftStatus) {
         router.push("/student/dashboard/quiz");
-      }
-      else{
-        message.loading('please Wait')
+      } else {
+        message.loading("please Wait");
       }
     },
     onError: (_data: any) => {
@@ -99,7 +100,7 @@ const BasicInformation = (props: Props) => {
       enabled: !!data,
     }
   );
-  console.log(shiftStatus)
+  // console.log(shiftStatus)
   const handleSubmit = (data: any) => {
     // Handle form submission logic here
     // handleCapturePhoto();
@@ -191,6 +192,23 @@ const BasicInformation = (props: Props) => {
   //   }
   // };
 
+  const checkShiftStat = useMutation((data:any) => checkShift(data), {
+    onSuccess:() => {
+      message.success("Shift is already in progress");
+      setIsChecked(true);
+    },
+    onError: (data: any) => {
+      const errorMessage = data?.response?.error;
+      message.error(errorMessage);
+    },
+  });
+
+  const handleCheckShift = () => {
+   var data ={
+    student_id:empData.id,
+   }
+   checkShiftStat.mutate(data)
+  };
   return (
     <>
       <DetailWrapper>
@@ -259,6 +277,13 @@ const BasicInformation = (props: Props) => {
         </DetailTitleWrapper>
 
         <Form form={form} onFinish={handleSubmit}>
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            onClick={handleCheckShift}
+          >
+            Check Shift
+          </Button>
           <Form.Item
             name="checkbox"
             getValueFromEvent={(e) => e.target.checked}
@@ -277,6 +302,7 @@ const BasicInformation = (props: Props) => {
               left: "50%",
               right: "50%",
               height: "30px",
+              display: isChecked ? "block" : "none"
             }}
           >
             Take Examination

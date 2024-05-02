@@ -100,7 +100,7 @@ export const CreateShiftModal = (props: Props) => {
             <Form.Item
               label="Tolerance Time (in minutes)"
               name="tolerance_time"
-              rules={[
+              rules={[       
                 {
                   required: true,
                   message: "Please enter tolerance time in minutes!",

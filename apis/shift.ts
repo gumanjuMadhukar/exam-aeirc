@@ -23,7 +23,7 @@ class ShiftAPI extends Resource {
       method: "get",
     });
   }
-  constructor() {     
+  constructor() {
     super("shift");
   }
 }
@@ -63,9 +63,26 @@ export const postShift = async (data: any) => {
 };
 
 export const updateShift = async (data: any) => {
-  console.log(data,"id--")
   const response = await http({
     url: `/start-shift`,
+    method: "post",
+    data: data,
+  });
+
+  return response;
+};
+export const completeShift = async (data: any) => {
+  const response = await http({
+    url: `/complete-shift`,
+    method: "post",
+    data: data,
+  });
+
+  return response;
+};
+export const checkShift = async (data: any) => {
+  const response = await http({
+    url: `/check-shift`,
     method: "post",
     data:data,
   });

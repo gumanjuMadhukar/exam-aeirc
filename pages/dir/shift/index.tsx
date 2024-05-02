@@ -30,7 +30,7 @@ import {
 } from "styles/styled/PageHeader";
 import { Colors } from "utils/colors";
 
-import { getShift} from "apis/shift";
+import { getShift } from "apis/shift";
 import { CreateShiftModal } from "components/admin/shift/CreateShiftModal";
 import ConfirmShiftStartModal from "components/admin/shift/ConfirmShiftStartModal";
 
@@ -52,10 +52,16 @@ interface IViewDropDown {
   showModalView: (id: string) => void;
   showModalEdit: (id: string) => void;
   openCloseDeleteLeaveModal: (id: string) => void;
-  showShiftConfirmModal: (id: string) => void;
+  showShiftConfirmModal: (id: string, value:string) => void;
   id: string;
+  data: any;
 }
-const ViewDropDown = ({ openCloseDeleteLeaveModal,showShiftConfirmModal, id }: IViewDropDown) => {
+const ViewDropDown = ({
+  openCloseDeleteLeaveModal,
+  showShiftConfirmModal,
+  id,
+  data,
+}: IViewDropDown) => {
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -78,10 +84,34 @@ const ViewDropDown = ({ openCloseDeleteLeaveModal,showShiftConfirmModal, id }: I
     {
       key: "3",
       label: (
-        <div onClick={() => showShiftConfirmModal(id)}>
-          <CheckCircleOutlined />
-          {" Start"}
-        </div>
+        <>
+          {data.status === "Not Started" && (
+            <div onClick={() => showShiftConfirmModal(id, "Start")}>
+              <CheckCircleOutlined />
+              {" Start"}
+            </div>
+          )}
+          {data.status === "In Progress" && (
+            <div onClick={() => showShiftConfirmModal(id, "In Progress")}>
+              <CheckCircleOutlined />
+              {" End"}
+            </div>
+          )}
+          {/* {data.status === "Completed" && (
+            <div onClick={() => showShiftConfirmModal(id)}>
+              <CheckCircleOutlined />
+              {" End"}
+            </div>
+          )} */}
+          {/* <div onClick={() => showShiftConfirmModal(id)}>
+            <CheckCircleOutlined />
+            {data.status === "In Progress"
+              ? " Complete"
+              : data.status === "Not Started"
+              ? "Start"
+              : " End"}
+          </div> */}
+        </>
       ),
     },
   ];
@@ -153,12 +183,14 @@ const Shift = () => {
           showShiftConfirmModal={showShiftConfirmModal}
           openCloseDeleteLeaveModal={openCloseDeleteLeaveModal}
           id={row.id}
+          data={row}
         />
       ),
     },
   ];
   const [isDeleteLeaveModalOpen, setIsDeleteLeaveModalOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState<string>("");
+  const [statusValue, setStatusValue] = useState<string>("");
 
   const openCloseDeleteLeaveModal = (id?: string) => {
     id ? setCurrentItem(id) : setCurrentItem("");
@@ -186,11 +218,11 @@ const Shift = () => {
     setCurrentItem(id);
     setOpenEdit(true);
   };
-  const showShiftConfirmModal = (id: string) => {
+  const showShiftConfirmModal = (id: string,value:string) => {
     setCurrentItem(id);
     setOpenShiftConfirm(true);
+    setStatusValue(value)
   };
-
   return (
     <UsersContainer>
       <PageHeader>
@@ -296,7 +328,12 @@ const Shift = () => {
         handleCancel={openCloseModal}
         isModalOpen={createUserModalOpen}
       />
-      <ConfirmShiftStartModal handleCancel={openCloseShiftConfirmModal} isModalOpen={openShiftConfirm} id={currentItem}/>
+      <ConfirmShiftStartModal
+        handleCancel={openCloseShiftConfirmModal}
+        isModalOpen={openShiftConfirm}
+        id={currentItem}
+        value={statusValue}
+      />
     </UsersContainer>
   );
 };

@@ -34,7 +34,7 @@ const Quiz = () => {
   const router = useRouter();
   const [submitQuiz, setSumitQuiz] = useState<boolean>(false);
   const student_id = Cookies.get("student_id");
-  const [timeRemaining, setTimeRemaining] = useState(60 * 10); // 30 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(60 * 20); // 30 minutes in seconds
   const photo = Cookies.get("photo");
   const queryList = useQuery(["RandomList"], async () => {
     const response = await questionAPI.getRandomQuestion(student_id);
